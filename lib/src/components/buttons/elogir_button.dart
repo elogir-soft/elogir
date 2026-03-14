@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../../theme/theme.dart';
+import '../feedback/elogir_spinner.dart';
 import '../interaction/elogir_pressable.dart';
 import 'button_style.dart';
 
@@ -24,6 +25,7 @@ class ElogirButton extends StatefulWidget {
     this.size = ElogirButtonSize.md,
     this.style,
     this.enabled = true,
+    this.loading = false,
     this.expanded = false,
     this.icon,
     this.semanticsLabel,
@@ -37,13 +39,14 @@ class ElogirButton extends StatefulWidget {
   final ElogirButtonSize size;
   final ElogirButtonStyle? style;
   final bool enabled;
+  final bool loading;
   final bool expanded;
   final Widget? icon;
   final String? semanticsLabel;
   final bool autofocus;
   final FocusNode? focusNode;
 
-  bool get _effectiveEnabled => enabled && onPressed != null;
+  bool get _effectiveEnabled => enabled && !loading && onPressed != null;
 
   @override
   State<ElogirButton> createState() => _ElogirButtonState();
@@ -142,20 +145,48 @@ class _ElogirButtonState extends State<ElogirButton> {
       border = widget.style!.border ?? border;
     }
 
+    // Spinner size proportional to button height
+    final double spinnerSize;
+    switch (widget.size) {
+      case ElogirButtonSize.sm:
+        spinnerSize = 14;
+      case ElogirButtonSize.md:
+        spinnerSize = 18;
+      case ElogirButtonSize.lg:
+        spinnerSize = 22;
+    }
+
+    final normalContent = Row(
+      mainAxisSize:
+          widget.expanded ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (widget.icon != null) ...[
+          widget.icon!,
+          SizedBox(width: theme.spacing.sm),
+        ],
+        widget.child,
+      ],
+    );
+
+    // Stack keeps both children laid out so the button never changes
+    // width when swapping between label and spinner.
     final content = DefaultTextStyle.merge(
       style: textStyle.copyWith(color: fg),
       child: IconTheme(
         data: IconThemeData(color: fg, size: 18),
-        child: Row(
-          mainAxisSize:
-              widget.expanded ? MainAxisSize.max : MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            if (widget.icon != null) ...[
-              widget.icon!,
-              SizedBox(width: theme.spacing.sm),
-            ],
-            widget.child,
+            // The label is always laid out to hold the button width,
+            // but invisible when loading.
+            Opacity(
+              opacity: widget.loading ? 0.0 : 1.0,
+              child: normalContent,
+            ),
+            // Spinner fades in on top when loading.
+            if (widget.loading)
+              ElogirSpinner(size: spinnerSize, color: fg),
           ],
         ),
       ),
@@ -179,9 +210,6 @@ class _ElogirButtonState extends State<ElogirButton> {
           borderRadius: borderRadius,
           border: border,
         ),
-        // Align centers content vertically without forcing the
-        // container to expand horizontally (widthFactor: 1.0 keeps
-        // the container wrapped to the child's intrinsic width).
         child: Align(
           alignment: Alignment.center,
           widthFactor: widget.expanded ? null : 1.0,

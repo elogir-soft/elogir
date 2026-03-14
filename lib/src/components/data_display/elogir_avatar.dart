@@ -12,7 +12,7 @@ enum ElogirAvatarSize { xs, sm, md, lg, xl }
 /// Supports [imageUrl] via cached_network_image for network images,
 /// [imageProvider] for local/asset images, or [initials] for text.
 /// Optional status indicator dot in the bottom-right corner.
-class ElogirAvatar extends StatelessWidget {
+class ElogirAvatar extends StatefulWidget {
   const ElogirAvatar({
     super.key,
     this.imageUrl,
@@ -42,9 +42,55 @@ class ElogirAvatar extends StatelessWidget {
   final bool showStatus;
   final bool isOnline;
 
+  @override
+  State<ElogirAvatar> createState() => _ElogirAvatarState();
+}
+
+class _ElogirAvatarState extends State<ElogirAvatar>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.4).animate(
+      CurvedAnimation(
+        parent: _pulseController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    if (widget.isOnline && widget.showStatus) {
+      _pulseController.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(ElogirAvatar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isOnline && widget.showStatus) {
+      if (!_pulseController.isAnimating) {
+        _pulseController.repeat(reverse: true);
+      }
+    } else {
+      _pulseController.stop();
+      _pulseController.value = 0.0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
   double get _resolvedSize {
-    if (customSize != null) return customSize!;
-    switch (size) {
+    if (widget.customSize != null) return widget.customSize!;
+    switch (widget.size) {
       case ElogirAvatarSize.xs:
         return 24;
       case ElogirAvatarSize.sm:
@@ -59,7 +105,7 @@ class ElogirAvatar extends StatelessWidget {
   }
 
   double get _fontSize {
-    switch (size) {
+    switch (widget.size) {
       case ElogirAvatarSize.xs:
         return 10;
       case ElogirAvatarSize.sm:
@@ -78,31 +124,31 @@ class ElogirAvatar extends StatelessWidget {
     final theme = ElogirTheme.of(context);
     final colors = theme.colors;
     final dimension = _resolvedSize;
-    final bg = backgroundColor ?? colors.primaryContainer;
-    final fg = foregroundColor ?? colors.onPrimaryContainer;
+    final bg = widget.backgroundColor ?? colors.primaryContainer;
+    final fg = widget.foregroundColor ?? colors.onPrimaryContainer;
 
     Widget content;
-    if (imageUrl != null) {
+    if (widget.imageUrl != null) {
       content = CachedNetworkImage(
-        imageUrl: imageUrl!,
+        imageUrl: widget.imageUrl!,
         width: dimension,
         height: dimension,
         fit: BoxFit.cover,
         placeholder: (context, url) => _buildFallback(fg),
         errorWidget: (context, url, error) => _buildFallback(fg),
       );
-    } else if (imageProvider != null) {
+    } else if (widget.imageProvider != null) {
       content = Image(
-        image: imageProvider!,
+        image: widget.imageProvider!,
         width: dimension,
         height: dimension,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => _buildFallback(fg),
       );
-    } else if (child != null) {
+    } else if (widget.child != null) {
       content = IconTheme(
         data: IconThemeData(color: fg, size: dimension * 0.5),
-        child: child!,
+        child: widget.child!,
       );
     } else {
       content = _buildFallback(fg);
@@ -114,9 +160,9 @@ class ElogirAvatar extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: bg,
-        shape: shape,
-        borderRadius: shape == BoxShape.rectangle
-            ? (borderRadius ?? theme.radii.md)
+        shape: widget.shape,
+        borderRadius: widget.shape == BoxShape.rectangle
+            ? (widget.borderRadius ?? theme.radii.md)
             : null,
         border: Border.all(
           color: colors.outlineVariant,
@@ -127,8 +173,72 @@ class ElogirAvatar extends StatelessWidget {
       child: content,
     );
 
-    if (showStatus) {
+    if (widget.showStatus) {
       final dotSize = dimension * 0.28;
+      final dotColor = widget.isOnline ? colors.success : colors.onSurfaceVariant;
+
+      Widget statusDot;
+      if (widget.isOnline) {
+        statusDot = AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) {
+            return SizedBox(
+              width: dotSize * 1.6,
+              height: dotSize * 1.6,
+              child: Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Outer glow ring
+                    Transform.scale(
+                      scale: _pulseAnimation.value,
+                      child: Container(
+                        width: dotSize,
+                        height: dotSize,
+                        decoration: BoxDecoration(
+                          color: dotColor.withValues(alpha: 0.3),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    // Main status dot
+                    Transform.scale(
+                      scale: 1.0 + (_pulseAnimation.value - 1.0) * 0.3,
+                      child: child,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          child: Container(
+            width: dotSize,
+            height: dotSize,
+            decoration: BoxDecoration(
+              color: dotColor,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: colors.surface,
+                width: theme.strokes.thick,
+              ),
+            ),
+          ),
+        );
+      } else {
+        statusDot = Container(
+          width: dotSize,
+          height: dotSize,
+          decoration: BoxDecoration(
+            color: dotColor,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: colors.surface,
+              width: theme.strokes.thick,
+            ),
+          ),
+        );
+      }
+
       avatar = Stack(
         clipBehavior: Clip.none,
         children: [
@@ -136,18 +246,7 @@ class ElogirAvatar extends StatelessWidget {
           Positioned(
             right: -1,
             bottom: -1,
-            child: Container(
-              width: dotSize,
-              height: dotSize,
-              decoration: BoxDecoration(
-                color: isOnline ? colors.success : colors.onSurfaceVariant,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: colors.surface,
-                  width: theme.strokes.thick,
-                ),
-              ),
-            ),
+            child: statusDot,
           ),
         ],
       );
@@ -158,7 +257,7 @@ class ElogirAvatar extends StatelessWidget {
 
   Widget _buildFallback(Color fg) {
     return Text(
-      initials?.toUpperCase() ?? '?',
+      widget.initials?.toUpperCase() ?? '?',
       textAlign: TextAlign.center,
       style: TextStyle(
         color: fg,

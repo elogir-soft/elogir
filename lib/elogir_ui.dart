@@ -16,6 +16,20 @@ export 'src/theme/theme_data.dart';
 export 'src/theme/theme_extension.dart';
 export 'src/theme/typography.dart';
 
+// Animations
+export 'src/animations/curves.dart';
+export 'src/animations/elogir_animated_counter.dart';
+export 'src/animations/elogir_animated_gradient.dart';
+export 'src/animations/elogir_animated_swap.dart';
+export 'src/animations/elogir_animated_visibility.dart';
+export 'src/animations/elogir_fade_in.dart';
+export 'src/animations/elogir_marquee.dart';
+export 'src/animations/elogir_parallax.dart';
+export 'src/animations/elogir_pulse.dart';
+export 'src/animations/elogir_spring_container.dart';
+export 'src/animations/elogir_staggered_list.dart';
+export 'src/animations/elogir_typewriter.dart';
+
 // App
 export 'src/app/elogir_app.dart';
 

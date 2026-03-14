@@ -34,6 +34,7 @@ class ElogirAccordionState extends State<ElogirAccordion>
   late final AnimationController _controller;
   late final Animation<double> _heightFactor;
   late final Animation<double> _chevronTurns;
+  late final Animation<double> _contentOpacity;
   late bool _expanded;
 
   @override
@@ -49,6 +50,11 @@ class ElogirAccordionState extends State<ElogirAccordion>
       parent: _controller,
       curve: Curves.easeOutCubic,
       reverseCurve: Curves.easeOutCubic.flipped,
+    );
+    _contentOpacity = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.3, 1.0, curve: Curves.easeIn),
+      reverseCurve: const Interval(0.0, 0.5, curve: Curves.easeOut),
     );
     _chevronTurns = Tween<double>(begin: 0.0, end: 0.5).animate(
       CurvedAnimation(
@@ -168,15 +174,18 @@ class ElogirAccordionState extends State<ElogirAccordion>
                   height: theme.strokes.thin,
                   color: colors.outlineVariant,
                 ),
-                Padding(
-                  padding: EdgeInsets.all(theme.spacing.md),
-                  child: DefaultTextStyle.merge(
-                    style: theme.typography.bodyMedium.copyWith(
-                      color: colors.onSurface,
-                    ),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: widget.body,
+                FadeTransition(
+                  opacity: _contentOpacity,
+                  child: Padding(
+                    padding: EdgeInsets.all(theme.spacing.md),
+                    child: DefaultTextStyle.merge(
+                      style: theme.typography.bodyMedium.copyWith(
+                        color: colors.onSurface,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: widget.body,
+                      ),
                     ),
                   ),
                 ),

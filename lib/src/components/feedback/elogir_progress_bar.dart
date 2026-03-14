@@ -32,8 +32,9 @@ class ElogirProgressBar extends StatefulWidget {
 }
 
 class _ElogirProgressBarState extends State<ElogirProgressBar>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   AnimationController? _indeterminateController;
+  AnimationController? _shineController;
 
   bool get _isDeterminate => widget.value != null;
 
@@ -52,6 +53,17 @@ class _ElogirProgressBarState extends State<ElogirProgressBar>
     } else if (!_isDeterminate && _indeterminateController == null) {
       _startIndeterminate();
     }
+
+    // Trigger shine when value reaches 1.0
+    final oldValue = oldWidget.value ?? 0.0;
+    final newValue = widget.value ?? 0.0;
+    if (newValue >= 1.0 && oldValue < 1.0) {
+      _shineController?.dispose();
+      _shineController = AnimationController(
+        duration: const Duration(milliseconds: 800),
+        vsync: this,
+      )..forward();
+    }
   }
 
   void _startIndeterminate() {
@@ -64,6 +76,7 @@ class _ElogirProgressBarState extends State<ElogirProgressBar>
   @override
   void dispose() {
     _indeterminateController?.dispose();
+    _shineController?.dispose();
     super.dispose();
   }
 
@@ -92,6 +105,7 @@ class _ElogirProgressBarState extends State<ElogirProgressBar>
                 value: widget.value!.clamp(0.0, 1.0),
                 color: fillColor,
                 duration: theme.durations.normal,
+                shineAnimation: _shineController,
               )
             : AnimatedBuilder(
                 animation: _indeterminateController!,
@@ -151,11 +165,13 @@ class _DeterminateFill extends StatelessWidget {
     required this.value,
     required this.color,
     required this.duration,
+    this.shineAnimation,
   });
 
   final double value;
   final Color color;
   final Duration duration;
+  final Animation<double>? shineAnimation;
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +181,63 @@ class _DeterminateFill extends StatelessWidget {
         duration: duration,
         curve: Curves.easeOutCubic,
         widthFactor: value,
-        child: Container(color: color),
+        child: Stack(
+          children: [
+            Positioned.fill(child: Container(color: color)),
+            if (shineAnimation != null)
+              Positioned.fill(
+                child: AnimatedBuilder(
+                  animation: shineAnimation!,
+                  builder: (context, _) {
+                    final progress = shineAnimation!.value;
+                    if (progress <= 0.0 || progress >= 1.0) {
+                      return const SizedBox.shrink();
+                    }
+                    return _ShineOverlay(progress: progress);
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ShineOverlay extends StatelessWidget {
+  const _ShineOverlay({required this.progress});
+
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    // The shine band is 30% of the bar width; it sweeps left to right.
+    const bandWidth = 0.3;
+    final center = -bandWidth + progress * (1.0 + 2 * bandWidth);
+
+    return ClipRect(
+      child: FractionallySizedBox(
+        alignment: Alignment.centerLeft,
+        widthFactor: 1.0,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: const [
+                Color(0x00FFFFFF),
+                Color(0x4DFFFFFF),
+                Color(0x00FFFFFF),
+              ],
+              stops: [
+                (center - bandWidth / 2).clamp(0.0, 1.0),
+                center.clamp(0.0, 1.0),
+                (center + bandWidth / 2).clamp(0.0, 1.0),
+              ],
+            ),
+          ),
+          child: const SizedBox.expand(),
+        ),
       ),
     );
   }

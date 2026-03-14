@@ -9,7 +9,7 @@ enum ElogirTrendDirection { up, down, neutral }
 ///
 /// Soft Industrial style: thick-bordered card, bold number,
 /// muted label, colored trend arrow with percentage.
-class ElogirStatCard extends StatelessWidget {
+class ElogirStatCard extends StatefulWidget {
   const ElogirStatCard({
     super.key,
     required this.value,
@@ -48,14 +48,120 @@ class ElogirStatCard extends StatelessWidget {
   final double? width;
 
   @override
+  State<ElogirStatCard> createState() => _ElogirStatCardState();
+}
+
+class _ElogirStatCardState extends State<ElogirStatCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _countController;
+  late Animation<double> _countAnimation;
+  double? _parsedValue;
+  String _displayFormat = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _countController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _parsedValue = _parseValue(widget.value);
+    if (_parsedValue != null) {
+      _displayFormat = _detectFormat(widget.value);
+      _countAnimation = Tween<double>(begin: 0.0, end: _parsedValue!).animate(
+        CurvedAnimation(
+          parent: _countController,
+          curve: Curves.easeOutCubic,
+        ),
+      );
+      _countController.forward();
+    } else {
+      _countAnimation = AlwaysStoppedAnimation(0.0);
+    }
+  }
+
+  @override
+  void didUpdateWidget(ElogirStatCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      final newParsed = _parseValue(widget.value);
+      final oldParsed = _parsedValue;
+      _parsedValue = newParsed;
+      if (newParsed != null) {
+        _displayFormat = _detectFormat(widget.value);
+        _countAnimation = Tween<double>(
+          begin: oldParsed ?? 0.0,
+          end: newParsed,
+        ).animate(
+          CurvedAnimation(
+            parent: _countController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+        _countController.forward(from: 0);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _countController.dispose();
+    super.dispose();
+  }
+
+  /// Try to parse the value string as a number, stripping commas.
+  double? _parseValue(String value) {
+    final cleaned = value.replaceAll(',', '').replaceAll(' ', '');
+    return double.tryParse(cleaned);
+  }
+
+  /// Detect the format of the original string (decimal places, commas).
+  String _detectFormat(String value) {
+    final hasCommas = value.contains(',');
+    final dotIndex = value.indexOf('.');
+    final decimals = dotIndex >= 0 ? value.length - dotIndex - 1 : 0;
+    return '${hasCommas ? 'c' : ''}$decimals';
+  }
+
+  /// Format a number to match the detected format.
+  String _formatNumber(double number) {
+    final hasCommas = _displayFormat.startsWith('c');
+    final formatStr = hasCommas ? _displayFormat.substring(1) : _displayFormat;
+    final decimals = int.tryParse(formatStr) ?? 0;
+
+    String result = number.toStringAsFixed(decimals);
+
+    if (hasCommas) {
+      // Add commas to the integer part
+      final parts = result.split('.');
+      final intPart = parts[0];
+      final buffer = StringBuffer();
+      final startIndex = intPart.startsWith('-') ? 1 : 0;
+      final digits = intPart.substring(startIndex);
+      for (int i = 0; i < digits.length; i++) {
+        if (i > 0 && (digits.length - i) % 3 == 0) {
+          buffer.write(',');
+        }
+        buffer.write(digits[i]);
+      }
+      result = (startIndex == 1 ? '-' : '') + buffer.toString();
+      if (parts.length > 1) {
+        result += '.${parts[1]}';
+      }
+    }
+
+    return result;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
     final colors = theme.colors;
     final effectiveDirection =
-        trendDirection ?? (trend != null ? ElogirTrendDirection.neutral : null);
+        widget.trendDirection ?? (widget.trend != null ? ElogirTrendDirection.neutral : null);
 
     return Container(
-      width: width,
+      width: widget.width,
       padding: EdgeInsets.all(theme.spacing.lg),
       decoration: BoxDecoration(
         color: colors.surface,
@@ -74,19 +180,19 @@ class ElogirStatCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  label,
+                  widget.label,
                   style: theme.typography.labelMedium.copyWith(
                     color: colors.onSurfaceVariant,
                   ),
                 ),
               ),
-              if (icon != null)
+              if (widget.icon != null)
                 IconTheme(
                   data: IconThemeData(
                     color: colors.onSurfaceVariant,
                     size: 20,
                   ),
-                  child: icon!,
+                  child: widget.icon!,
                 ),
             ],
           ),
@@ -96,24 +202,37 @@ class ElogirStatCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              if (prefix != null)
+              if (widget.prefix != null)
                 Text(
-                  prefix!,
+                  widget.prefix!,
                   style: theme.typography.headlineSmall.copyWith(
                     color: colors.onSurfaceVariant,
                   ),
                 ),
-              Text(
-                value,
-                style: theme.typography.headlineLarge.copyWith(
-                  color: colors.onSurface,
+              if (_parsedValue != null)
+                AnimatedBuilder(
+                  animation: _countAnimation,
+                  builder: (context, _) {
+                    return Text(
+                      _formatNumber(_countAnimation.value),
+                      style: theme.typography.headlineLarge.copyWith(
+                        color: colors.onSurface,
+                      ),
+                    );
+                  },
+                )
+              else
+                Text(
+                  widget.value,
+                  style: theme.typography.headlineLarge.copyWith(
+                    color: colors.onSurface,
+                  ),
                 ),
-              ),
-              if (suffix != null)
+              if (widget.suffix != null)
                 Padding(
                   padding: const EdgeInsets.only(left: 2),
                   child: Text(
-                    suffix!,
+                    widget.suffix!,
                     style: theme.typography.titleMedium.copyWith(
                       color: colors.onSurfaceVariant,
                     ),
@@ -122,7 +241,7 @@ class ElogirStatCard extends StatelessWidget {
             ],
           ),
           // Trend
-          if (trend != null && effectiveDirection != null) ...[
+          if (widget.trend != null && effectiveDirection != null) ...[
             SizedBox(height: theme.spacing.sm),
             Row(
               children: [
@@ -142,7 +261,7 @@ class ElogirStatCard extends StatelessWidget {
                     ),
                   ),
                 Text(
-                  trend!,
+                  widget.trend!,
                   style: theme.typography.labelSmall.copyWith(
                     color: effectiveDirection == ElogirTrendDirection.up
                         ? colors.success

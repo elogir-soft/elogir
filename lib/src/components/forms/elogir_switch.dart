@@ -32,6 +32,7 @@ class ElogirSwitch extends StatefulWidget {
 class _ElogirSwitchState extends State<ElogirSwitch>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animation;
+  late final CurvedAnimation _curvedAnimation;
   bool _hovered = false;
 
   @override
@@ -41,6 +42,11 @@ class _ElogirSwitchState extends State<ElogirSwitch>
       duration: const Duration(milliseconds: 200),
       vsync: this,
       value: widget.value ? 1.0 : 0.0,
+    );
+    _curvedAnimation = CurvedAnimation(
+      parent: _animation,
+      curve: Curves.easeOutBack,
+      reverseCurve: Curves.easeOutBack.flipped,
     );
   }
 
@@ -58,6 +64,7 @@ class _ElogirSwitchState extends State<ElogirSwitch>
 
   @override
   void dispose() {
+    _curvedAnimation.dispose();
     _animation.dispose();
     super.dispose();
   }
@@ -72,9 +79,9 @@ class _ElogirSwitchState extends State<ElogirSwitch>
     final travel = widget.width - thumbSize - 8;
 
     final switchWidget = AnimatedBuilder(
-      animation: _animation,
+      animation: _curvedAnimation,
       builder: (context, _) {
-        final t = _animation.value;
+        final t = _curvedAnimation.value;
         final trackColor = Color.lerp(
           enabled ? colors.outline : colors.disabled,
           enabled ? colors.primary : colors.disabled,

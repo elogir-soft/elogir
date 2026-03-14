@@ -188,20 +188,28 @@ class _ElogirSliderState extends State<ElogirSlider>
                             parent: _tooltipController,
                             curve: Curves.easeOut,
                           ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: theme.spacing.sm,
-                              vertical: theme.spacing.xs,
+                          child: ScaleTransition(
+                            scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                              CurvedAnimation(
+                                parent: _tooltipController,
+                                curve: Curves.easeOutBack,
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                              color: colors.onSurface,
-                              borderRadius: theme.radii.sm,
-                            ),
-                            child: Text(
-                              widget.label?.call(widget.value) ??
-                                  widget.value.toStringAsFixed(1),
-                              style: theme.typography.labelSmall.copyWith(
-                                color: colors.surface,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: theme.spacing.sm,
+                                vertical: theme.spacing.xs,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colors.onSurface,
+                                borderRadius: theme.radii.sm,
+                              ),
+                              child: Text(
+                                widget.label?.call(widget.value) ??
+                                    widget.value.toStringAsFixed(1),
+                                style: theme.typography.labelSmall.copyWith(
+                                  color: colors.surface,
+                                ),
                               ),
                             ),
                           ),

@@ -108,7 +108,7 @@ class ElogirBottomNav extends StatelessWidget {
   }
 }
 
-class _BottomNavItemWidget extends StatelessWidget {
+class _BottomNavItemWidget extends StatefulWidget {
   const _BottomNavItemWidget({
     required this.item,
     required this.isSelected,
@@ -122,35 +122,91 @@ class _BottomNavItemWidget extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
+  State<_BottomNavItemWidget> createState() => _BottomNavItemWidgetState();
+}
+
+class _BottomNavItemWidgetState extends State<_BottomNavItemWidget>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scaleController;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 1.2)
+            .chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.2, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 60,
+      ),
+    ]).animate(_scaleController);
+  }
+
+  @override
+  void didUpdateWidget(_BottomNavItemWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isSelected && !oldWidget.isSelected) {
+      _scaleController.forward(from: 0.0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
     final colors = theme.colors;
 
-    final color = isSelected ? colors.primary : colors.onSurfaceVariant;
-    final iconWidget =
-        isSelected ? (item.activeIcon ?? item.icon) : item.icon;
+    final color =
+        widget.isSelected ? colors.primary : colors.onSurfaceVariant;
+    final iconWidget = widget.isSelected
+        ? (widget.item.activeIcon ?? widget.item.icon)
+        : widget.item.icon;
 
     return ElogirPressable(
-      enabled: enabled,
-      onPressed: onPressed,
+      enabled: widget.enabled,
+      onPressed: widget.onPressed,
       pressScale: 0.95,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: theme.spacing.xs),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconTheme(
-              data: IconThemeData(color: color, size: 22),
-              child: iconWidget,
+            AnimatedBuilder(
+              animation: _scaleAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: child,
+                );
+              },
+              child: IconTheme(
+                data: IconThemeData(color: color, size: 22),
+                child: iconWidget,
+              ),
             ),
             SizedBox(height: theme.spacing.xs),
             AnimatedDefaultTextStyle(
               duration: theme.durations.fast,
               style: theme.typography.labelSmall.copyWith(
                 color: color,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight:
+                    widget.isSelected ? FontWeight.w700 : FontWeight.w500,
               ),
-              child: Text(item.label),
+              child: Text(widget.item.label),
             ),
           ],
         ),

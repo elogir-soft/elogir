@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../../theme/theme.dart';
 
 /// A small count or dot indicator that attaches to the corner of another widget.
-class ElogirBadge extends StatelessWidget {
+class ElogirBadge extends StatefulWidget {
   const ElogirBadge({
     super.key,
     required this.child,
@@ -33,30 +33,69 @@ class ElogirBadge extends StatelessWidget {
   final Alignment alignment;
   final Offset? offset;
 
-  bool get _visible => showDot || (count != null && count! > 0);
+  @override
+  State<ElogirBadge> createState() => _ElogirBadgeState();
+}
+
+class _ElogirBadgeState extends State<ElogirBadge>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scaleController;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+      value: 1.0,
+    );
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _scaleController,
+        curve: Curves.easeOutBack,
+      ),
+    );
+  }
+
+  @override
+  void didUpdateWidget(ElogirBadge oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.count != oldWidget.count) {
+      _scaleController.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  bool get _visible => widget.showDot || (widget.count != null && widget.count! > 0);
 
   @override
   Widget build(BuildContext context) {
-    if (!_visible) return child;
+    if (!_visible) return widget.child;
 
     final theme = ElogirTheme.of(context);
     final colors = theme.colors;
-    final bg = color ?? colors.error;
-    final fg = textColor ?? colors.onError;
+    final bg = widget.color ?? colors.error;
+    final fg = widget.textColor ?? colors.onError;
 
     final Offset effectiveOffset;
-    if (offset != null) {
-      effectiveOffset = offset!;
-    } else if (alignment == Alignment.topRight) {
+    if (widget.offset != null) {
+      effectiveOffset = widget.offset!;
+    } else if (widget.alignment == Alignment.topRight) {
       effectiveOffset = const Offset(6, -6);
-    } else if (alignment == Alignment.topLeft) {
+    } else if (widget.alignment == Alignment.topLeft) {
       effectiveOffset = const Offset(-6, -6);
     } else {
       effectiveOffset = const Offset(6, 6);
     }
 
     Widget badge;
-    if (showDot) {
+    if (widget.showDot) {
       badge = Container(
         width: 10,
         height: 10,
@@ -71,7 +110,7 @@ class ElogirBadge extends StatelessWidget {
       );
     } else {
       final label =
-          count! > maxCount ? '$maxCount+' : count.toString();
+          widget.count! > widget.maxCount ? '${widget.maxCount}+' : widget.count.toString();
       badge = Container(
         constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
@@ -99,13 +138,16 @@ class ElogirBadge extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        child,
+        widget.child,
         Positioned(
-          top: alignment.y <= 0 ? effectiveOffset.dy : null,
-          bottom: alignment.y > 0 ? effectiveOffset.dy : null,
-          right: alignment.x >= 0 ? effectiveOffset.dx * -1 : null,
-          left: alignment.x < 0 ? effectiveOffset.dx * -1 : null,
-          child: badge,
+          top: widget.alignment.y <= 0 ? effectiveOffset.dy : null,
+          bottom: widget.alignment.y > 0 ? effectiveOffset.dy : null,
+          right: widget.alignment.x >= 0 ? effectiveOffset.dx * -1 : null,
+          left: widget.alignment.x < 0 ? effectiveOffset.dx * -1 : null,
+          child: ScaleTransition(
+            scale: _scaleAnimation,
+            child: badge,
+          ),
         ),
       ],
     );

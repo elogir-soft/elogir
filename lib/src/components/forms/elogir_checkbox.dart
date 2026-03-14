@@ -27,8 +27,10 @@ class ElogirCheckbox extends StatefulWidget {
 }
 
 class _ElogirCheckboxState extends State<ElogirCheckbox>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _animation;
+  late final AnimationController _bounceController;
+  late final Animation<double> _bounceAnimation;
   bool _hovered = false;
 
   @override
@@ -39,6 +41,17 @@ class _ElogirCheckboxState extends State<ElogirCheckbox>
       vsync: this,
       value: widget.value ? 1.0 : 0.0,
     );
+    _bounceController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _bounceAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.12), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.12, end: 1.0), weight: 50),
+    ]).animate(CurvedAnimation(
+      parent: _bounceController,
+      curve: Curves.easeOut,
+    ));
   }
 
   @override
@@ -50,12 +63,14 @@ class _ElogirCheckboxState extends State<ElogirCheckbox>
       } else {
         _animation.reverse();
       }
+      _bounceController.forward(from: 0);
     }
   }
 
   @override
   void dispose() {
     _animation.dispose();
+    _bounceController.dispose();
     super.dispose();
   }
 
@@ -66,21 +81,24 @@ class _ElogirCheckboxState extends State<ElogirCheckbox>
     final enabled = widget.enabled && widget.onChanged != null;
 
     final box = AnimatedBuilder(
-      animation: _animation,
+      animation: Listenable.merge([_animation, _bounceAnimation]),
       builder: (context, _) {
         final t = _animation.value;
-        return CustomPaint(
-          size: Size.square(widget.size),
-          painter: _CheckboxPainter(
-            progress: t,
-            checked: widget.value,
-            borderColor: enabled
-                ? (_hovered ? colors.primary : colors.outline)
-                : colors.disabled,
-            fillColor: colors.primary,
-            checkColor: colors.onPrimary,
-            strokeWidth: theme.strokes.thick,
-            borderRadius: 4.0,
+        return Transform.scale(
+          scale: _bounceAnimation.value,
+          child: CustomPaint(
+            size: Size.square(widget.size),
+            painter: _CheckboxPainter(
+              progress: t,
+              checked: widget.value,
+              borderColor: enabled
+                  ? (_hovered ? colors.primary : colors.outline)
+                  : colors.disabled,
+              fillColor: colors.primary,
+              checkColor: colors.onPrimary,
+              strokeWidth: theme.strokes.thick,
+              borderRadius: 4.0,
+            ),
           ),
         );
       },

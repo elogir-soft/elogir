@@ -1,3 +1,5 @@
+import 'dart:math' show sin, pi;
+
 import 'package:flutter/services.dart' show TextInputAction;
 import 'package:flutter/widgets.dart';
 
@@ -54,9 +56,12 @@ class ElogirTextField extends StatefulWidget {
   State<ElogirTextField> createState() => _ElogirTextFieldState();
 }
 
-class _ElogirTextFieldState extends State<ElogirTextField> {
+class _ElogirTextFieldState extends State<ElogirTextField>
+    with SingleTickerProviderStateMixin {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
+  late final AnimationController _shakeController;
+  late final Animation<double> _shakeAnimation;
   bool _focused = false;
 
   bool get _hasText => _controller.text.isNotEmpty;
@@ -67,12 +72,28 @@ class _ElogirTextFieldState extends State<ElogirTextField> {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
     _controller = widget.controller ?? TextEditingController();
+    _shakeController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _shakeAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _shakeController, curve: Curves.easeOut),
+    );
     _focusNode.addListener(_handleFocusChange);
     _controller.addListener(_handleTextChange);
   }
 
   @override
+  void didUpdateWidget(ElogirTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.errorText != null && oldWidget.errorText == null) {
+      _shakeController.forward(from: 0);
+    }
+  }
+
+  @override
   void dispose() {
+    _shakeController.dispose();
     _focusNode.removeListener(_handleFocusChange);
     _controller.removeListener(_handleTextChange);
     if (widget.focusNode == null) _focusNode.dispose();
@@ -141,7 +162,18 @@ class _ElogirTextFieldState extends State<ElogirTextField> {
           ),
 
         // Input container
-        AnimatedContainer(
+        AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) {
+            final shakeOffset = sin(_shakeAnimation.value * pi * 3) *
+                6 *
+                (1 - _shakeAnimation.value);
+            return Transform.translate(
+              offset: Offset(shakeOffset, 0),
+              child: child,
+            );
+          },
+          child: AnimatedContainer(
           duration: theme.durations.fast,
           decoration: BoxDecoration(
             borderRadius: theme.radii.md,
@@ -223,6 +255,7 @@ class _ElogirTextFieldState extends State<ElogirTextField> {
                 ),
             ],
           ),
+        ),
         ),
 
         // Helper / error / counter
