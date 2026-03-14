@@ -9,6 +9,10 @@ import '../theme/theme_data.dart';
 ///
 /// Provides theme injection (light/dark + auto), navigation, localization
 /// hooks, and a default text style — without pulling in Material or Cupertino.
+///
+/// Use the default constructor for imperative [Navigator]-based routing,
+/// or [ElogirApp.router] for declarative routing with packages like
+/// `go_router`.
 class ElogirApp extends StatefulWidget {
   const ElogirApp({
     super.key,
@@ -27,7 +31,39 @@ class ElogirApp extends StatefulWidget {
     this.localizationsDelegates,
     this.supportedLocales = const [Locale('en', 'US')],
     this.debugShowCheckedModeBanner = true,
-  });
+  })  : routerConfig = null,
+        _isRouter = false;
+
+  /// Creates an [ElogirApp] that uses a [Router] for navigation.
+  ///
+  /// Pass a [RouterConfig] (e.g. a `GoRouter` instance) to [routerConfig].
+  ///
+  /// ```dart
+  /// ElogirApp.router(
+  ///   theme: ElogirThemeData.light(),
+  ///   darkTheme: ElogirThemeData.dark(),
+  ///   routerConfig: goRouter,
+  /// )
+  /// ```
+  const ElogirApp.router({
+    super.key,
+    this.theme,
+    this.darkTheme,
+    this.themeMode = ThemeMode.system,
+    required RouterConfig<Object> this.routerConfig,
+    this.title = '',
+    this.locale,
+    this.localizationsDelegates,
+    this.supportedLocales = const [Locale('en', 'US')],
+    this.debugShowCheckedModeBanner = true,
+  })  : home = null,
+        navigatorKey = null,
+        onGenerateRoute = null,
+        onUnknownRoute = null,
+        initialRoute = null,
+        navigatorObservers = const [],
+        routes = const {},
+        _isRouter = true;
 
   final ElogirThemeData? theme;
   final ElogirThemeData? darkTheme;
@@ -42,10 +78,15 @@ class ElogirApp extends StatefulWidget {
   final Map<String, WidgetBuilder> routes;
   final String title;
 
+  /// Router configuration for declarative routing (e.g. go_router).
+  final RouterConfig<Object>? routerConfig;
+
   final Locale? locale;
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
   final Iterable<Locale> supportedLocales;
   final bool debugShowCheckedModeBanner;
+
+  final bool _isRouter;
 
   @override
   State<ElogirApp> createState() => _ElogirAppState();
@@ -89,13 +130,37 @@ class _ElogirAppState extends State<ElogirApp> with WidgetsBindingObserver {
     }
   }
 
+  Widget _buildWrapper(ElogirThemeData themeData, Widget? child) {
+    return DefaultTextStyle(
+      style: themeData.typography.bodyMedium.copyWith(
+        color: themeData.colors.onBackground,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: themeData.colors.background),
+        child: child ?? const SizedBox.shrink(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeData = _resolveTheme();
 
-    return ElogirTheme(
-      data: themeData,
-      child: WidgetsApp(
+    final Widget app;
+
+    if (widget._isRouter) {
+      app = WidgetsApp.router(
+        key: GlobalObjectKey(this),
+        routerConfig: widget.routerConfig,
+        title: widget.title,
+        color: themeData.colors.primary,
+        locale: widget.locale,
+        supportedLocales: widget.supportedLocales,
+        debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
+        builder: (context, child) => _buildWrapper(themeData, child),
+      );
+    } else {
+      app = WidgetsApp(
         key: GlobalObjectKey(this),
         navigatorKey: widget.navigatorKey,
         title: widget.title,
@@ -112,25 +177,22 @@ class _ElogirAppState extends State<ElogirApp> with WidgetsBindingObserver {
                     if (settings.name == Navigator.defaultRouteName) {
                       return PageRouteBuilder(
                         settings: settings,
-                        pageBuilder: (context, animation, secondaryAnimation) => widget.home!,
+                        pageBuilder:
+                            (context, animation, secondaryAnimation) =>
+                                widget.home!,
                       );
                     }
                     return null;
                   }
                 : null),
         onUnknownRoute: widget.onUnknownRoute,
-        builder: (context, child) {
-          return DefaultTextStyle(
-            style: themeData.typography.bodyMedium.copyWith(
-              color: themeData.colors.onBackground,
-            ),
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: themeData.colors.background),
-              child: child ?? const SizedBox.shrink(),
-            ),
-          );
-        },
-      ),
+        builder: (context, child) => _buildWrapper(themeData, child),
+      );
+    }
+
+    return ElogirTheme(
+      data: themeData,
+      child: app,
     );
   }
 }
