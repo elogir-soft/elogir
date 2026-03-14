@@ -1,7 +1,6 @@
 name: elogir_ui
-description: "A new Flutter project."
-publish_to: 'none'
-version: 0.1.0+1
+description: A custom Flutter UI component library built from Flutter primitives.
+version: 0.1.0
 
 environment:
   sdk: ^3.11.1
@@ -9,11 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-
-flutter:
-  uses-material-design: true
