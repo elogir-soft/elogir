@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppTimer {
 
- String get id; String get label; int get durationMs; int get remainingMs; TimerStatus get status; DateTime? get startedAt; DateTime? get pausedAt; DateTime get createdAt;
+ String get id; int get durationMs; int get remainingMs; TimerStatus get status; DateTime get createdAt; String get label; DateTime? get startedAt; DateTime? get pausedAt;
 /// Create a copy of AppTimer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AppTimerCopyWith<AppTimer> get copyWith => _$AppTimerCopyWithImpl<AppTimer>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppTimer&&(identical(other.id, id) || other.id == id)&&(identical(other.label, label) || other.label == label)&&(identical(other.durationMs, durationMs) || other.durationMs == durationMs)&&(identical(other.remainingMs, remainingMs) || other.remainingMs == remainingMs)&&(identical(other.status, status) || other.status == status)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.pausedAt, pausedAt) || other.pausedAt == pausedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppTimer&&(identical(other.id, id) || other.id == id)&&(identical(other.durationMs, durationMs) || other.durationMs == durationMs)&&(identical(other.remainingMs, remainingMs) || other.remainingMs == remainingMs)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.label, label) || other.label == label)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.pausedAt, pausedAt) || other.pausedAt == pausedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,label,durationMs,remainingMs,status,startedAt,pausedAt,createdAt);
+int get hashCode => Object.hash(runtimeType,id,durationMs,remainingMs,status,createdAt,label,startedAt,pausedAt);
 
 @override
 String toString() {
-  return 'AppTimer(id: $id, label: $label, durationMs: $durationMs, remainingMs: $remainingMs, status: $status, startedAt: $startedAt, pausedAt: $pausedAt, createdAt: $createdAt)';
+  return 'AppTimer(id: $id, durationMs: $durationMs, remainingMs: $remainingMs, status: $status, createdAt: $createdAt, label: $label, startedAt: $startedAt, pausedAt: $pausedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AppTimerCopyWith<$Res>  {
   factory $AppTimerCopyWith(AppTimer value, $Res Function(AppTimer) _then) = _$AppTimerCopyWithImpl;
 @useResult
 $Res call({
- String id, String label, int durationMs, int remainingMs, TimerStatus status, DateTime? startedAt, DateTime? pausedAt, DateTime createdAt
+ String id, int durationMs, int remainingMs, TimerStatus status, DateTime createdAt, String label, DateTime? startedAt, DateTime? pausedAt
 });
 
 
@@ -65,17 +65,17 @@ class _$AppTimerCopyWithImpl<$Res>
 
 /// Create a copy of AppTimer
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? label = null,Object? durationMs = null,Object? remainingMs = null,Object? status = null,Object? startedAt = freezed,Object? pausedAt = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? durationMs = null,Object? remainingMs = null,Object? status = null,Object? createdAt = null,Object? label = null,Object? startedAt = freezed,Object? pausedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,durationMs: null == durationMs ? _self.durationMs : durationMs // ignore: cast_nullable_to_non_nullable
 as int,remainingMs: null == remainingMs ? _self.remainingMs : remainingMs // ignore: cast_nullable_to_non_nullable
 as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as TimerStatus,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as TimerStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,pausedAt: freezed == pausedAt ? _self.pausedAt : pausedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime?,
   ));
 }
 
@@ -160,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String label,  int durationMs,  int remainingMs,  TimerStatus status,  DateTime? startedAt,  DateTime? pausedAt,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int durationMs,  int remainingMs,  TimerStatus status,  DateTime createdAt,  String label,  DateTime? startedAt,  DateTime? pausedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppTimer() when $default != null:
-return $default(_that.id,_that.label,_that.durationMs,_that.remainingMs,_that.status,_that.startedAt,_that.pausedAt,_that.createdAt);case _:
+return $default(_that.id,_that.durationMs,_that.remainingMs,_that.status,_that.createdAt,_that.label,_that.startedAt,_that.pausedAt);case _:
   return orElse();
 
 }
@@ -181,10 +181,10 @@ return $default(_that.id,_that.label,_that.durationMs,_that.remainingMs,_that.st
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String label,  int durationMs,  int remainingMs,  TimerStatus status,  DateTime? startedAt,  DateTime? pausedAt,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int durationMs,  int remainingMs,  TimerStatus status,  DateTime createdAt,  String label,  DateTime? startedAt,  DateTime? pausedAt)  $default,) {final _that = this;
 switch (_that) {
 case _AppTimer():
-return $default(_that.id,_that.label,_that.durationMs,_that.remainingMs,_that.status,_that.startedAt,_that.pausedAt,_that.createdAt);case _:
+return $default(_that.id,_that.durationMs,_that.remainingMs,_that.status,_that.createdAt,_that.label,_that.startedAt,_that.pausedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +201,10 @@ return $default(_that.id,_that.label,_that.durationMs,_that.remainingMs,_that.st
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String label,  int durationMs,  int remainingMs,  TimerStatus status,  DateTime? startedAt,  DateTime? pausedAt,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int durationMs,  int remainingMs,  TimerStatus status,  DateTime createdAt,  String label,  DateTime? startedAt,  DateTime? pausedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _AppTimer() when $default != null:
-return $default(_that.id,_that.label,_that.durationMs,_that.remainingMs,_that.status,_that.startedAt,_that.pausedAt,_that.createdAt);case _:
+return $default(_that.id,_that.durationMs,_that.remainingMs,_that.status,_that.createdAt,_that.label,_that.startedAt,_that.pausedAt);case _:
   return null;
 
 }
@@ -216,17 +216,17 @@ return $default(_that.id,_that.label,_that.durationMs,_that.remainingMs,_that.st
 @JsonSerializable()
 
 class _AppTimer extends AppTimer {
-  const _AppTimer({required this.id, this.label = '', required this.durationMs, required this.remainingMs, required this.status, this.startedAt, this.pausedAt, required this.createdAt}): super._();
+  const _AppTimer({required this.id, required this.durationMs, required this.remainingMs, required this.status, required this.createdAt, this.label = '', this.startedAt, this.pausedAt}): super._();
   factory _AppTimer.fromJson(Map<String, dynamic> json) => _$AppTimerFromJson(json);
 
 @override final  String id;
-@override@JsonKey() final  String label;
 @override final  int durationMs;
 @override final  int remainingMs;
 @override final  TimerStatus status;
+@override final  DateTime createdAt;
+@override@JsonKey() final  String label;
 @override final  DateTime? startedAt;
 @override final  DateTime? pausedAt;
-@override final  DateTime createdAt;
 
 /// Create a copy of AppTimer
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppTimer&&(identical(other.id, id) || other.id == id)&&(identical(other.label, label) || other.label == label)&&(identical(other.durationMs, durationMs) || other.durationMs == durationMs)&&(identical(other.remainingMs, remainingMs) || other.remainingMs == remainingMs)&&(identical(other.status, status) || other.status == status)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.pausedAt, pausedAt) || other.pausedAt == pausedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppTimer&&(identical(other.id, id) || other.id == id)&&(identical(other.durationMs, durationMs) || other.durationMs == durationMs)&&(identical(other.remainingMs, remainingMs) || other.remainingMs == remainingMs)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.label, label) || other.label == label)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.pausedAt, pausedAt) || other.pausedAt == pausedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,label,durationMs,remainingMs,status,startedAt,pausedAt,createdAt);
+int get hashCode => Object.hash(runtimeType,id,durationMs,remainingMs,status,createdAt,label,startedAt,pausedAt);
 
 @override
 String toString() {
-  return 'AppTimer(id: $id, label: $label, durationMs: $durationMs, remainingMs: $remainingMs, status: $status, startedAt: $startedAt, pausedAt: $pausedAt, createdAt: $createdAt)';
+  return 'AppTimer(id: $id, durationMs: $durationMs, remainingMs: $remainingMs, status: $status, createdAt: $createdAt, label: $label, startedAt: $startedAt, pausedAt: $pausedAt)';
 }
 
 
@@ -261,7 +261,7 @@ abstract mixin class _$AppTimerCopyWith<$Res> implements $AppTimerCopyWith<$Res>
   factory _$AppTimerCopyWith(_AppTimer value, $Res Function(_AppTimer) _then) = __$AppTimerCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String label, int durationMs, int remainingMs, TimerStatus status, DateTime? startedAt, DateTime? pausedAt, DateTime createdAt
+ String id, int durationMs, int remainingMs, TimerStatus status, DateTime createdAt, String label, DateTime? startedAt, DateTime? pausedAt
 });
 
 
@@ -278,17 +278,17 @@ class __$AppTimerCopyWithImpl<$Res>
 
 /// Create a copy of AppTimer
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? label = null,Object? durationMs = null,Object? remainingMs = null,Object? status = null,Object? startedAt = freezed,Object? pausedAt = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? durationMs = null,Object? remainingMs = null,Object? status = null,Object? createdAt = null,Object? label = null,Object? startedAt = freezed,Object? pausedAt = freezed,}) {
   return _then(_AppTimer(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,durationMs: null == durationMs ? _self.durationMs : durationMs // ignore: cast_nullable_to_non_nullable
 as int,remainingMs: null == remainingMs ? _self.remainingMs : remainingMs // ignore: cast_nullable_to_non_nullable
 as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as TimerStatus,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as TimerStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,pausedAt: freezed == pausedAt ? _self.pausedAt : pausedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime?,
   ));
 }
 

@@ -26,7 +26,7 @@ final class AlarmsProvider
         argument: null,
         retry: null,
         name: r'alarmsProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -46,7 +46,7 @@ final class AlarmsProvider
   }
 }
 
-String _$alarmsHash() => r'e94f2a836edb412f995d88d3312f952111ed845d';
+String _$alarmsHash() => r'33cb5c9aec9225dbed65af616c4e22df4b7221cf';
 
 @ProviderFor(enabledAlarms)
 final enabledAlarmsProvider = EnabledAlarmsProvider._();
@@ -65,7 +65,7 @@ final class EnabledAlarmsProvider
         argument: null,
         retry: null,
         name: r'enabledAlarmsProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -85,4 +85,4 @@ final class EnabledAlarmsProvider
   }
 }
 
-String _$enabledAlarmsHash() => r'6a14e262bfe859b6bc386f2e374c3b0917323021';
+String _$enabledAlarmsHash() => r'2b40667c006cbb5aef02a305867916951f9a5ef7';

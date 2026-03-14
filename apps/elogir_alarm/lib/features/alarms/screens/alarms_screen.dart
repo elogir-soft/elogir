@@ -22,6 +22,7 @@ class AlarmsScreen extends ConsumerWidget {
       body: Stack(
         children: [
           alarmsAsync.when(
+            skipLoadingOnReload: true,
             loading: () => const Center(child: ElogirSpinner()),
             error: (error, _) => Center(
               child: ElogirText(

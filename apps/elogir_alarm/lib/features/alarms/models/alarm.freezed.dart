@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Alarm {
 
- String get id; int get hour; int get minute; String get label; bool get isEnabled; List<int> get repeatDays; String get soundId; int get snoozeDurationMinutes; DateTime get createdAt; DateTime get updatedAt;
+ String get id; int get hour; int get minute; DateTime get createdAt; DateTime get updatedAt; String get label; bool get isEnabled; List<int> get repeatDays; String get soundId; int get snoozeDurationMinutes;
 /// Create a copy of Alarm
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AlarmCopyWith<Alarm> get copyWith => _$AlarmCopyWithImpl<Alarm>(this as Alarm, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Alarm&&(identical(other.id, id) || other.id == id)&&(identical(other.hour, hour) || other.hour == hour)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.label, label) || other.label == label)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other.repeatDays, repeatDays)&&(identical(other.soundId, soundId) || other.soundId == soundId)&&(identical(other.snoozeDurationMinutes, snoozeDurationMinutes) || other.snoozeDurationMinutes == snoozeDurationMinutes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Alarm&&(identical(other.id, id) || other.id == id)&&(identical(other.hour, hour) || other.hour == hour)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.label, label) || other.label == label)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other.repeatDays, repeatDays)&&(identical(other.soundId, soundId) || other.soundId == soundId)&&(identical(other.snoozeDurationMinutes, snoozeDurationMinutes) || other.snoozeDurationMinutes == snoozeDurationMinutes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,hour,minute,label,isEnabled,const DeepCollectionEquality().hash(repeatDays),soundId,snoozeDurationMinutes,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,hour,minute,createdAt,updatedAt,label,isEnabled,const DeepCollectionEquality().hash(repeatDays),soundId,snoozeDurationMinutes);
 
 @override
 String toString() {
-  return 'Alarm(id: $id, hour: $hour, minute: $minute, label: $label, isEnabled: $isEnabled, repeatDays: $repeatDays, soundId: $soundId, snoozeDurationMinutes: $snoozeDurationMinutes, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Alarm(id: $id, hour: $hour, minute: $minute, createdAt: $createdAt, updatedAt: $updatedAt, label: $label, isEnabled: $isEnabled, repeatDays: $repeatDays, soundId: $soundId, snoozeDurationMinutes: $snoozeDurationMinutes)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AlarmCopyWith<$Res>  {
   factory $AlarmCopyWith(Alarm value, $Res Function(Alarm) _then) = _$AlarmCopyWithImpl;
 @useResult
 $Res call({
- String id, int hour, int minute, String label, bool isEnabled, List<int> repeatDays, String soundId, int snoozeDurationMinutes, DateTime createdAt, DateTime updatedAt
+ String id, int hour, int minute, DateTime createdAt, DateTime updatedAt, String label, bool isEnabled, List<int> repeatDays, String soundId, int snoozeDurationMinutes
 });
 
 
@@ -65,19 +65,19 @@ class _$AlarmCopyWithImpl<$Res>
 
 /// Create a copy of Alarm
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? hour = null,Object? minute = null,Object? label = null,Object? isEnabled = null,Object? repeatDays = null,Object? soundId = null,Object? snoozeDurationMinutes = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? hour = null,Object? minute = null,Object? createdAt = null,Object? updatedAt = null,Object? label = null,Object? isEnabled = null,Object? repeatDays = null,Object? soundId = null,Object? snoozeDurationMinutes = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,hour: null == hour ? _self.hour : hour // ignore: cast_nullable_to_non_nullable
 as int,minute: null == minute ? _self.minute : minute // ignore: cast_nullable_to_non_nullable
-as int,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,repeatDays: null == repeatDays ? _self.repeatDays : repeatDays // ignore: cast_nullable_to_non_nullable
 as List<int>,soundId: null == soundId ? _self.soundId : soundId // ignore: cast_nullable_to_non_nullable
 as String,snoozeDurationMinutes: null == snoozeDurationMinutes ? _self.snoozeDurationMinutes : snoozeDurationMinutes // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as int,
   ));
 }
 
@@ -162,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int hour,  int minute,  String label,  bool isEnabled,  List<int> repeatDays,  String soundId,  int snoozeDurationMinutes,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int hour,  int minute,  DateTime createdAt,  DateTime updatedAt,  String label,  bool isEnabled,  List<int> repeatDays,  String soundId,  int snoozeDurationMinutes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Alarm() when $default != null:
-return $default(_that.id,_that.hour,_that.minute,_that.label,_that.isEnabled,_that.repeatDays,_that.soundId,_that.snoozeDurationMinutes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.hour,_that.minute,_that.createdAt,_that.updatedAt,_that.label,_that.isEnabled,_that.repeatDays,_that.soundId,_that.snoozeDurationMinutes);case _:
   return orElse();
 
 }
@@ -183,10 +183,10 @@ return $default(_that.id,_that.hour,_that.minute,_that.label,_that.isEnabled,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int hour,  int minute,  String label,  bool isEnabled,  List<int> repeatDays,  String soundId,  int snoozeDurationMinutes,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int hour,  int minute,  DateTime createdAt,  DateTime updatedAt,  String label,  bool isEnabled,  List<int> repeatDays,  String soundId,  int snoozeDurationMinutes)  $default,) {final _that = this;
 switch (_that) {
 case _Alarm():
-return $default(_that.id,_that.hour,_that.minute,_that.label,_that.isEnabled,_that.repeatDays,_that.soundId,_that.snoozeDurationMinutes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.hour,_that.minute,_that.createdAt,_that.updatedAt,_that.label,_that.isEnabled,_that.repeatDays,_that.soundId,_that.snoozeDurationMinutes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +203,10 @@ return $default(_that.id,_that.hour,_that.minute,_that.label,_that.isEnabled,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int hour,  int minute,  String label,  bool isEnabled,  List<int> repeatDays,  String soundId,  int snoozeDurationMinutes,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int hour,  int minute,  DateTime createdAt,  DateTime updatedAt,  String label,  bool isEnabled,  List<int> repeatDays,  String soundId,  int snoozeDurationMinutes)?  $default,) {final _that = this;
 switch (_that) {
 case _Alarm() when $default != null:
-return $default(_that.id,_that.hour,_that.minute,_that.label,_that.isEnabled,_that.repeatDays,_that.soundId,_that.snoozeDurationMinutes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.hour,_that.minute,_that.createdAt,_that.updatedAt,_that.label,_that.isEnabled,_that.repeatDays,_that.soundId,_that.snoozeDurationMinutes);case _:
   return null;
 
 }
@@ -218,12 +218,14 @@ return $default(_that.id,_that.hour,_that.minute,_that.label,_that.isEnabled,_th
 @JsonSerializable()
 
 class _Alarm extends Alarm {
-  const _Alarm({required this.id, required this.hour, required this.minute, this.label = '', this.isEnabled = true, final  List<int> repeatDays = const [], this.soundId = 'alarm', this.snoozeDurationMinutes = 5, required this.createdAt, required this.updatedAt}): _repeatDays = repeatDays,super._();
+  const _Alarm({required this.id, required this.hour, required this.minute, required this.createdAt, required this.updatedAt, this.label = '', this.isEnabled = true, final  List<int> repeatDays = const [], this.soundId = 'alarm', this.snoozeDurationMinutes = 5}): _repeatDays = repeatDays,super._();
   factory _Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);
 
 @override final  String id;
 @override final  int hour;
 @override final  int minute;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
 @override@JsonKey() final  String label;
 @override@JsonKey() final  bool isEnabled;
  final  List<int> _repeatDays;
@@ -235,8 +237,6 @@ class _Alarm extends Alarm {
 
 @override@JsonKey() final  String soundId;
 @override@JsonKey() final  int snoozeDurationMinutes;
-@override final  DateTime createdAt;
-@override final  DateTime updatedAt;
 
 /// Create a copy of Alarm
 /// with the given fields replaced by the non-null parameter values.
@@ -251,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Alarm&&(identical(other.id, id) || other.id == id)&&(identical(other.hour, hour) || other.hour == hour)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.label, label) || other.label == label)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other._repeatDays, _repeatDays)&&(identical(other.soundId, soundId) || other.soundId == soundId)&&(identical(other.snoozeDurationMinutes, snoozeDurationMinutes) || other.snoozeDurationMinutes == snoozeDurationMinutes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Alarm&&(identical(other.id, id) || other.id == id)&&(identical(other.hour, hour) || other.hour == hour)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.label, label) || other.label == label)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other._repeatDays, _repeatDays)&&(identical(other.soundId, soundId) || other.soundId == soundId)&&(identical(other.snoozeDurationMinutes, snoozeDurationMinutes) || other.snoozeDurationMinutes == snoozeDurationMinutes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,hour,minute,label,isEnabled,const DeepCollectionEquality().hash(_repeatDays),soundId,snoozeDurationMinutes,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,hour,minute,createdAt,updatedAt,label,isEnabled,const DeepCollectionEquality().hash(_repeatDays),soundId,snoozeDurationMinutes);
 
 @override
 String toString() {
-  return 'Alarm(id: $id, hour: $hour, minute: $minute, label: $label, isEnabled: $isEnabled, repeatDays: $repeatDays, soundId: $soundId, snoozeDurationMinutes: $snoozeDurationMinutes, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Alarm(id: $id, hour: $hour, minute: $minute, createdAt: $createdAt, updatedAt: $updatedAt, label: $label, isEnabled: $isEnabled, repeatDays: $repeatDays, soundId: $soundId, snoozeDurationMinutes: $snoozeDurationMinutes)';
 }
 
 
@@ -271,7 +271,7 @@ abstract mixin class _$AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
   factory _$AlarmCopyWith(_Alarm value, $Res Function(_Alarm) _then) = __$AlarmCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int hour, int minute, String label, bool isEnabled, List<int> repeatDays, String soundId, int snoozeDurationMinutes, DateTime createdAt, DateTime updatedAt
+ String id, int hour, int minute, DateTime createdAt, DateTime updatedAt, String label, bool isEnabled, List<int> repeatDays, String soundId, int snoozeDurationMinutes
 });
 
 
@@ -288,19 +288,19 @@ class __$AlarmCopyWithImpl<$Res>
 
 /// Create a copy of Alarm
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? hour = null,Object? minute = null,Object? label = null,Object? isEnabled = null,Object? repeatDays = null,Object? soundId = null,Object? snoozeDurationMinutes = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? hour = null,Object? minute = null,Object? createdAt = null,Object? updatedAt = null,Object? label = null,Object? isEnabled = null,Object? repeatDays = null,Object? soundId = null,Object? snoozeDurationMinutes = null,}) {
   return _then(_Alarm(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,hour: null == hour ? _self.hour : hour // ignore: cast_nullable_to_non_nullable
 as int,minute: null == minute ? _self.minute : minute // ignore: cast_nullable_to_non_nullable
-as int,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,repeatDays: null == repeatDays ? _self._repeatDays : repeatDays // ignore: cast_nullable_to_non_nullable
 as List<int>,soundId: null == soundId ? _self.soundId : soundId // ignore: cast_nullable_to_non_nullable
 as String,snoozeDurationMinutes: null == snoozeDurationMinutes ? _self.snoozeDurationMinutes : snoozeDurationMinutes // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as int,
   ));
 }
 

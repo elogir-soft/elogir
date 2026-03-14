@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'alarm_repository_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 AlarmRepository alarmRepository(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return AlarmRepository(db.alarmDao);

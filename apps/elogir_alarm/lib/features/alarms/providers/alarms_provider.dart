@@ -4,12 +4,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'alarms_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<List<Alarm>> alarms(Ref ref) {
   return ref.watch(alarmRepositoryProvider).watchAll();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<List<Alarm>> enabledAlarms(Ref ref) {
   return ref.watch(alarmsProvider.future).asStream().asyncExpand(
         (_) => ref.watch(alarmRepositoryProvider).watchAll().map(

@@ -22,7 +22,7 @@ final class TimerRepositoryProvider
         argument: null,
         retry: null,
         name: r'timerRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -49,4 +49,4 @@ final class TimerRepositoryProvider
   }
 }
 
-String _$timerRepositoryHash() => r'2fe91c4ea5ea489787c46f4712ee5f0185552a1d';
+String _$timerRepositoryHash() => r'00486e4b5f71ae758a8a75db42bbdd09fb8ab1b0';

@@ -8,28 +8,28 @@ part of 'app_timer.dart';
 
 _AppTimer _$AppTimerFromJson(Map<String, dynamic> json) => _AppTimer(
   id: json['id'] as String,
-  label: json['label'] as String? ?? '',
   durationMs: (json['durationMs'] as num).toInt(),
   remainingMs: (json['remainingMs'] as num).toInt(),
   status: $enumDecode(_$TimerStatusEnumMap, json['status']),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  label: json['label'] as String? ?? '',
   startedAt: json['startedAt'] == null
       ? null
       : DateTime.parse(json['startedAt'] as String),
   pausedAt: json['pausedAt'] == null
       ? null
       : DateTime.parse(json['pausedAt'] as String),
-  createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
 Map<String, dynamic> _$AppTimerToJson(_AppTimer instance) => <String, dynamic>{
   'id': instance.id,
-  'label': instance.label,
   'durationMs': instance.durationMs,
   'remainingMs': instance.remainingMs,
   'status': _$TimerStatusEnumMap[instance.status]!,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'label': instance.label,
   'startedAt': instance.startedAt?.toIso8601String(),
   'pausedAt': instance.pausedAt?.toIso8601String(),
-  'createdAt': instance.createdAt.toIso8601String(),
 };
 
 const _$TimerStatusEnumMap = {

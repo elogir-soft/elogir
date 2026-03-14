@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'timer_repository_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 TimerRepository timerRepository(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return TimerRepository(db.timerDao);

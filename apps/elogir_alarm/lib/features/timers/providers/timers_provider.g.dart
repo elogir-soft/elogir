@@ -30,7 +30,7 @@ final class PersistedTimersProvider
         argument: null,
         retry: null,
         name: r'persistedTimersProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -50,4 +50,4 @@ final class PersistedTimersProvider
   }
 }
 
-String _$persistedTimersHash() => r'05da208115cd5299d3a3ab93321e929688d921a3';
+String _$persistedTimersHash() => r'09fdf6b82341abfb07cbbc01d355ff95d075c6f7';

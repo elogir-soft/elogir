@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'timers_provider.g.dart';
 
 /// Watches all persisted timers from Drift.
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<List<AppTimer>> persistedTimers(Ref ref) {
   return ref.watch(timerRepositoryProvider).watchAll();
 }
