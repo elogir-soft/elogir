@@ -1,9 +1,9 @@
-import 'package:elogir_alarm/shared/widgets/wheel_picker.dart';
+import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 
 /// Three-drum duration picker for hours, minutes, and seconds.
 ///
-/// Delegates to the shared [WheelPicker] / [WheelDrum] widgets.
+/// Delegates to the shared [ElogirWheelPicker] / [ElogirWheelDrum] widgets.
 class DurationInput extends StatefulWidget {
   const DurationInput({
     required this.onDurationChanged,
@@ -39,10 +39,10 @@ class _DurationInputState extends State<DurationInput> {
 
   @override
   Widget build(BuildContext context) {
-    return WheelPicker(
+    return ElogirWheelPicker(
       height: 180,
       drums: [
-        WheelDrum(
+        ElogirWheelDrum(
           itemCount: 24,
           initialValue: _hours,
           label: 'h',
@@ -51,7 +51,7 @@ class _DurationInputState extends State<DurationInput> {
             _notifyChanged();
           },
         ),
-        WheelDrum(
+        ElogirWheelDrum(
           itemCount: 60,
           initialValue: _minutes,
           label: 'm',
@@ -60,7 +60,7 @@ class _DurationInputState extends State<DurationInput> {
             _notifyChanged();
           },
         ),
-        WheelDrum(
+        ElogirWheelDrum(
           itemCount: 60,
           initialValue: _seconds,
           label: 's',

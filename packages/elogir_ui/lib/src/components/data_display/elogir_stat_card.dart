@@ -167,8 +167,8 @@ class _ElogirStatCardState extends State<ElogirStatCard>
         color: colors.surface,
         borderRadius: theme.radii.md,
         border: Border.all(
-          color: colors.outline,
-          width: theme.strokes.thick,
+          color: colors.outlineVariant,
+          width: theme.strokes.medium,
         ),
       ),
       child: Column(
@@ -181,8 +181,9 @@ class _ElogirStatCardState extends State<ElogirStatCard>
               Expanded(
                 child: Text(
                   widget.label,
-                  style: theme.typography.labelMedium.copyWith(
+                  style: theme.typography.labelLarge.copyWith(
                     color: colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
@@ -196,7 +197,7 @@ class _ElogirStatCardState extends State<ElogirStatCard>
                 ),
             ],
           ),
-          SizedBox(height: theme.spacing.sm),
+          SizedBox(height: theme.spacing.xs),
           // Value
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,

@@ -1,21 +1,22 @@
 import 'dart:ui';
 
-import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../theme/theme.dart';
 
 /// A single scrollable drum displaying zero-padded numbers.
 ///
 /// Used by both the alarm time picker and the timer duration picker.
 /// Each drum shows [itemCount] items (0 to itemCount-1) and notifies
 /// [onChanged] when the selected item changes.
-class WheelDrum extends StatefulWidget {
-  const WheelDrum({
+class ElogirWheelDrum extends StatefulWidget {
+  const ElogirWheelDrum({
+    super.key,
     required this.itemCount,
     required this.onChanged,
     this.initialValue = 0,
     this.label,
     this.itemExtent = 44,
-    super.key,
   });
 
   /// Number of items in the wheel (e.g. 24 for hours, 60 for minutes).
@@ -34,10 +35,10 @@ class WheelDrum extends StatefulWidget {
   final double itemExtent;
 
   @override
-  State<WheelDrum> createState() => WheelDrumState();
+  State<ElogirWheelDrum> createState() => ElogirWheelDrumState();
 }
 
-class WheelDrumState extends State<WheelDrum> {
+class ElogirWheelDrumState extends State<ElogirWheelDrum> {
   late FixedExtentScrollController _controller;
 
   @override
@@ -132,14 +133,14 @@ class WheelDrumState extends State<WheelDrum> {
 
 /// A multi-drum wheel picker for selecting time or duration values.
 ///
-/// Wraps one or more [WheelDrum]s in a themed container with optional
+/// Wraps one or more [ElogirWheelDrum]s in a themed container with optional
 /// separator text between drums.
-class WheelPicker extends StatelessWidget {
-  const WheelPicker({
+class ElogirWheelPicker extends StatelessWidget {
+  const ElogirWheelPicker({
+    super.key,
     required this.drums,
     this.separators = const [],
     this.height = 200,
-    super.key,
   });
 
   /// The drums to display side by side.

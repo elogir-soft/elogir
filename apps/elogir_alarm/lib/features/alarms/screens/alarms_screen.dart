@@ -122,19 +122,18 @@ class _AddAlarmButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
-
-    return ElogirButton(
+    return ElogirIconButton(
       onPressed: onPressed,
-      variant: ElogirButtonVariant.tonal,
-      style: ElogirButtonStyle(
-        height: 56,
-        padding: EdgeInsets.zero,
-        borderRadius: theme.radii.lg,
-        textStyle: theme.typography.headlineMedium.copyWith(
-          fontWeight: FontWeight.w600,
+      variant: ElogirIconButtonVariant.tonal,
+      size: ElogirIconButtonSize.lg,
+      borderRadius: theme.radii.lg,
+      icon: const Text(
+        '+',
+        style: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.w400,
         ),
       ),
-      child: const SizedBox(width: 56, child: Center(child: Text('+'))),
     );
   }
 }

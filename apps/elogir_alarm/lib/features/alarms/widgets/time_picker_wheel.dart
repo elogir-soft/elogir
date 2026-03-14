@@ -1,4 +1,3 @@
-import 'package:elogir_alarm/shared/widgets/wheel_picker.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,22 +21,22 @@ class TimePickerWheel extends StatefulWidget {
 }
 
 class _TimePickerWheelState extends State<TimePickerWheel> {
-  final _hourKey = GlobalKey<WheelDrumState>();
-  final _minuteKey = GlobalKey<WheelDrumState>();
+  final _hourKey = GlobalKey<ElogirWheelDrumState>();
+  final _minuteKey = GlobalKey<ElogirWheelDrumState>();
 
   @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
 
-    return WheelPicker(
+    return ElogirWheelPicker(
       drums: [
-        WheelDrum(
+        ElogirWheelDrum(
           key: _hourKey,
           itemCount: 24,
           initialValue: widget.hour,
           onChanged: (h) => widget.onTimeChanged(h, widget.minute),
         ),
-        WheelDrum(
+        ElogirWheelDrum(
           key: _minuteKey,
           itemCount: 60,
           initialValue: widget.minute,

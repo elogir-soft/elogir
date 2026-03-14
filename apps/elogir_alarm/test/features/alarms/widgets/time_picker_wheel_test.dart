@@ -1,5 +1,5 @@
 import 'package:elogir_alarm/features/alarms/widgets/time_picker_wheel.dart';
-import 'package:elogir_alarm/shared/widgets/wheel_picker.dart';
+import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/pump_app.dart';
@@ -29,8 +29,8 @@ void main() {
       );
 
       expect(find.byType(TimePickerWheel), findsOneWidget);
-      // Uses the shared WheelPicker underneath.
-      expect(find.byType(WheelPicker), findsOneWidget);
+      // Uses the shared ElogirWheelPicker underneath.
+      expect(find.byType(ElogirWheelPicker), findsOneWidget);
     });
   });
 }
