@@ -7,8 +7,9 @@ environment:
   sdk: ^3.11.1
 
 workspace:
-  - packages/**
-  - apps/**
+  - packages/*
+  - packages/*/example
+  - apps/*
 
 dev_dependencies:
   melos: ^7.0.0
