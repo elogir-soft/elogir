@@ -30,9 +30,11 @@ export 'src/components/buttons/elogir_button.dart';
 export 'src/components/text/elogir_text.dart';
 
 // Components — forms
+export 'src/components/forms/elogir_calendar.dart';
 export 'src/components/forms/elogir_checkbox.dart';
 export 'src/components/forms/elogir_date_picker.dart';
 export 'src/components/forms/elogir_dropdown.dart';
+export 'src/components/forms/elogir_multi_dropdown.dart';
 export 'src/components/forms/elogir_radio_group.dart';
 export 'src/components/forms/elogir_search_field.dart';
 export 'src/components/forms/elogir_slider.dart';

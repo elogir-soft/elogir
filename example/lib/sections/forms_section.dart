@@ -14,6 +14,7 @@ class _FormsSectionState extends State<FormsSection> {
   String? _selectedFruit;
   double _sliderValue = 0.4;
   String? _selectedDropdown;
+  Set<String> _selectedMulti = {};
   DateTime? _selectedDate;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
@@ -155,6 +156,24 @@ class _FormsSectionState extends State<FormsSection> {
           value: _selectedDropdown,
           placeholder: 'Select a framework…',
           onChanged: (v) => setState(() => _selectedDropdown = v),
+          width: 260,
+        ),
+
+        SizedBox(height: theme.spacing.xl),
+        ElogirDivider(label: ElogirText('Multi Dropdown')),
+        SizedBox(height: theme.spacing.md),
+        ElogirMultiDropdown<String>(
+          options: const [
+            ElogirMultiDropdownOption(value: 'dart', label: 'Dart'),
+            ElogirMultiDropdownOption(value: 'kotlin', label: 'Kotlin'),
+            ElogirMultiDropdownOption(value: 'swift', label: 'Swift'),
+            ElogirMultiDropdownOption(value: 'rust', label: 'Rust'),
+            ElogirMultiDropdownOption(value: 'go', label: 'Go'),
+            ElogirMultiDropdownOption(value: 'ts', label: 'TypeScript'),
+          ],
+          values: _selectedMulti,
+          placeholder: 'Select languages…',
+          onChanged: (v) => setState(() => _selectedMulti = v),
           width: 260,
         ),
       ],
