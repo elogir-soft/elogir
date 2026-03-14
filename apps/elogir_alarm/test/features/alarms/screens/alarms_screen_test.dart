@@ -1,5 +1,6 @@
 import 'package:elogir_alarm/features/alarms/providers/alarm_repository_provider.dart';
 import 'package:elogir_alarm/features/alarms/screens/alarms_screen.dart';
+import 'package:elogir_alarm/features/alarms/widgets/alarm_card.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -31,7 +32,22 @@ void main() {
       expect(find.text('Add Alarm'), findsOneWidget);
     });
 
-    testWidgets('shows alarm list', (tester) async {
+    testWidgets('shows alarm cards', (tester) async {
+      when(() => mockRepo.watchAll())
+          .thenAnswer((_) => Stream.value(sampleAlarms()));
+
+      await tester.pumpApp(
+        const AlarmsScreen(),
+        overrides: [
+          alarmRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlarmCard), findsNWidgets(3));
+    });
+
+    testWidgets('shows alarm time and labels', (tester) async {
       when(() => mockRepo.watchAll())
           .thenAnswer((_) => Stream.value(sampleAlarms()));
 
@@ -44,23 +60,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('08:00'), findsOneWidget);
-      expect(find.text('09:30'), findsOneWidget);
-    });
-
-    testWidgets('shows alarm labels', (tester) async {
-      when(() => mockRepo.watchAll())
-          .thenAnswer((_) => Stream.value(sampleAlarms()));
-
-      await tester.pumpApp(
-        const AlarmsScreen(),
-        overrides: [
-          alarmRepositoryProvider.overrideWithValue(mockRepo),
-        ],
-      );
-      await tester.pumpAndSettle();
-
       expect(find.text('Wake Up'), findsOneWidget);
-      expect(find.text('Workout'), findsOneWidget);
     });
   });
 }

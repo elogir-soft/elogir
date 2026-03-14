@@ -8,6 +8,23 @@ elogir is a monorepo for an offline-first Flutter app ecosystem. It uses Melos 7
 
 All apps use the `elogir_ui` design system ("Soft Industrial" — thick borders, warm neutrals, no Material/Cupertino). Apps set `uses-material-design: false` and import only `package:flutter/widgets.dart`.
 
+## Commit Messages
+
+All lowercase. Format: `<scope>: <type> <description>`
+
+- **scope**: app or package name (e.g. `elogir_alarm`, `elogir_ui`, `root`)
+- **type**: `add`, `fix`, `update`, `remove`, `refactor`, `test`, `docs`, `chore`
+- **description**: short summary of what changed
+
+Examples:
+```
+elogir_alarm: add alarms, timers, and stopwatch
+elogir_ui: fix text field hint alignment for multiline fields
+elogir_ui: update animation system with public widgets and curves
+root: add claude.md with monorepo guide and tech stack
+root: fix workspace globs to avoid picking up .symlinks pubspecs
+```
+
 ## Commands
 
 ```bash

@@ -24,12 +24,16 @@ class ElogirDialog extends StatelessWidget {
   final EdgeInsets? padding;
 
   /// Shows this dialog as a modal overlay.
+  ///
+  /// Set [useRootNavigator] to true to display above all nested navigators
+  /// (e.g. above a bottom navigation bar).
   static Future<T?> show<T>({
     required BuildContext context,
     required WidgetBuilder builder,
     bool barrierDismissible = true,
+    bool useRootNavigator = true,
   }) {
-    return Navigator.of(context).push<T>(
+    return Navigator.of(context, rootNavigator: useRootNavigator).push<T>(
       PageRouteBuilder<T>(
         opaque: false,
         barrierDismissible: barrierDismissible,

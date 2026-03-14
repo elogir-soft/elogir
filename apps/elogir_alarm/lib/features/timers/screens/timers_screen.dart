@@ -29,27 +29,7 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
       body: ListView(
         padding: EdgeInsets.all(theme.spacing.md),
         children: [
-          // Quick presets
-          ElogirText(
-            'Quick Start',
-            variant: ElogirTextVariant.titleSmall,
-            style: TextStyle(color: theme.colors.onSurfaceVariant),
-          ),
-          SizedBox(height: theme.spacing.sm),
-          PresetGrid(
-            onPresetSelected: (ms) {
-              ref.read(activeTimersProvider.notifier).startNew(durationMs: ms);
-            },
-          ),
-          SizedBox(height: theme.spacing.lg),
-
-          // Custom duration
-          ElogirText(
-            'Custom',
-            variant: ElogirTextVariant.titleSmall,
-            style: TextStyle(color: theme.colors.onSurfaceVariant),
-          ),
-          SizedBox(height: theme.spacing.sm),
+          // Custom duration input
           DurationInput(
             onDurationChanged: (d) => _customDuration = d,
           ),
@@ -64,6 +44,20 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
             },
             expanded: true,
             child: const Text('Start'),
+          ),
+          SizedBox(height: theme.spacing.lg),
+
+          // Quick presets
+          ElogirText(
+            'Quick Start',
+            variant: ElogirTextVariant.titleSmall,
+            style: TextStyle(color: theme.colors.onSurfaceVariant),
+          ),
+          SizedBox(height: theme.spacing.sm),
+          PresetGrid(
+            onPresetSelected: (ms) {
+              ref.read(activeTimersProvider.notifier).startNew(durationMs: ms);
+            },
           ),
           SizedBox(height: theme.spacing.lg),
 
@@ -99,8 +93,6 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
                       ref.read(activeTimersProvider.notifier).pause(timer.id),
                   onResume: () =>
                       ref.read(activeTimersProvider.notifier).resume(timer.id),
-                  onCancel: () =>
-                      ref.read(activeTimersProvider.notifier).cancel(timer.id),
                   onRemove: () =>
                       ref.read(activeTimersProvider.notifier).remove(timer.id),
                 ),

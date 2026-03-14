@@ -11,17 +11,7 @@ List<RouteBase> get $appRoutes => [$appShellRoute];
 RouteBase get $appShellRoute => ShellRouteData.$route(
   factory: $AppShellRouteExtension._fromState,
   routes: [
-    GoRouteData.$route(
-      path: '/alarms',
-      factory: $AlarmsRoute._fromState,
-      routes: [
-        GoRouteData.$route(path: 'new', factory: $AlarmNewRoute._fromState),
-        GoRouteData.$route(
-          path: ':alarmId/edit',
-          factory: $AlarmEditRoute._fromState,
-        ),
-      ],
-    ),
+    GoRouteData.$route(path: '/alarms', factory: $AlarmsRoute._fromState),
     GoRouteData.$route(path: '/timers', factory: $TimersRoute._fromState),
     GoRouteData.$route(path: '/stopwatch', factory: $StopwatchRoute._fromState),
   ],
@@ -36,51 +26,6 @@ mixin $AlarmsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/alarms');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $AlarmNewRoute on GoRouteData {
-  static AlarmNewRoute _fromState(GoRouterState state) => const AlarmNewRoute();
-
-  @override
-  String get location => GoRouteData.$location('/alarms/new');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $AlarmEditRoute on GoRouteData {
-  static AlarmEditRoute _fromState(GoRouterState state) =>
-      AlarmEditRoute(alarmId: state.pathParameters['alarmId']!);
-
-  AlarmEditRoute get _self => this as AlarmEditRoute;
-
-  @override
-  String get location => GoRouteData.$location(
-    '/alarms/${Uri.encodeComponent(_self.alarmId)}/edit',
-  );
 
   @override
   void go(BuildContext context) => context.go(location);

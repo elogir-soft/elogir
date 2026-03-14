@@ -95,15 +95,32 @@ class _RepeatDayDots extends StatelessWidget {
       children: List.generate(7, (index) {
         final isActive = days.contains(index);
         return Padding(
-          padding: EdgeInsets.only(right: theme.spacing.xxs),
-          child: ElogirText(
-            Alarm.dayLetters[index],
-            variant: ElogirTextVariant.caption,
-            style: TextStyle(
+          padding: EdgeInsets.only(right: 3),
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
               color: isActive
                   ? theme.colors.primary
-                  : theme.colors.onSurfaceVariant.withValues(alpha: 0.4),
-              fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+                  : theme.colors.surfaceContainer,
+              border: isActive
+                  ? null
+                  : Border.all(
+                      color: theme.colors.outlineVariant,
+                      width: theme.strokes.thin,
+                    ),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              Alarm.dayLetters[index],
+              style: theme.typography.labelSmall.copyWith(
+                fontSize: 9,
+                color: isActive
+                    ? theme.colors.onPrimary
+                    : theme.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         );

@@ -30,6 +30,23 @@ class CountdownRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
+    final hasHours = remaining.inHours > 0;
+
+    // Pick font size based on ring size and whether hours are shown.
+    final TextStyle timeStyle;
+    if (size > 150) {
+      timeStyle = hasHours
+          ? theme.typography.headlineLarge
+          : theme.typography.displayMedium;
+    } else if (size > 100) {
+      timeStyle = hasHours
+          ? theme.typography.titleMedium
+          : theme.typography.titleLarge;
+    } else {
+      timeStyle = hasHours
+          ? theme.typography.labelMedium
+          : theme.typography.titleSmall;
+    }
 
     return SizedBox(
       width: size,
@@ -47,30 +64,36 @@ class CountdownRing extends StatelessWidget {
               strokeWidth: size * 0.04,
             ),
           ),
-          // Time text
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                remaining.formatted,
-                style: (size > 150
-                        ? theme.typography.displayMedium
-                        : theme.typography.titleLarge)
-                    .copyWith(
-                  color: theme.colors.onSurface,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
-              ),
-              if (label != null && label!.isNotEmpty) ...[
-                SizedBox(height: theme.spacing.xxs),
-                Text(
-                  label!,
-                  style: theme.typography.bodySmall.copyWith(
-                    color: theme.colors.onSurfaceVariant,
+          // Time text — constrained to ring interior.
+          Padding(
+            padding: EdgeInsets.all(size * 0.12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    remaining.formatted,
+                    style: timeStyle.copyWith(
+                      color: theme.colors.onSurface,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                    maxLines: 1,
                   ),
                 ),
+                if (label != null && label!.isNotEmpty) ...[
+                  SizedBox(height: theme.spacing.xxs),
+                  Text(
+                    label!,
+                    style: theme.typography.bodySmall.copyWith(
+                      color: theme.colors.onSurfaceVariant,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ],
       ),
@@ -105,7 +128,7 @@ class _CountdownRingPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, trackPaint);
 
-    // Fill arc (sweeps counter-clockwise from top)
+    // Fill arc (sweeps from top)
     if (progress > 0) {
       final fillPaint = Paint()
         ..color = fillColor

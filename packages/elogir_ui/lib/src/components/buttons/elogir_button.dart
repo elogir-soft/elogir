@@ -6,7 +6,7 @@ import '../interaction/elogir_pressable.dart';
 import 'button_style.dart';
 
 /// Button variants that define default styling.
-enum ElogirButtonVariant { filled, outlined, ghost }
+enum ElogirButtonVariant { filled, outlined, ghost, tonal }
 
 /// Button size presets.
 enum ElogirButtonSize { sm, md, lg }
@@ -135,6 +135,29 @@ class _ElogirButtonState extends State<ElogirButton> {
           bg = colors.primary.withValues(alpha: 0.06);
         } else {
           bg = const Color(0x00000000);
+        }
+
+      case ElogirButtonVariant.tonal:
+        if (!enabled) {
+          bg = colors.disabled;
+          fg = colors.onDisabled;
+        } else if (_pressed) {
+          bg = Color.lerp(
+            colors.primaryContainer,
+            colors.palette.black,
+            0.08,
+          )!;
+          fg = colors.onPrimaryContainer;
+        } else if (_hovered) {
+          bg = Color.lerp(
+            colors.primaryContainer,
+            colors.palette.white,
+            0.06,
+          )!;
+          fg = colors.onPrimaryContainer;
+        } else {
+          bg = colors.primaryContainer;
+          fg = colors.onPrimaryContainer;
         }
     }
 

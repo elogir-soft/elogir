@@ -6,6 +6,10 @@ import '../../theme/theme.dart';
 ///
 /// Wraps any child to make it tappable with a subtle iOS-like scale
 /// effect on press. All interactive elogir widgets use this internally.
+///
+/// Uses [Listener] for the visual press state so the scale feedback is
+/// immediate even when [onLongPress] is set (no gesture disambiguation
+/// delay).
 class ElogirPressable extends StatefulWidget {
   const ElogirPressable({
     super.key,
@@ -71,20 +75,19 @@ class _ElogirPressableState extends State<ElogirPressable>
     super.dispose();
   }
 
-  void _handleTapDown(TapDownDetails _) {
+  void _handlePointerDown(PointerDownEvent _) {
     if (!widget.enabled) return;
     _scaleController.forward();
     widget.onPressChanged?.call(true);
   }
 
-  void _handleTapUp(TapUpDetails _) {
+  void _handlePointerUp(PointerUpEvent _) {
     if (!widget.enabled) return;
     _scaleController.reverse();
     widget.onPressChanged?.call(false);
-    widget.onPressed?.call();
   }
 
-  void _handleTapCancel() {
+  void _handlePointerCancel(PointerCancelEvent _) {
     if (!widget.enabled) return;
     _scaleController.reverse();
     widget.onPressChanged?.call(false);
@@ -112,15 +115,18 @@ class _ElogirPressableState extends State<ElogirPressable>
             : SystemMouseCursors.basic,
         onShowHoverHighlight: (v) => widget.onHoverChanged?.call(v),
         onShowFocusHighlight: (v) => widget.onFocusChanged?.call(v),
-        child: GestureDetector(
-          behavior: widget.hitTestBehavior,
-          onTapDown: widget.enabled ? _handleTapDown : null,
-          onTapUp: widget.enabled ? _handleTapUp : null,
-          onTapCancel: widget.enabled ? _handleTapCancel : null,
-          onLongPress: widget.enabled ? widget.onLongPress : null,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: widget.child,
+        child: Listener(
+          onPointerDown: widget.enabled ? _handlePointerDown : null,
+          onPointerUp: widget.enabled ? _handlePointerUp : null,
+          onPointerCancel: widget.enabled ? _handlePointerCancel : null,
+          child: GestureDetector(
+            behavior: widget.hitTestBehavior,
+            onTap: widget.enabled ? widget.onPressed : null,
+            onLongPress: widget.enabled ? widget.onLongPress : null,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: widget.child,
+            ),
           ),
         ),
       ),

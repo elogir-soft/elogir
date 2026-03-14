@@ -8,16 +8,6 @@ void main() {
       expect(route, isA<AlarmsRoute>());
     });
 
-    test('AlarmNewRoute path resolves', () {
-      const route = AlarmNewRoute();
-      expect(route, isA<AlarmNewRoute>());
-    });
-
-    test('AlarmEditRoute holds alarmId', () {
-      const route = AlarmEditRoute(alarmId: 'abc-123');
-      expect(route.alarmId, 'abc-123');
-    });
-
     test('TimersRoute creates', () {
       const route = TimersRoute();
       expect(route, isA<TimersRoute>());
