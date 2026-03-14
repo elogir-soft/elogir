@@ -56,7 +56,8 @@ class ElogirGlass extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              color: (backgroundColor ?? colors.surface).withOpacity(opacity),
+              color: (backgroundColor ?? colors.surface)
+                  .withValues(alpha: opacity),
               borderRadius: effectiveRadius,
               border: effectiveBorder,
             ),

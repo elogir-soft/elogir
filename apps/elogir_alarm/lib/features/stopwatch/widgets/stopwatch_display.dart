@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 
@@ -39,15 +37,35 @@ class StopwatchDisplay extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text(
-          '${minutes.toString().padLeft(2, '0')}'
-          ':'
-          '${seconds.toString().padLeft(2, '0')}',
+        ElogirAnimatedCounter(
+          value: minutes,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.linear,
           style: mainStyle,
+          prefix: '',
+          suffix: ':',
+          fractionDigits: 0,
+          padding: 2,
         ),
-        Text(
-          '.${centiseconds.toString().padLeft(2, '0')}',
+        ElogirAnimatedCounter(
+          value: seconds,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.linear,
+          style: mainStyle,
+          prefix: '',
+          suffix: '.',
+          fractionDigits: 0,
+          padding: 2,
+        ),
+        ElogirAnimatedCounter(
+          value: centiseconds,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.linear,
           style: centiStyle,
+          prefix: '',
+          suffix: '',
+          fractionDigits: 0,
+          padding: 2,
         ),
       ],
     );

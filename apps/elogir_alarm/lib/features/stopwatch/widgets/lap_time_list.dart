@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:elogir_alarm/features/stopwatch/models/lap.dart';
 import 'package:elogir_alarm/shared/extensions/duration_extensions.dart';
 import 'package:elogir_ui/elogir_ui.dart';
@@ -36,7 +34,7 @@ class LapTimeList extends StatelessWidget {
       }
     }
 
-    final tabularStyle = const TextStyle(
+    const tabularStyle = TextStyle(
       fontFeatures: [FontFeature.tabularFigures()],
     );
 

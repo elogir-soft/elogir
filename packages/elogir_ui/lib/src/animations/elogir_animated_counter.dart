@@ -20,6 +20,7 @@ class ElogirAnimatedCounter extends StatefulWidget {
     this.prefix,
     this.suffix,
     this.fractionDigits = 0,
+    this.padding = 0,
     this.separator,
   });
 
@@ -38,6 +39,9 @@ class ElogirAnimatedCounter extends StatefulWidget {
 
   /// Decimal places to display.
   final int fractionDigits;
+
+  /// Minimum number of integer digits (zero-padded).
+  final int padding;
 
   /// Thousands separator (e.g., ",").
   final String? separator;
@@ -91,9 +95,14 @@ class _ElogirAnimatedCounterState extends State<ElogirAnimatedCounter>
   String _format(double value) {
     String formatted;
     if (widget.fractionDigits == 0) {
-      formatted = value.round().toString();
+      formatted = value.round().toString().padLeft(widget.padding, '0');
     } else {
       formatted = value.toStringAsFixed(widget.fractionDigits);
+      if (widget.padding > 0) {
+        final parts = formatted.split('.');
+        parts[0] = parts[0].padLeft(widget.padding, '0');
+        formatted = parts.join('.');
+      }
     }
 
     if (widget.separator != null) {

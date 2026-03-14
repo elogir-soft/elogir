@@ -36,7 +36,7 @@ class AlarmsScreen extends ConsumerWidget {
                 );
               }
 
-              return ListView.builder(
+              return SingleChildScrollView(
                 padding: EdgeInsets.only(
                   left: theme.spacing.md,
                   right: theme.spacing.md,
@@ -44,28 +44,29 @@ class AlarmsScreen extends ConsumerWidget {
                   // Extra bottom padding for the floating add button.
                   bottom: 96,
                 ),
-                itemCount: alarms.length,
-                itemBuilder: (context, index) {
-                  final alarm = alarms[index];
-
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: theme.spacing.sm),
-                    child: AlarmCard(
-                      alarm: alarm,
-                      onToggle: (enabled) {
-                        ref
-                            .read(alarmRepositoryProvider)
-                            .toggle(id: alarm.id, isEnabled: enabled);
-                      },
-                      onTap: () => showAlarmEditSheet(
-                        context: context,
-                        alarmId: alarm.id,
+                child: ElogirAnimatedList(
+                  items: alarms,
+                  itemKey: (a) => a.id,
+                  itemBuilder: (context, alarm, animation) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: theme.spacing.sm),
+                      child: AlarmCard(
+                        alarm: alarm,
+                        onToggle: (enabled) {
+                          ref
+                              .read(alarmRepositoryProvider)
+                              .toggle(id: alarm.id, isEnabled: enabled);
+                        },
+                        onTap: () => showAlarmEditSheet(
+                          context: context,
+                          alarmId: alarm.id,
+                        ),
+                        onDelete: () =>
+                            _confirmDelete(context, ref, alarm.id),
                       ),
-                      onDelete: () =>
-                          _confirmDelete(context, ref, alarm.id),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             },
           ),

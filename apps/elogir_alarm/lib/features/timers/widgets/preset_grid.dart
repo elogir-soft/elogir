@@ -19,10 +19,11 @@ class PresetGrid extends StatelessWidget {
       runSpacing: theme.spacing.sm,
       children: AppConstants.timerPresetSeconds.map((seconds) {
         final duration = Duration(seconds: seconds);
-        return ElogirTag(
-          label: duration.presetLabel,
-          variant: ElogirTagVariant.primary,
+        return ElogirButton(
           onPressed: () => onPresetSelected(seconds * 1000),
+          variant: ElogirButtonVariant.tonal,
+          size: ElogirButtonSize.sm,
+          child: Text(duration.presetLabel),
         );
       }).toList(),
     );

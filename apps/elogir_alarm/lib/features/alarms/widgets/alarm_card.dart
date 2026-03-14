@@ -95,7 +95,7 @@ class _RepeatDayDots extends StatelessWidget {
       children: List.generate(7, (index) {
         final isActive = days.contains(index);
         return Padding(
-          padding: EdgeInsets.only(right: 3),
+          padding: const EdgeInsets.only(right: 3),
           child: Container(
             width: 20,
             height: 20,

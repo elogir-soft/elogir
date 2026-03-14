@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:elogir_alarm/shared/extensions/duration_extensions.dart';
 import 'package:elogir_ui/elogir_ui.dart';

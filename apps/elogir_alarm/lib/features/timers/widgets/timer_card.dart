@@ -61,6 +61,49 @@ class TimerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
     final isDone = !timer.status.isActive;
+    final isRunning = timer.status == TimerStatus.running;
+
+    final content = Padding(
+      padding: EdgeInsets.only(
+        left: theme.spacing.md,
+        top: theme.spacing.sm,
+        bottom: theme.spacing.sm,
+        right: theme.spacing.md,
+      ),
+      child: Row(
+        children: [
+          // Countdown ring.
+          CountdownRing(
+            progress: timer.progress,
+            remaining: timer.remaining,
+            size: 56,
+          ),
+          SizedBox(width: theme.spacing.md),
+
+          // Label / duration.
+          Expanded(
+            child: ElogirText(
+              timer.label.isNotEmpty
+                  ? timer.label
+                  : Duration(milliseconds: timer.durationMs).formatted,
+              variant: ElogirTextVariant.titleSmall,
+            ),
+          ),
+
+          // Pause indicator when paused.
+          if (timer.status == TimerStatus.paused)
+            Padding(
+              padding: EdgeInsets.only(left: theme.spacing.sm),
+              child: CustomPaint(
+                size: const Size(12, 16),
+                painter: _PauseIconPainter(
+                  color: theme.colors.outlineVariant,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
 
     return AnimatedOpacity(
       duration: theme.durations.normal,
@@ -69,47 +112,16 @@ class TimerCard extends StatelessWidget {
         onPressed: _onTap,
         onLongPress: () => _onLongPress(context),
         pressScale: 0.96,
-        child: ElogirCard(
-          padding: EdgeInsets.only(
-            left: theme.spacing.md,
-            top: theme.spacing.sm,
-            bottom: theme.spacing.sm,
-            right: theme.spacing.md,
-          ),
-          child: Row(
-            children: [
-              // Countdown ring.
-              CountdownRing(
-                progress: timer.progress,
-                remaining: timer.remaining,
-                size: 56,
+        child: isRunning
+            ? ElogirGlass(
+                opacity: 0.1,
+                backgroundColor: theme.colors.primaryContainer,
+                child: content,
+              )
+            : ElogirCard(
+                padding: EdgeInsets.zero,
+                child: content,
               ),
-              SizedBox(width: theme.spacing.md),
-
-              // Label / duration.
-              Expanded(
-                child: ElogirText(
-                  timer.label.isNotEmpty
-                      ? timer.label
-                      : Duration(milliseconds: timer.durationMs).formatted,
-                  variant: ElogirTextVariant.titleSmall,
-                ),
-              ),
-
-              // Pause indicator when paused.
-              if (timer.status == TimerStatus.paused)
-                Padding(
-                  padding: EdgeInsets.only(left: theme.spacing.sm),
-                  child: CustomPaint(
-                    size: const Size(12, 16),
-                    painter: _PauseIconPainter(
-                      color: theme.colors.outlineVariant,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
       ),
     );
   }

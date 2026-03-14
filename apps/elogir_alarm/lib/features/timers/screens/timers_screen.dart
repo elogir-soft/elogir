@@ -45,7 +45,7 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
             expanded: true,
             child: const Text('Start'),
           ),
-          SizedBox(height: theme.spacing.lg),
+          SizedBox(height: theme.spacing.xl),
 
           // Quick presets
           ElogirText(
@@ -59,7 +59,7 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
               ref.read(activeTimersProvider.notifier).startNew(durationMs: ms);
             },
           ),
-          SizedBox(height: theme.spacing.lg),
+          SizedBox(height: theme.spacing.xl),
 
           // Active timers
           if (timers.isNotEmpty) ...[
@@ -84,19 +84,23 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
               ],
             ),
             SizedBox(height: theme.spacing.sm),
-            ...timers.map(
-              (timer) => Padding(
-                padding: EdgeInsets.only(bottom: theme.spacing.sm),
-                child: TimerCard(
-                  timer: timer,
-                  onPause: () =>
-                      ref.read(activeTimersProvider.notifier).pause(timer.id),
-                  onResume: () =>
-                      ref.read(activeTimersProvider.notifier).resume(timer.id),
-                  onRemove: () =>
-                      ref.read(activeTimersProvider.notifier).remove(timer.id),
-                ),
-              ),
+            ElogirAnimatedList(
+              items: timers,
+              itemKey: (t) => t.id,
+              itemBuilder: (context, timer, animation) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: theme.spacing.sm),
+                  child: TimerCard(
+                    timer: timer,
+                    onPause: () =>
+                        ref.read(activeTimersProvider.notifier).pause(timer.id),
+                    onResume: () =>
+                        ref.read(activeTimersProvider.notifier).resume(timer.id),
+                    onRemove: () =>
+                        ref.read(activeTimersProvider.notifier).remove(timer.id),
+                  ),
+                );
+              },
             ),
           ],
         ],

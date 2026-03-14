@@ -37,7 +37,8 @@ class ElogirAppBar extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: (backgroundColor ?? theme.colors.surface).withOpacity(0.8),
+              color: (backgroundColor ?? theme.colors.surface)
+                  .withValues(alpha: 0.8),
               border: Border(
                 bottom: BorderSide(
                   color: theme.colors.outlineVariant,

@@ -1,59 +1,35 @@
 import 'package:flutter/widgets.dart';
 
 /// A list that animates items in with staggered fade + slide, and supports
-/// programmatic insertion and removal with smooth transitions.
-///
-/// Use a [GlobalKey] to access [ElogirAnimatedListState] for dynamic updates:
-///
-/// ```dart
-/// final _listKey = GlobalKey<ElogirAnimatedListState>();
-///
-/// ElogirAnimatedList(
-///   key: _listKey,
-///   initialItemCount: items.length,
-///   itemBuilder: (context, index, animation) {
-///     return MyCard(item: items[index]);
-///   },
-/// )
-///
-/// // Insert:
-/// items.insert(0, newItem);
-/// _listKey.currentState!.insertItem(0);
-///
-/// // Remove:
-/// final removed = items.removeAt(index);
-/// _listKey.currentState!.removeItem(
-///   index,
-///   (context, animation) => MyCard(item: removed),
-/// );
-/// ```
-class ElogirAnimatedList extends StatefulWidget {
+/// automatic insertion and removal animations based on item diffing.
+class ElogirAnimatedList<T> extends StatefulWidget {
   const ElogirAnimatedList({
     super.key,
+    required this.items,
     required this.itemBuilder,
-    this.initialItemCount = 0,
+    required this.itemKey,
     this.staggerDelay = const Duration(milliseconds: 50),
     this.animationDuration = const Duration(milliseconds: 300),
     this.removeDuration = const Duration(milliseconds: 200),
     this.curve = Curves.easeOutCubic,
     this.slideOffset = 20.0,
     this.crossAxisAlignment = CrossAxisAlignment.stretch,
+    this.padding,
+    this.animateInitial = false,
   });
 
-  /// Builds a widget for the item at [index].
-  ///
-  /// The [animation] goes from 0.0 (entering) to 1.0 (fully visible).
-  /// You don't need to animate the child yourself — the list wraps it
-  /// in fade + slide + size transitions automatically.
+  /// The data items to display.
+  final List<T> items;
+
+  /// Builds a widget for the given item.
   final Widget Function(
     BuildContext context,
-    int index,
+    T item,
     Animation<double> animation,
   ) itemBuilder;
 
-  /// Number of items when the list first appears.
-  /// These items animate in with a staggered delay.
-  final int initialItemCount;
+  /// Returns a unique key for the item to track it during diffing.
+  final dynamic Function(T item) itemKey;
 
   /// Delay between each initial item's stagger animation.
   final Duration staggerDelay;
@@ -73,74 +49,102 @@ class ElogirAnimatedList extends StatefulWidget {
   /// Cross axis alignment of the internal column.
   final CrossAxisAlignment crossAxisAlignment;
 
+  /// Optional padding around the list.
+  final EdgeInsetsGeometry? padding;
+
+  /// Whether items should animate in when the list is first built.
+  final bool animateInitial;
+
   @override
-  State<ElogirAnimatedList> createState() => ElogirAnimatedListState();
+  State<ElogirAnimatedList<T>> createState() => _ElogirAnimatedListState<T>();
 }
 
-class ElogirAnimatedListState extends State<ElogirAnimatedList>
+class _ElogirAnimatedListState<T> extends State<ElogirAnimatedList<T>>
     with TickerProviderStateMixin {
-  final List<_Entry> _entries = [];
+  final List<_Entry<T>> _entries = [];
 
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.initialItemCount; i++) {
-      _entries.add(_Entry(
-        controller: AnimationController(
-          duration: widget.animationDuration,
-          vsync: this,
-        ),
-        curve: widget.curve,
-      ));
-    }
-    _staggerInitial();
-  }
-
-  Future<void> _staggerInitial() async {
-    for (int i = 0; i < _entries.length; i++) {
-      if (!mounted) return;
-      if (i > 0) await Future.delayed(widget.staggerDelay);
-      if (!mounted) return;
-      _entries[i].controller.forward();
+    _syncItems();
+    if (widget.animateInitial) {
+      _staggerInitial();
+    } else {
+      for (final entry in _entries) {
+        entry.controller.value = 1.0;
+      }
     }
   }
 
-  /// Inserts an item at [index] with an enter animation.
-  ///
-  /// Call this **after** adding the item to your data source.
-  void insertItem(int index, {Duration? duration}) {
-    assert(index >= 0 && index <= _activeCount);
+  @override
+  void didUpdateWidget(ElogirAnimatedList<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncItems();
+  }
+
+  void _syncItems() {
+    final newItems = widget.items;
+    final newKeys = newItems.map(widget.itemKey).toList();
+
+    // 1. Remove items that are no longer present
+    for (int i = _entries.length - 1; i >= 0; i--) {
+      final entry = _entries[i];
+      if (entry.removing) continue;
+
+      final key = widget.itemKey(entry.item);
+      if (!newKeys.contains(key)) {
+        _removeItem(i);
+      }
+    }
+
+    // 2. Insert items that are new
+    final currentKeys =
+        _entries.where((e) => !e.removing).map((e) => widget.itemKey(e.item)).toList();
+
+    for (int i = 0; i < newItems.length; i++) {
+      final item = newItems[i];
+      final key = widget.itemKey(item);
+
+      if (!currentKeys.contains(key)) {
+        _insertItem(i, item);
+        currentKeys.insert(i, key);
+      } else {
+        // Update existing entry item data (in case it changed but key is same)
+        final entryIndex = _activeIndexToEntryIndex(i);
+        if (entryIndex < _entries.length) {
+          _entries[entryIndex].item = item;
+        }
+      }
+    }
+  }
+
+  void _insertItem(int index, T item) {
     final controller = AnimationController(
-      duration: duration ?? widget.animationDuration,
+      duration: widget.animationDuration,
       vsync: this,
     );
+    final entry = _Entry(
+      item: item,
+      controller: controller,
+      curve: widget.curve,
+    );
+
     setState(() {
-      _entries.insert(
-        _activeIndexToEntryIndex(index),
-        _Entry(controller: controller, curve: widget.curve),
-      );
+      _entries.insert(_activeIndexToEntryIndex(index), entry);
     });
+
     controller.forward();
   }
 
-  /// Removes the item at [index] with an exit animation.
-  ///
-  /// [removedItemBuilder] builds the widget shown during the exit animation.
-  /// Call this **after** removing the item from your data source.
-  void removeItem(
-    int index,
-    Widget Function(BuildContext context, Animation<double> animation)
-        removedItemBuilder, {
-    Duration? duration,
-  }) {
-    assert(index >= 0 && index < _activeCount);
+  void _removeItem(int index) {
     final entryIndex = _activeIndexToEntryIndex(index);
     final entry = _entries[entryIndex];
-    entry.removing = true;
-    entry.removedItemBuilder = removedItemBuilder;
-    entry.controller.duration = duration ?? widget.removeDuration;
-    setState(() {});
 
+    setState(() {
+      entry.removing = true;
+    });
+
+    entry.controller.duration = widget.removeDuration;
     entry.controller.reverse().then((_) {
       if (!mounted) return;
       setState(() {
@@ -150,10 +154,18 @@ class ElogirAnimatedListState extends State<ElogirAnimatedList>
     });
   }
 
-  int get _activeCount => _entries.where((e) => !e.removing).length;
+  Future<void> _staggerInitial() async {
+    for (int i = 0; i < _entries.length; i++) {
+      if (!mounted) return;
+      // Only stagger items that haven't started yet
+      if (_entries[i].controller.status == AnimationStatus.dismissed) {
+        if (i > 0) await Future.delayed(widget.staggerDelay);
+        if (!mounted) return;
+        _entries[i].controller.forward();
+      }
+    }
+  }
 
-  /// Maps an active item index to the position in _entries (which may
-  /// contain removing entries interspersed).
   int _activeIndexToEntryIndex(int activeIndex) {
     int active = 0;
     for (int i = 0; i < _entries.length; i++) {
@@ -162,7 +174,7 @@ class ElogirAnimatedListState extends State<ElogirAnimatedList>
         active++;
       }
     }
-    return _entries.length; // append position
+    return _entries.length;
   }
 
   @override
@@ -176,20 +188,11 @@ class ElogirAnimatedListState extends State<ElogirAnimatedList>
   @override
   Widget build(BuildContext context) {
     final children = <Widget>[];
-    int activeIndex = 0;
 
     for (final entry in _entries) {
-      Widget child;
-      if (entry.removing && entry.removedItemBuilder != null) {
-        child = entry.removedItemBuilder!(context, entry.controller);
-      } else {
-        child = widget.itemBuilder(context, activeIndex, entry.controller);
-        activeIndex++;
-      }
-
       children.add(
         SizeTransition(
-          sizeFactor: entry.controller, // linear for smooth, even collapse
+          sizeFactor: entry.controller,
           child: FadeTransition(
             opacity: entry.curved,
             child: AnimatedBuilder(
@@ -198,29 +201,38 @@ class ElogirAnimatedListState extends State<ElogirAnimatedList>
                 offset: Offset(0, widget.slideOffset * (1 - entry.curved.value)),
                 child: ch,
               ),
-              child: child,
+              child: widget.itemBuilder(context, entry.item, entry.curved),
             ),
           ),
         ),
       );
     }
 
-    return Column(
+    Widget result = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: widget.crossAxisAlignment,
       children: children,
     );
+
+    if (widget.padding != null) {
+      result = Padding(padding: widget.padding!, child: result);
+    }
+
+    return result;
   }
 }
 
-class _Entry {
-  _Entry({required this.controller, required Curve curve})
-      : curved = CurvedAnimation(parent: controller, curve: curve);
+class _Entry<T> {
+  _Entry({
+    required this.item,
+    required this.controller,
+    required Curve curve,
+  }) : curved = CurvedAnimation(parent: controller, curve: curve);
 
+  T item;
   final AnimationController controller;
   final CurvedAnimation curved;
   bool removing = false;
-  Widget Function(BuildContext, Animation<double>)? removedItemBuilder;
 
   void dispose() {
     curved.dispose();

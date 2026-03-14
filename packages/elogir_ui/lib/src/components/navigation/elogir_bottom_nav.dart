@@ -69,7 +69,7 @@ class ElogirBottomNav extends StatelessWidget {
           child: Container(
             height: 80, // Increased height for better vertical breathing room
             decoration: BoxDecoration(
-              color: colors.surface.withOpacity(0.85),
+              color: colors.surface.withValues(alpha: 0.85),
               borderRadius: BorderRadius.all(Radius.circular(outerRadius)),
               border: Border.all(
                 color: colors.outlineVariant,

@@ -9,13 +9,13 @@ abstract class Alarm with _$Alarm {
     required String id,
     required int hour,
     required int minute,
+    required DateTime createdAt,
+    required DateTime updatedAt,
     @Default('') String label,
     @Default(true) bool isEnabled,
     @Default([]) List<int> repeatDays,
     @Default('alarm') String soundId,
     @Default(5) int snoozeDurationMinutes,
-    required DateTime createdAt,
-    required DateTime updatedAt,
   }) = _Alarm;
 
   const Alarm._();

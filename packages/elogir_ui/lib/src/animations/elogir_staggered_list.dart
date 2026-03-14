@@ -21,6 +21,10 @@ class ElogirStaggeredList extends StatelessWidget {
     this.offset = 20.0,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.min,
+    this.padding,
+    this.scrollable = true,
+    this.controller,
+    this.physics,
   });
 
   final List<Widget> children;
@@ -40,21 +44,48 @@ class ElogirStaggeredList extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
   final MainAxisSize mainAxisSize;
 
+  /// Optional padding around the list.
+  final EdgeInsetsGeometry? padding;
+
+  /// Whether the list should be scrollable (wraps in ListView).
+  /// If false, uses a Column.
+  final bool scrollable;
+
+  final ScrollController? controller;
+  final ScrollPhysics? physics;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final animatedChildren = [
+      for (int i = 0; i < children.length; i++)
+        ElogirFadeIn(
+          duration: itemDuration,
+          delay: itemDelay * i,
+          direction: direction,
+          offset: offset,
+          child: children[i],
+        ),
+    ];
+
+    if (scrollable) {
+      return ListView(
+        padding: padding,
+        controller: controller,
+        physics: physics,
+        children: animatedChildren,
+      );
+    }
+
+    Widget result = Column(
       crossAxisAlignment: crossAxisAlignment,
       mainAxisSize: mainAxisSize,
-      children: [
-        for (int i = 0; i < children.length; i++)
-          ElogirFadeIn(
-            duration: itemDuration,
-            delay: itemDelay * i,
-            direction: direction,
-            offset: offset,
-            child: children[i],
-          ),
-      ],
+      children: animatedChildren,
     );
+
+    if (padding != null) {
+      result = Padding(padding: padding!, child: result);
+    }
+
+    return result;
   }
 }

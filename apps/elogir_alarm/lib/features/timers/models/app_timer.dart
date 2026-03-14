@@ -19,13 +19,13 @@ enum TimerStatus {
 abstract class AppTimer with _$AppTimer {
   const factory AppTimer({
     required String id,
-    @Default('') String label,
     required int durationMs,
     required int remainingMs,
     required TimerStatus status,
+    required DateTime createdAt,
+    @Default('') String label,
     DateTime? startedAt,
     DateTime? pausedAt,
-    required DateTime createdAt,
   }) = _AppTimer;
 
   const AppTimer._();
