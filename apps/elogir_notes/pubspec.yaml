@@ -1,0 +1,21 @@
+name: elogir_notes
+description: A minimal note-taking app to test the elogir monorepo.
+publish_to: 'none'
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  elogir_ui:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: false

@@ -2,6 +2,7 @@ name: elogir_ui_example
 description: Example app demonstrating the elogir_ui package.
 publish_to: 'none'
 version: 1.0.0+1
+resolution: workspace
 
 environment:
   sdk: ^3.11.1

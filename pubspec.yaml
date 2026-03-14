@@ -1,16 +1,47 @@
-name: elogir_ui
-description: A custom Flutter UI component library built from Flutter primitives.
-version: 0.1.0
+name: elogir_workspace
+description: Elogir monorepo — apps and shared packages.
+version: 0.0.0
+publish_to: 'none'
 
 environment:
   sdk: ^3.11.1
 
-dependencies:
-  flutter:
-    sdk: flutter
-  cached_network_image: ^3.4.1
+workspace:
+  - packages/**
+  - apps/**
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^6.0.0
+  melos: ^7.0.0
+
+melos:
+  name: elogir
+
+  scripts:
+    analyze:
+      description: Run static analysis on all packages.
+      exec:
+        concurrency: 5
+      run: dart analyze --fatal-infos
+
+    test:
+      description: Run tests in all packages.
+      exec:
+        concurrency: 5
+      run: flutter test
+      packageFilters:
+        dirExists: test
+
+    format:
+      description: Check formatting of all packages.
+      exec:
+        concurrency: 5
+      run: dart format --set-exit-if-changed .
+
+    clean:
+      description: Clean all packages.
+      exec:
+        concurrency: 5
+      run: flutter clean
+
+  ide:
+    intellij: true
