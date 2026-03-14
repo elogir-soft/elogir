@@ -1,0 +1,34 @@
+import 'package:elogir_alarm/features/alarms/widgets/time_picker_wheel.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../../../helpers/pump_app.dart';
+
+void main() {
+  group('TimePickerWheel', () {
+    testWidgets('renders with initial hour and minute', (tester) async {
+      await tester.pumpApp(
+        TimePickerWheel(
+          hour: 14,
+          minute: 30,
+          onTimeChanged: (_, __) {},
+        ),
+      );
+
+      // The colon separator should be visible.
+      expect(find.text(':'), findsOneWidget);
+    });
+
+    testWidgets('renders without errors', (tester) async {
+      await tester.pumpApp(
+        TimePickerWheel(
+          hour: 0,
+          minute: 0,
+          onTimeChanged: (_, __) {},
+        ),
+      );
+
+      // Widget should render without throwing.
+      expect(find.byType(TimePickerWheel), findsOneWidget);
+    });
+  });
+}

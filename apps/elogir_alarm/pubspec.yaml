@@ -1,0 +1,50 @@
+name: elogir_alarm
+description: Alarm, Timer, and Stopwatch app in the elogir ecosystem.
+publish_to: 'none'
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  elogir_ui:
+  flutter_riverpod:
+  riverpod_annotation:
+  freezed_annotation:
+  json_annotation:
+  go_router:
+  drift:
+  drift_flutter:
+  sqlite3_flutter_libs:
+  path_provider:
+  path:
+  connectivity_plus:
+  flutter_secure_storage:
+  dio:
+  talker:
+  talker_riverpod_logger:
+  talker_dio_logger:
+  flutter_local_notifications:
+  flutter_ringtone_player:
+  wakelock_plus:
+  uuid:
+  intl:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis:
+  build_runner:
+  riverpod_generator:
+  freezed:
+  json_serializable:
+  drift_dev:
+  go_router_builder:
+  mocktail:
+  custom_lint:
+
+flutter:
+  uses-material-design: false
