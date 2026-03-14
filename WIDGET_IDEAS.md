@@ -119,27 +119,27 @@ Shadows are subtle or absent — depth comes from borders and layering.
 
 ---
 
+### Navigation & Structure (continued)
+
+- [x] ElogirTabBar — tab strip with animated underline/pill indicator that slides between tabs
+- [x] ElogirBottomNav — mobile bottom bar with animated icon transitions on selection
+
+### Data Display (continued)
+
+- [x] ElogirStatCard — number + label + trend arrow for dashboards
+
+### Forms (continued)
+
+- [x] ElogirDropdown — overlay-based picker with hover highlight, selected check mark
+- [x] ElogirSlider — slider with value tooltip, optional divisions
+
+---
+
 ## Future Widget Ideas
 
-### Navigation & Structure
-
 - [ ] ElogirSidebar — collapsible side nav with icon+label items, nested groups, active indicator animation
-- [ ] ElogirTabBar — tab strip with animated underline/pill indicator that slides between tabs
-- [ ] ElogirBottomNav — mobile bottom bar with animated icon transitions on selection
 - [ ] ElogirCommandPalette — Cmd+K style overlay with fuzzy search, keyboard navigation, action groups
-
-### Data Display
-
 - [ ] ElogirDataTable — sortable columns, row selection, sticky headers, virtual scrolling
-- [ ] ElogirStatCard — number + label + trend arrow/sparkline for dashboards
-
-### Forms
-
-- [ ] ElogirDropdown — overlay-based picker, searchable, multi-select variant
-- [ ] ElogirSlider — range slider with tooltip showing current value
 - [ ] ElogirDatePicker — calendar overlay, range selection
-
-### Layout
-
 - [ ] ElogirAnimatedList — staggered entry animations when items appear
 - [ ] ElogirPageTransition — shared-element-style transitions between routes

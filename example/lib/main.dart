@@ -57,6 +57,10 @@ class _HomePageState extends State<HomePage> {
   String? _selectedFruit;
   final GlobalKey<ElogirPopoverState> _popoverKey =
       GlobalKey<ElogirPopoverState>();
+  int _selectedTab = 0;
+  double _sliderValue = 0.4;
+  String? _selectedDropdown;
+  int _bottomNavIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -645,6 +649,136 @@ class _HomePageState extends State<HomePage> {
             ),
 
             SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Tab Bar')),
+            SizedBox(height: theme.spacing.md),
+
+            // Tab Bar — underline style
+            ElogirTabBar(
+              tabs: const [
+                ElogirTab(label: 'Overview'),
+                ElogirTab(label: 'Activity'),
+                ElogirTab(label: 'Settings'),
+              ],
+              selectedIndex: _selectedTab,
+              onChanged: (i) => setState(() => _selectedTab = i),
+            ),
+            SizedBox(height: theme.spacing.md),
+
+            // Tab Bar — pill style
+            ElogirTabBar(
+              tabs: const [
+                ElogirTab(label: 'Day'),
+                ElogirTab(label: 'Week'),
+                ElogirTab(label: 'Month'),
+              ],
+              selectedIndex: _selectedTab.clamp(0, 2),
+              onChanged: (i) => setState(() => _selectedTab = i),
+              indicatorStyle: ElogirTabIndicatorStyle.pill,
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Slider')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirSlider(
+              value: _sliderValue,
+              onChanged: (v) => setState(() => _sliderValue = v),
+              label: (v) => '${(v * 100).round()}%',
+            ),
+            SizedBox(height: theme.spacing.md),
+            ElogirSlider(
+              value: _sliderValue,
+              onChanged: (v) => setState(() => _sliderValue = v),
+              min: 0,
+              max: 10,
+              divisions: 10,
+              label: (v) => v.round().toString(),
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Dropdown')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirDropdown<String>(
+              options: const [
+                ElogirDropdownOption(value: 'flutter', label: 'Flutter'),
+                ElogirDropdownOption(value: 'react', label: 'React Native'),
+                ElogirDropdownOption(value: 'swift', label: 'SwiftUI'),
+                ElogirDropdownOption(value: 'kotlin', label: 'Jetpack Compose'),
+              ],
+              value: _selectedDropdown,
+              placeholder: 'Select a framework…',
+              onChanged: (v) => setState(() => _selectedDropdown = v),
+              width: 260,
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Stat Cards')),
+            SizedBox(height: theme.spacing.md),
+
+            Wrap(
+              spacing: theme.spacing.md,
+              runSpacing: theme.spacing.md,
+              children: const [
+                ElogirStatCard(
+                  value: '1,234',
+                  label: 'Active Users',
+                  trend: '+12.5%',
+                  trendDirection: ElogirTrendDirection.up,
+                  width: 180,
+                ),
+                ElogirStatCard(
+                  value: '98.2',
+                  label: 'Uptime',
+                  suffix: '%',
+                  trend: '-0.3%',
+                  trendDirection: ElogirTrendDirection.down,
+                  width: 180,
+                ),
+                ElogirStatCard(
+                  value: '42',
+                  label: 'Response Time',
+                  suffix: 'ms',
+                  width: 180,
+                ),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Bottom Nav')),
+            SizedBox(height: theme.spacing.md),
+
+            // Bottom nav preview in a bordered container
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: theme.colors.outlineVariant,
+                  width: theme.strokes.thick,
+                ),
+                borderRadius: theme.radii.md,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: ElogirBottomNav(
+                items: const [
+                  ElogirBottomNavItem(
+                    icon: _NavIcon(icon: 0x1F3E0), // 🏠
+                    label: 'Home',
+                  ),
+                  ElogirBottomNavItem(
+                    icon: _NavIcon(icon: 0x1F50D), // 🔍
+                    label: 'Search',
+                  ),
+                  ElogirBottomNavItem(
+                    icon: _NavIcon(icon: 0x1F464), // 👤
+                    label: 'Profile',
+                  ),
+                ],
+                selectedIndex: _bottomNavIndex,
+                onChanged: (i) => setState(() => _bottomNavIndex = i),
+              ),
+            ),
+
+            SizedBox(height: theme.spacing.xl),
             ElogirDivider(label: ElogirText('Theme Colors')),
             SizedBox(height: theme.spacing.md),
 
@@ -655,6 +789,21 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Simple emoji-based nav icon (avoids Material Icons dependency).
+class _NavIcon extends StatelessWidget {
+  const _NavIcon({required this.icon});
+
+  final int icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      String.fromCharCode(icon),
+      style: const TextStyle(fontSize: 20),
     );
   }
 }
