@@ -189,6 +189,7 @@ class ElogirColors {
     required this.shadow,
     required this.disabled,
     required this.onDisabled,
+    this.barrier = const Color(0x80000000),
   });
 
   /// Creates semantic colors for light mode from the given [palette].
@@ -280,6 +281,9 @@ class ElogirColors {
   final Color disabled;
   final Color onDisabled;
 
+  /// Semi-transparent overlay for modal barriers (dialogs, drawers, sheets).
+  final Color barrier;
+
   ElogirColors copyWith({
     ElogirColorPalette? palette,
     Color? primary,
@@ -301,6 +305,7 @@ class ElogirColors {
     Color? shadow,
     Color? disabled,
     Color? onDisabled,
+    Color? barrier,
   }) {
     return ElogirColors(
       palette: palette ?? this.palette,
@@ -323,6 +328,7 @@ class ElogirColors {
       shadow: shadow ?? this.shadow,
       disabled: disabled ?? this.disabled,
       onDisabled: onDisabled ?? this.onDisabled,
+      barrier: barrier ?? this.barrier,
     );
   }
 }

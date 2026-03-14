@@ -72,7 +72,7 @@ class ElogirTag extends StatelessWidget {
     Widget content = Container(
       constraints: const BoxConstraints(minHeight: 28),
       padding: EdgeInsets.symmetric(
-        horizontal: theme.spacing.sm + 2,
+        horizontal: theme.spacing.sm + theme.spacing.xxs,
       ),
       decoration: BoxDecoration(
         color: bg,

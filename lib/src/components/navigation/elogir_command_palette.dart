@@ -68,7 +68,7 @@ class ElogirCommandPalette {
       PageRouteBuilder(
         opaque: false,
         barrierDismissible: true,
-        barrierColor: const Color(0x66000000),
+        barrierColor: ElogirTheme.of(context).colors.barrier,
         transitionDuration: const Duration(milliseconds: 150),
         reverseTransitionDuration: const Duration(milliseconds: 100),
         pageBuilder: (context, animation, secondaryAnimation) {
@@ -429,8 +429,8 @@ class _ActionItemState extends State<_ActionItem> {
             if (widget.action.shortcutLabel != null)
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget.theme.spacing.xs + 2,
-                  vertical: 2,
+                  horizontal: widget.theme.spacing.xs + widget.theme.spacing.xxs,
+                  vertical: widget.theme.spacing.xxs,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: widget.theme.radii.sm,

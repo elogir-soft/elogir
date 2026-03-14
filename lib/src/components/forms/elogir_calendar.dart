@@ -412,7 +412,7 @@ class _HoverLabelState extends State<_HoverLabel> {
         onTap: widget.onPressed,
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: widget.theme.spacing.xs + 2,
+            horizontal: widget.theme.spacing.xs + widget.theme.spacing.xxs,
             vertical: 2,
           ),
           decoration: BoxDecoration(
@@ -474,7 +474,7 @@ class _MultiFooterState extends State<_MultiFooter> {
             onTap: widget.onClear,
             child: Container(
               padding: EdgeInsets.symmetric(
-                horizontal: widget.theme.spacing.xs + 2,
+                horizontal: widget.theme.spacing.xs + widget.theme.spacing.xxs,
                 vertical: 2,
               ),
               decoration: BoxDecoration(

@@ -1,6 +1,7 @@
 /// Spacing tokens for consistent whitespace across the UI.
 class ElogirSpacing {
   const ElogirSpacing({
+    this.xxs = 2.0,
     this.xs = 4.0,
     this.sm = 8.0,
     this.md = 16.0,
@@ -9,6 +10,7 @@ class ElogirSpacing {
     this.xxl = 48.0,
   });
 
+  final double xxs;
   final double xs;
   final double sm;
   final double md;
@@ -17,6 +19,7 @@ class ElogirSpacing {
   final double xxl;
 
   ElogirSpacing copyWith({
+    double? xxs,
     double? xs,
     double? sm,
     double? md,
@@ -25,6 +28,7 @@ class ElogirSpacing {
     double? xxl,
   }) {
     return ElogirSpacing(
+      xxs: xxs ?? this.xxs,
       xs: xs ?? this.xs,
       sm: sm ?? this.sm,
       md: md ?? this.md,

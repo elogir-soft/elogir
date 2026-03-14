@@ -41,7 +41,7 @@ class ElogirBreadcrumb extends StatelessWidget {
           for (int i = 0; i < items.length; i++) ...[
             if (i > 0)
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: theme.spacing.xs + 2),
+                padding: EdgeInsets.symmetric(horizontal: theme.spacing.xs + theme.spacing.xxs),
                 child: separator ??
                     Text(
                       '/',

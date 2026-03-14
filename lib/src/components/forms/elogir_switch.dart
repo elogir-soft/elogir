@@ -109,7 +109,7 @@ class _ElogirSwitchState extends State<ElogirSwitch>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.all(2),
+              padding: EdgeInsets.all(theme.spacing.xxs),
               child: Transform.translate(
                 offset: Offset(travel * t, 0),
                 child: Container(
@@ -118,13 +118,7 @@ class _ElogirSwitchState extends State<ElogirSwitch>
                   decoration: BoxDecoration(
                     color: thumbColor,
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0x1A000000),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+                    boxShadow: theme.shadows.sm,
                   ),
                 ),
               ),

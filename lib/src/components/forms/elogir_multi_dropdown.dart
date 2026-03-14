@@ -546,7 +546,7 @@ class _MultiOptionItemState<T> extends State<_MultiOptionItem<T>> {
         duration: widget.theme.durations.fast,
         padding: EdgeInsets.symmetric(
           horizontal: widget.theme.spacing.md,
-          vertical: widget.theme.spacing.sm + 2,
+          vertical: widget.theme.spacing.sm + widget.theme.spacing.xxs,
         ),
         color: widget.isSelected
             ? colors.primaryContainer

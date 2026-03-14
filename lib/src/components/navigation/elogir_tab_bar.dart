@@ -105,7 +105,11 @@ class ElogirTabBar extends StatelessWidget {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: colors.surface,
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          (theme.radii.md.topLeft.x - 3).clamp(0, double.infinity),
+                        ),
+                      ),
                       border: Border.all(
                         color: colors.outlineVariant,
                         width: theme.strokes.thin,
@@ -228,7 +232,7 @@ class _TabItemState extends State<_TabItem> {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: theme.spacing.md,
-          vertical: theme.spacing.sm + 4,
+          vertical: theme.spacing.sm + theme.spacing.xs,
         ),
         decoration: widget.showUnderline && widget.isSelected
             ? BoxDecoration(

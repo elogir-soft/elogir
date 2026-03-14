@@ -209,28 +209,31 @@ class _ElogirStatCardState extends State<ElogirStatCard>
                     color: colors.onSurfaceVariant,
                   ),
                 ),
-              if (_parsedValue != null)
-                AnimatedBuilder(
-                  animation: _countAnimation,
-                  builder: (context, _) {
-                    return Text(
-                      _formatNumber(_countAnimation.value),
-                      style: theme.typography.headlineLarge.copyWith(
-                        color: colors.onSurface,
+              Flexible(
+                child: _parsedValue != null
+                    ? AnimatedBuilder(
+                        animation: _countAnimation,
+                        builder: (context, _) {
+                          return Text(
+                            _formatNumber(_countAnimation.value),
+                            style: theme.typography.headlineLarge.copyWith(
+                              color: colors.onSurface,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        },
+                      )
+                    : Text(
+                        widget.value,
+                        style: theme.typography.headlineLarge.copyWith(
+                          color: colors.onSurface,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    );
-                  },
-                )
-              else
-                Text(
-                  widget.value,
-                  style: theme.typography.headlineLarge.copyWith(
-                    color: colors.onSurface,
-                  ),
-                ),
+              ),
               if (widget.suffix != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 2),
+                  padding: EdgeInsets.only(left: theme.spacing.xxs),
                   child: Text(
                     widget.suffix!,
                     style: theme.typography.titleMedium.copyWith(
@@ -248,7 +251,7 @@ class _ElogirStatCardState extends State<ElogirStatCard>
                 // Trend arrow
                 if (effectiveDirection != ElogirTrendDirection.neutral)
                   Padding(
-                    padding: const EdgeInsets.only(right: 4),
+                    padding: EdgeInsets.only(right: theme.spacing.xs),
                     child: CustomPaint(
                       size: const Size(10, 10),
                       painter: _TrendArrowPainter(

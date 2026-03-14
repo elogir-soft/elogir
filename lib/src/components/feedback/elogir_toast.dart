@@ -256,7 +256,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                 constraints: const BoxConstraints(maxWidth: 400),
                 padding: EdgeInsets.symmetric(
                   horizontal: theme.spacing.md,
-                  vertical: theme.spacing.sm + 4,
+                  vertical: theme.spacing.sm + theme.spacing.xs,
                 ),
                 decoration: BoxDecoration(
                   color: bg,

@@ -73,8 +73,8 @@ class ElogirBottomNav extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: colors.primary,
                       borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(2),
-                        bottomRight: Radius.circular(2),
+                        bottomLeft: theme.radii.xs.topLeft,
+                        bottomRight: theme.radii.xs.topLeft,
                       ),
                     ),
                   ),

@@ -69,15 +69,15 @@ class _ElogirButtonState extends State<ElogirButton> {
     switch (widget.size) {
       case ElogirButtonSize.sm:
         defaultHeight = 36;
-        defaultPadding = const EdgeInsets.symmetric(horizontal: 16);
+        defaultPadding = EdgeInsets.symmetric(horizontal: theme.spacing.md);
         defaultTextStyle = theme.typography.labelMedium;
       case ElogirButtonSize.md:
         defaultHeight = 44;
-        defaultPadding = const EdgeInsets.symmetric(horizontal: 24);
+        defaultPadding = EdgeInsets.symmetric(horizontal: theme.spacing.lg);
         defaultTextStyle = theme.typography.labelLarge;
       case ElogirButtonSize.lg:
         defaultHeight = 52;
-        defaultPadding = const EdgeInsets.symmetric(horizontal: 32);
+        defaultPadding = EdgeInsets.symmetric(horizontal: theme.spacing.xl);
         defaultTextStyle = theme.typography.titleSmall;
     }
 

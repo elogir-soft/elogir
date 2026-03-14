@@ -178,8 +178,8 @@ class _TooltipOverlay extends StatelessWidget {
           child: Container(
             constraints: const BoxConstraints(maxWidth: 240),
             padding: EdgeInsets.symmetric(
-              horizontal: theme.spacing.sm + 4,
-              vertical: theme.spacing.xs + 2,
+              horizontal: theme.spacing.sm + theme.spacing.xs,
+              vertical: theme.spacing.xs + theme.spacing.xxs,
             ),
             decoration: BoxDecoration(
               color: colors.onBackground,

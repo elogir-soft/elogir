@@ -181,7 +181,7 @@ class _HeaderRow extends StatelessWidget {
       color: theme.colors.surfaceContainer,
       padding: EdgeInsets.symmetric(
         horizontal: theme.spacing.md,
-        vertical: theme.spacing.sm + 2,
+        vertical: theme.spacing.sm + theme.spacing.xxs,
       ),
       child: Row(
         children: [
@@ -315,7 +315,7 @@ class _DataRowWidgetState extends State<_DataRowWidget> {
         duration: theme.durations.fast,
         padding: EdgeInsets.symmetric(
           horizontal: theme.spacing.md,
-          vertical: theme.spacing.sm + 2,
+          vertical: theme.spacing.sm + theme.spacing.xxs,
         ),
         decoration: BoxDecoration(
           color: row.selected

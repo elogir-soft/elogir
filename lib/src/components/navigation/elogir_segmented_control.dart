@@ -68,7 +68,11 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: colors.surface,
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          (theme.radii.md.topLeft.x - 3).clamp(0, double.infinity),
+                        ),
+                      ),
                     border: Border.all(
                       color: colors.outlineVariant,
                       width: theme.strokes.thin,
@@ -87,7 +91,7 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
                       pressScale: 0.98,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          vertical: theme.spacing.sm + 2,
+                          vertical: theme.spacing.sm + theme.spacing.xxs,
                           horizontal: theme.spacing.sm,
                         ),
                         alignment: Alignment.center,

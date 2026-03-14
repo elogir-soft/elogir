@@ -33,7 +33,7 @@ class ElogirDialog extends StatelessWidget {
       PageRouteBuilder<T>(
         opaque: false,
         barrierDismissible: barrierDismissible,
-        barrierColor: const Color(0x80000000),
+        barrierColor: ElogirTheme.of(context).colors.barrier,
         transitionDuration: const Duration(milliseconds: 200),
         reverseTransitionDuration: const Duration(milliseconds: 150),
         pageBuilder: (context, animation, secondaryAnimation) {
