@@ -80,6 +80,20 @@ Shadows are subtle or absent — depth comes from borders and layering.
 ### Feedback
 
 - [x] ElogirDialog — modal dialog with backdrop
+- [x] ElogirProgressBar — determinate/indeterminate with animated fill, optional label
+- [x] ElogirSpinner — custom loading indicator with thick arc rotation
+- [x] ElogirSkeleton — pulse-animated loading placeholder (rectangle, circle, text variants)
+- [x] ElogirTooltip — hover/long-press overlay positioned above/below/left/right
+- [x] ElogirToast — non-modal stacking notifications with auto-dismiss, variant icons
+
+### Forms (continued)
+
+- [x] ElogirSearchField — search field with magnifying glass icon and clear button
+
+### Layout (continued)
+
+- [x] ElogirAccordion — animated expand/collapse with header, chevron, single or multi-open modes
+- [x] ElogirAccordionGroup — coordinated accordion container with single-open behavior
 
 ---
 
@@ -102,7 +116,6 @@ Shadows are subtle or absent — depth comes from borders and layering.
 
 ### Forms
 
-- [ ] ElogirSearchField — text field with clear button, search icon, debounced onChanged
 - [ ] ElogirRadioGroup — custom radio buttons with group management
 - [ ] ElogirDropdown — overlay-based picker, searchable, multi-select variant
 - [ ] ElogirSlider — range slider with tooltip showing current value
@@ -110,19 +123,10 @@ Shadows are subtle or absent — depth comes from borders and layering.
 
 ### Feedback & Overlay
 
-- [ ] ElogirToast — non-modal stacking notifications with auto-dismiss, swipe-to-dismiss
 - [ ] ElogirBottomSheet — draggable sheet with snap points, handle bar
-- [ ] ElogirTooltip — hover/long-press overlay with arrow pointing to target
-- [ ] ElogirSkeleton — shimmer loading placeholder matching content shape
-- [ ] ElogirProgressBar — determinate/indeterminate with animated fill, optional label
-- [ ] ElogirSpinner — custom loading indicator (distinctive to elogir brand)
 - [ ] ElogirPopover — anchored floating panel with arbitrary content
 
 ### Layout
-
-- [ ] ElogirAccordion — animated expand/collapse with header, single or multi-open modes
-
-### Micro-interactions
 
 - [ ] ElogirAnimatedList — staggered entry animations when items appear
 - [ ] ElogirPageTransition — shared-element-style transitions between routes

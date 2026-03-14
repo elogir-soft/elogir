@@ -253,7 +253,163 @@ class _HomePageState extends State<HomePage> {
             ),
 
             SizedBox(height: theme.spacing.xl),
-            ElogirDivider(label: ElogirText('Card & Dialog')),
+            ElogirDivider(label: ElogirText('Search')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirSearchField(
+              hint: 'Search components…',
+              onChanged: (v) {},
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Progress & Loading')),
+            SizedBox(height: theme.spacing.md),
+
+            // Progress bars
+            ElogirProgressBar(
+              value: 0.65,
+              label: const Text('Uploading files'),
+              showPercentage: true,
+            ),
+            SizedBox(height: theme.spacing.md),
+            const ElogirProgressBar(
+              value: null, // indeterminate
+              height: 6,
+            ),
+            SizedBox(height: theme.spacing.md),
+
+            // Spinner
+            Row(
+              children: [
+                const ElogirSpinner(size: 20),
+                SizedBox(width: theme.spacing.sm),
+                const ElogirSpinner(size: 32),
+                SizedBox(width: theme.spacing.sm),
+                const ElogirSpinner(size: 44),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Accordion')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirAccordionGroup(
+              children: [
+                ElogirAccordion(
+                  title: const Text('What is Soft Industrial?'),
+                  body: const Text(
+                    'A design language defined by thick borders, warm neutrals, '
+                    'generous spacing, and measured typography. Depth comes from '
+                    'borders and layering rather than shadows.',
+                  ),
+                  initiallyExpanded: true,
+                ),
+                ElogirAccordion(
+                  title: const Text('Why no Material imports?'),
+                  body: const Text(
+                    'Every widget is built from Flutter primitives — '
+                    'GestureDetector, FocusableActionDetector, AnimatedContainer, '
+                    'EditableText. This gives full control over styling and behavior.',
+                  ),
+                ),
+                ElogirAccordion(
+                  title: const Text('How do I use it?'),
+                  body: const Text(
+                    'Add elogir_ui as a dependency, wrap your app in ElogirApp, '
+                    'and use the widgets. Customize via ElogirThemeData.',
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Tooltip')),
+            SizedBox(height: theme.spacing.md),
+
+            Wrap(
+              spacing: theme.spacing.md,
+              runSpacing: theme.spacing.sm,
+              children: [
+                ElogirTooltip(
+                  message: 'This is a tooltip above',
+                  child: ElogirButton(
+                    variant: ElogirButtonVariant.outlined,
+                    size: ElogirButtonSize.sm,
+                    onPressed: () {},
+                    child: const Text('Hover me'),
+                  ),
+                ),
+                ElogirTooltip(
+                  message: 'Tooltip below the button',
+                  position: ElogirTooltipPosition.below,
+                  child: ElogirButton(
+                    variant: ElogirButtonVariant.ghost,
+                    size: ElogirButtonSize.sm,
+                    onPressed: () {},
+                    child: const Text('Below tooltip'),
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Toast & Card & Dialog')),
+            SizedBox(height: theme.spacing.md),
+
+            // Toast triggers
+            Wrap(
+              spacing: theme.spacing.sm,
+              runSpacing: theme.spacing.sm,
+              children: [
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  onPressed: () {
+                    ElogirToast.show(
+                      context: context,
+                      message: 'This is an info toast',
+                    );
+                  },
+                  child: const Text('Info Toast'),
+                ),
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  variant: ElogirButtonVariant.outlined,
+                  onPressed: () {
+                    ElogirToast.show(
+                      context: context,
+                      message: 'Operation completed!',
+                      variant: ElogirToastVariant.success,
+                    );
+                  },
+                  child: const Text('Success Toast'),
+                ),
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  variant: ElogirButtonVariant.outlined,
+                  onPressed: () {
+                    ElogirToast.show(
+                      context: context,
+                      message: 'Check your input',
+                      variant: ElogirToastVariant.warning,
+                    );
+                  },
+                  child: const Text('Warning Toast'),
+                ),
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  variant: ElogirButtonVariant.ghost,
+                  onPressed: () {
+                    ElogirToast.show(
+                      context: context,
+                      message: 'Something went wrong',
+                      variant: ElogirToastVariant.error,
+                    );
+                  },
+                  child: const Text('Error Toast'),
+                ),
+              ],
+            ),
+
             SizedBox(height: theme.spacing.md),
 
             // Card

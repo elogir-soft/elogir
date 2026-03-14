@@ -31,10 +31,12 @@ export 'src/components/text/elogir_text.dart';
 
 // Components — forms
 export 'src/components/forms/elogir_checkbox.dart';
+export 'src/components/forms/elogir_search_field.dart';
 export 'src/components/forms/elogir_switch.dart';
 export 'src/components/forms/elogir_text_field.dart';
 
 // Components — layout
+export 'src/components/layout/elogir_accordion.dart';
 export 'src/components/layout/elogir_app_bar.dart';
 export 'src/components/layout/elogir_scaffold.dart';
 
@@ -56,3 +58,7 @@ export 'src/components/utility/elogir_divider.dart';
 
 // Components — feedback
 export 'src/components/feedback/elogir_dialog.dart';
+export 'src/components/feedback/elogir_progress_bar.dart';
+export 'src/components/feedback/elogir_spinner.dart';
+export 'src/components/feedback/elogir_toast.dart';
+export 'src/components/feedback/elogir_tooltip.dart';
