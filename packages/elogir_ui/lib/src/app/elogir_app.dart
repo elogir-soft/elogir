@@ -1,5 +1,6 @@
 import 'dart:ui' show Brightness, PlatformDispatcher;
 
+import 'package:flutter/services.dart' show AnnotatedRegion, SystemUiOverlayStyle;
 import 'package:flutter/widgets.dart';
 
 import '../theme/theme.dart';
@@ -190,9 +191,14 @@ class _ElogirAppState extends State<ElogirApp> with WidgetsBindingObserver {
       );
     }
 
-    return ElogirTheme(
-      data: themeData,
-      child: app,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: themeData.brightness == Brightness.dark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: ElogirTheme(
+        data: themeData,
+        child: app,
+      ),
     );
   }
 }
