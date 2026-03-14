@@ -187,7 +187,9 @@ class _ElogirTextFieldState extends State<ElogirTextField>
           ),
           padding: EdgeInsets.symmetric(horizontal: theme.spacing.md),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: widget.maxLines == 1
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             children: [
               if (widget.prefixIcon != null)
                 Padding(
@@ -205,7 +207,9 @@ class _ElogirTextFieldState extends State<ElogirTextField>
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 14),
                   child: Stack(
-                    alignment: Alignment.centerLeft,
+                    alignment: widget.maxLines == 1
+                        ? Alignment.centerLeft
+                        : Alignment.topLeft,
                     children: [
                       // Hint text
                       if (!_hasText && widget.hint != null)
