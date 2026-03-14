@@ -82,30 +82,23 @@ class _CompactLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ElogirTheme.of(context);
-    final iconColor = theme.colors.onSurfaceVariant;
-    final activeColor = theme.colors.primary;
-
     return Column(
       children: [
         Expanded(child: navigator),
         ElogirBottomNav(
           selectedIndex: currentIndex,
           onChanged: onNavigate,
-          items: [
+          items: const [
             ElogirBottomNavItem(
-              icon: AlarmIcon(color: iconColor),
-              activeIcon: AlarmIcon(color: activeColor),
+              icon: AlarmIcon(),
               label: 'Alarms',
             ),
             ElogirBottomNavItem(
-              icon: TimerIcon(color: iconColor),
-              activeIcon: TimerIcon(color: activeColor),
+              icon: TimerIcon(),
               label: 'Timers',
             ),
             ElogirBottomNavItem(
-              icon: StopwatchIcon(color: iconColor),
-              activeIcon: StopwatchIcon(color: activeColor),
+              icon: StopwatchIcon(),
               label: 'Stopwatch',
             ),
           ],

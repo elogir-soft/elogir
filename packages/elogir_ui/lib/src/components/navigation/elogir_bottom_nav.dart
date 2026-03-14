@@ -1,3 +1,4 @@
+import 'dart:ui' show ImageFilter;
 import 'package:flutter/widgets.dart';
 
 import '../../theme/theme.dart';
@@ -19,10 +20,13 @@ class ElogirBottomNavItem {
   final Widget? activeIcon;
 }
 
-/// A mobile bottom navigation bar with animated selection.
+/// A mobile bottom navigation bar with a unique floating glass pill design.
 ///
-/// Soft Industrial style: thick top border with a sliding active
-/// indicator segment, bold label on the selected item.
+/// Features:
+/// - Floating design with generous margins
+/// - Glassmorphism (BackdropFilter blur)
+/// - Sliding solid background pill for the active item
+/// - Scale-bump animations on selection
 class ElogirBottomNav extends StatelessWidget {
   const ElogirBottomNav({
     super.key,
@@ -43,65 +47,79 @@ class ElogirBottomNav extends StatelessWidget {
     final colors = theme.colors;
     final clampedIndex = selectedIndex.clamp(0, items.length - 1);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(
-          top: BorderSide(
-            color: colors.outlineVariant,
-            width: theme.strokes.thick,
-          ),
-        ),
-      ),
-      child: SafeArea(
-        top: false,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final itemWidth = constraints.maxWidth / items.length;
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final horizontalPadding = theme.spacing.lg;
+    final verticalMargin = theme.spacing.md;
 
-            return Stack(
-              children: [
-                // Sliding active indicator at top
-                AnimatedPositioned(
-                  duration: theme.durations.normal,
-                  curve: Curves.easeOutCubic,
-                  left: clampedIndex * itemWidth + itemWidth * 0.2,
-                  top: 0,
-                  width: itemWidth * 0.6,
-                  height: theme.strokes.thick,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: colors.primary,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: theme.radii.xs.topLeft,
-                        bottomRight: theme.radii.xs.topLeft,
+    final outerRadius = theme.radii.xl.topLeft.x + 12;
+    final indicatorPadding = theme.spacing.sm;
+    final innerRadius = outerRadius - indicatorPadding;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        0,
+        horizontalPadding,
+        bottomPadding > 0 ? bottomPadding : verticalMargin,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(outerRadius)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            height: 80, // Increased height for better vertical breathing room
+            decoration: BoxDecoration(
+              color: colors.surface.withOpacity(0.85),
+              borderRadius: BorderRadius.all(Radius.circular(outerRadius)),
+              border: Border.all(
+                color: colors.outlineVariant,
+                width: theme.strokes.thick,
+              ),
+            ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final itemWidth = constraints.maxWidth / items.length;
+                final pillHeight = 56.0; // Slightly taller pill to comfortably fit content
+                final pillTop = (constraints.maxHeight - pillHeight) / 2;
+
+                return Stack(
+                  children: [
+                    // Sliding active background pill
+                    AnimatedPositioned(
+                      duration: theme.durations.normal,
+                      curve: Curves.easeOutCubic,
+                      left: clampedIndex * itemWidth + indicatorPadding,
+                      top: pillTop,
+                      width: itemWidth - (indicatorPadding * 2),
+                      height: pillHeight,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: colors.primaryContainer,
+                          borderRadius: BorderRadius.all(Radius.circular(innerRadius)),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                // Items
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: theme.spacing.sm,
-                    horizontal: theme.spacing.sm,
-                  ),
-                  child: Row(
-                    children: [
-                      for (int i = 0; i < items.length; i++)
-                        Expanded(
-                          child: _BottomNavItemWidget(
-                            item: items[i],
-                            isSelected: i == clampedIndex,
-                            enabled: enabled,
-                            onPressed: () => onChanged(i),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+                    // Items
+                    Positioned.fill(
+                      child: Row(
+                        children: [
+                          for (int i = 0; i < items.length; i++)
+                            Expanded(
+                              child: _BottomNavItemWidget(
+                                item: items[i],
+                                isSelected: i == clampedIndex,
+                                enabled: enabled,
+                                onPressed: () => onChanged(i),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -139,12 +157,12 @@ class _BottomNavItemWidgetState extends State<_BottomNavItemWidget>
     );
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.2)
+        tween: Tween(begin: 1.0, end: 1.1)
             .chain(CurveTween(curve: Curves.easeOut)),
         weight: 40,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.2, end: 1.0)
+        tween: Tween(begin: 1.1, end: 1.0)
             .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 60,
       ),
@@ -170,8 +188,9 @@ class _BottomNavItemWidgetState extends State<_BottomNavItemWidget>
     final theme = ElogirTheme.of(context);
     final colors = theme.colors;
 
-    final color =
-        widget.isSelected ? colors.primary : colors.onSurfaceVariant;
+    final color = widget.isSelected
+        ? colors.onPrimaryContainer
+        : colors.onSurfaceVariant;
     final iconWidget = widget.isSelected
         ? (widget.item.activeIcon ?? widget.item.icon)
         : widget.item.icon;
@@ -179,11 +198,11 @@ class _BottomNavItemWidgetState extends State<_BottomNavItemWidget>
     return ElogirPressable(
       enabled: widget.enabled,
       onPressed: widget.onPressed,
-      pressScale: 0.95,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: theme.spacing.xs),
+      pressScale: 0.96,
+      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedBuilder(
               animation: _scaleAnimation,
@@ -193,16 +212,23 @@ class _BottomNavItemWidgetState extends State<_BottomNavItemWidget>
                   child: child,
                 );
               },
-              child: IconTheme(
-                data: IconThemeData(color: color, size: 22),
-                child: iconWidget,
+              child: AnimatedDefaultTextStyle(
+                duration: theme.durations.normal,
+                curve: Curves.easeOutCubic,
+                style: TextStyle(color: color),
+                child: IconTheme(
+                  data: IconThemeData(color: color, size: 24),
+                  child: iconWidget,
+                ),
               ),
             ),
-            SizedBox(height: theme.spacing.xs),
+            const SizedBox(height: 2),
             AnimatedDefaultTextStyle(
-              duration: theme.durations.fast,
+              duration: theme.durations.normal,
+              curve: Curves.easeOutCubic,
               style: theme.typography.labelSmall.copyWith(
                 color: color,
+                fontSize: 10,
                 fontWeight:
                     widget.isSelected ? FontWeight.w700 : FontWeight.w500,
               ),

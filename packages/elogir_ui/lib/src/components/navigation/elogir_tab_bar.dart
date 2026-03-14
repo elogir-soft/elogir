@@ -70,7 +70,7 @@ class ElogirTabBar extends StatelessWidget {
             : null,
       ),
       padding: indicatorStyle == ElogirTabIndicatorStyle.pill
-          ? const EdgeInsets.all(3)
+          ? const EdgeInsets.all(4)
           : null,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -104,15 +104,11 @@ class ElogirTabBar extends StatelessWidget {
                   width: tabWidth,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: colors.surface,
+                      color: colors.primary,
                       borderRadius: BorderRadius.all(
                         Radius.circular(
-                          (theme.radii.md.topLeft.x - 3).clamp(0, double.infinity),
+                          (theme.radii.md.topLeft.x - 4).clamp(0, double.infinity),
                         ),
-                      ),
-                      border: Border.all(
-                        color: colors.outlineVariant,
-                        width: theme.strokes.thin,
                       ),
                     ),
                   ),
@@ -219,7 +215,9 @@ class _TabItemState extends State<_TabItem> {
     final colors = theme.colors;
 
     final color = widget.isSelected
-        ? colors.primary
+        ? (widget.indicatorStyle == ElogirTabIndicatorStyle.pill
+            ? colors.onPrimary
+            : colors.primary)
         : _hovered
             ? colors.onSurface
             : colors.onSurfaceVariant;
@@ -232,7 +230,7 @@ class _TabItemState extends State<_TabItem> {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: theme.spacing.md,
-          vertical: theme.spacing.sm + theme.spacing.xs,
+          vertical: theme.spacing.sm,
         ),
         decoration: widget.showUnderline && widget.isSelected
             ? BoxDecoration(

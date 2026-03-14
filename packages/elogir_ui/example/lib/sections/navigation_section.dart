@@ -43,28 +43,18 @@ class _NavigationSectionState extends State<NavigationSection> {
         ),
 
         SizedBox(height: theme.spacing.xl),
-        ElogirDivider(label: ElogirText('Bottom Nav')),
+        ElogirDivider(label: ElogirText('Bottom Nav (Floating)')),
         SizedBox(height: theme.spacing.md),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.colors.outlineVariant,
-              width: theme.strokes.thick,
-            ),
-            borderRadius: theme.radii.md,
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: ElogirBottomNav(
-            items: const [
-              ElogirBottomNavItem(icon: _NavIcon(icon: 0x1F3E0), label: 'Home'),
-              ElogirBottomNavItem(
-                  icon: _NavIcon(icon: 0x1F50D), label: 'Search'),
-              ElogirBottomNavItem(
-                  icon: _NavIcon(icon: 0x1F464), label: 'Profile'),
-            ],
-            selectedIndex: _bottomNavIndex,
-            onChanged: (i) => setState(() => _bottomNavIndex = i),
-          ),
+        ElogirBottomNav(
+          items: const [
+            ElogirBottomNavItem(icon: _NavIcon(icon: 0x1F3E0), label: 'Home'),
+            ElogirBottomNavItem(
+                icon: _NavIcon(icon: 0x1F50D), label: 'Search'),
+            ElogirBottomNavItem(
+                icon: _NavIcon(icon: 0x1F464), label: 'Profile'),
+          ],
+          selectedIndex: _bottomNavIndex,
+          onChanged: (i) => setState(() => _bottomNavIndex = i),
         ),
       ],
     );

@@ -1,10 +1,11 @@
+import 'dart:ui' show ImageFilter;
 import 'package:flutter/widgets.dart';
 
 import '../../theme/theme.dart';
 
 /// A top app bar with leading/title/trailing layout.
 ///
-/// Soft Industrial style: thick bottom border, generous height.
+/// Soft Industrial style: Glassmorphism with a thick bottom border.
 class ElogirAppBar extends StatelessWidget {
   const ElogirAppBar({
     super.key,
@@ -12,7 +13,7 @@ class ElogirAppBar extends StatelessWidget {
     this.leading,
     this.trailing,
     this.backgroundColor,
-    this.height = 60.0,
+    this.height = 64.0,
     this.padding,
   });
 
@@ -31,43 +32,51 @@ class ElogirAppBar extends StatelessWidget {
 
     return Semantics(
       header: true,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: backgroundColor ?? theme.colors.surface,
-          border: Border(
-            bottom: BorderSide(
-              color: theme.colors.outlineVariant,
-              width: theme.strokes.thick,
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: (backgroundColor ?? theme.colors.surface).withOpacity(0.8),
+              border: Border(
+                bottom: BorderSide(
+                  color: theme.colors.outlineVariant,
+                  width: theme.strokes.thick,
+                ),
+              ),
             ),
-          ),
-        ),
-        child: SafeArea(
-          bottom: false,
-          child: SizedBox(
-            height: height,
-            child: Padding(
-              padding: effectivePadding,
-              child: Row(
-                children: [
-                  ?leading,
-                  if (title != null)
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: theme.spacing.sm,
-                        ),
-                        child: DefaultTextStyle.merge(
-                          style: theme.typography.titleLarge.copyWith(
-                            color: theme.colors.onSurface,
+            child: SafeArea(
+              bottom: false,
+              child: SizedBox(
+                height: height,
+                child: Padding(
+                  padding: effectivePadding,
+                  child: Row(
+                    children: [
+                      if (leading != null) ...[
+                        leading!,
+                        SizedBox(width: theme.spacing.md),
+                      ],
+                      if (title != null)
+                        Expanded(
+                          child: DefaultTextStyle.merge(
+                            style: theme.typography.titleLarge.copyWith(
+                              color: theme.colors.onSurface,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                            ),
+                            child: title!,
                           ),
-                          child: title!,
-                        ),
-                      ),
-                    )
-                  else
-                    const Spacer(),
-                  ?trailing,
-                ],
+                        )
+                      else
+                        const Spacer(),
+                      if (trailing != null) ...[
+                        SizedBox(width: theme.spacing.md),
+                        trailing!,
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

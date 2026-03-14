@@ -16,10 +16,11 @@ class AlarmIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconTheme = IconTheme.of(context);
     return CustomPaint(
       size: Size(size, size),
       painter: _AlarmIconPainter(
-        color: color ?? const Color(0xFF1D1B20),
+        color: color ?? iconTheme.color ?? const Color(0xFF1D1B20),
       ),
     );
   }
@@ -102,10 +103,11 @@ class TimerIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconTheme = IconTheme.of(context);
     return CustomPaint(
       size: Size(size, size),
       painter: _TimerIconPainter(
-        color: color ?? const Color(0xFF1D1B20),
+        color: color ?? iconTheme.color ?? const Color(0xFF1D1B20),
       ),
     );
   }
@@ -172,10 +174,11 @@ class StopwatchIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconTheme = IconTheme.of(context);
     return CustomPaint(
       size: Size(size, size),
       painter: _StopwatchIconPainter(
-        color: color ?? const Color(0xFF1D1B20),
+        color: color ?? iconTheme.color ?? const Color(0xFF1D1B20),
       ),
     );
   }

@@ -42,18 +42,14 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
         color: colors.surfaceContainer,
         borderRadius: theme.radii.md,
         border: Border.all(
-          color: colors.outline,
+          color: colors.outlineVariant,
           width: theme.strokes.thick,
         ),
       ),
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(4),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final segmentWidth =
-              (constraints.maxWidth - 6) / segments.length;
-          // Account for padding (3 on each side = 6 total subtracted)
-          // The 6 is already subtracted above because constraints.maxWidth
-          // is after the Container padding
+          final segmentWidth = constraints.maxWidth / segments.length;
 
           return Stack(
             children: [
@@ -67,16 +63,12 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
                 width: segmentWidth,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: colors.surface,
+                    color: colors.primary,
                     borderRadius: BorderRadius.all(
                         Radius.circular(
-                          (theme.radii.md.topLeft.x - 3).clamp(0, double.infinity),
+                          (theme.radii.md.topLeft.x - 4).clamp(0, double.infinity),
                         ),
                       ),
-                    border: Border.all(
-                      color: colors.outlineVariant,
-                      width: theme.strokes.thin,
-                    ),
                   ),
                 ),
               ),
@@ -91,7 +83,7 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
                       pressScale: 0.98,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          vertical: theme.spacing.sm + theme.spacing.xxs,
+                          vertical: theme.spacing.sm,
                           horizontal: theme.spacing.sm,
                         ),
                         alignment: Alignment.center,
@@ -103,7 +95,7 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
                               IconTheme(
                                 data: IconThemeData(
                                   color: isSelected
-                                      ? colors.onSurface
+                                      ? colors.onPrimary
                                       : colors.onSurfaceVariant,
                                   size: 16,
                                 ),
@@ -115,7 +107,7 @@ class ElogirSegmentedControl<T> extends StatelessWidget {
                               segment.label,
                               style: theme.typography.labelMedium.copyWith(
                                 color: isSelected
-                                    ? colors.onSurface
+                                    ? colors.onPrimary
                                     : colors.onSurfaceVariant,
                                 fontWeight: isSelected
                                     ? FontWeight.w700
