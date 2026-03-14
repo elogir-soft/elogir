@@ -9,21 +9,18 @@ elogir_ui is a Flutter UI component library built entirely from Flutter primitiv
 ## Commands
 
 ```bash
-# Analyze (from project root — covers both lib/ and example/)
+# From monorepo root — preferred
+melos run analyze         # all packages
+melos run test            # all packages with test/ dirs
+
+# From this package directory
 flutter analyze
-
-# Run tests (example app has the widget tests)
 cd example && flutter test
-
-# Run a single test file
 cd example && flutter test test/widget_test.dart
 
-# Get dependencies after pubspec changes
-flutter pub get
-cd example && flutter pub get
+# After pubspec changes, re-bootstrap from monorepo root
+melos bootstrap
 ```
-
-There is no build step, CI/CD, or custom scripts.
 
 ## Architecture
 
