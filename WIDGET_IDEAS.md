@@ -99,32 +99,45 @@ Shadows are subtle or absent — depth comes from borders and layering.
 
 ## Future Widget Ideas
 
+### Forms (continued)
+
+- [x] ElogirRadioGroup — custom radio buttons with animated selection dot, group management
+
+### Navigation (continued)
+
+- [x] ElogirBreadcrumb — path-style navigation with chevron separators
+
+### Data Display (continued)
+
+- [x] ElogirTimeline — vertical sequence with dots, connectors, title/subtitle/content
+
+### Feedback (continued)
+
+- [x] ElogirDrawer — slide-in panel from any edge with scrim overlay
+- [x] ElogirBottomSheet — draggable sheet with handle bar, drag-to-dismiss
+- [x] ElogirPopover — anchored floating panel with arbitrary content, barrier dismissible
+
+---
+
+## Future Widget Ideas
+
 ### Navigation & Structure
 
 - [ ] ElogirSidebar — collapsible side nav with icon+label items, nested groups, active indicator animation
 - [ ] ElogirTabBar — tab strip with animated underline/pill indicator that slides between tabs
-- [ ] ElogirBreadcrumb — path-style navigation with separators, truncation for deep paths
 - [ ] ElogirBottomNav — mobile bottom bar with animated icon transitions on selection
 - [ ] ElogirCommandPalette — Cmd+K style overlay with fuzzy search, keyboard navigation, action groups
-- [ ] ElogirDrawer — slide-in panel from any edge, with overlay
 
 ### Data Display
 
 - [ ] ElogirDataTable — sortable columns, row selection, sticky headers, virtual scrolling
-- [ ] ElogirTimeline — vertical sequence of events with connectors, icons, timestamps
 - [ ] ElogirStatCard — number + label + trend arrow/sparkline for dashboards
 
 ### Forms
 
-- [ ] ElogirRadioGroup — custom radio buttons with group management
 - [ ] ElogirDropdown — overlay-based picker, searchable, multi-select variant
 - [ ] ElogirSlider — range slider with tooltip showing current value
 - [ ] ElogirDatePicker — calendar overlay, range selection
-
-### Feedback & Overlay
-
-- [ ] ElogirBottomSheet — draggable sheet with snap points, handle bar
-- [ ] ElogirPopover — anchored floating panel with arbitrary content
 
 ### Layout
 

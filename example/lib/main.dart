@@ -54,6 +54,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _checkboxValue = false;
   String _selectedSegment = 'all';
+  String? _selectedFruit;
+  final GlobalKey<ElogirPopoverState> _popoverKey =
+      GlobalKey<ElogirPopoverState>();
 
   @override
   Widget build(BuildContext context) {
@@ -457,6 +460,187 @@ class _HomePageState extends State<HomePage> {
                     child: const Text('Show Dialog'),
                   ),
                 ],
+              ),
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Radio Group')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirRadioGroup<String>(
+              options: const [
+                ElogirRadioOption(value: 'apple', label: Text('Apple')),
+                ElogirRadioOption(value: 'banana', label: Text('Banana')),
+                ElogirRadioOption(value: 'cherry', label: Text('Cherry')),
+              ],
+              value: _selectedFruit,
+              onChanged: (v) => setState(() => _selectedFruit = v),
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Breadcrumb')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirBreadcrumb(
+              items: [
+                ElogirBreadcrumbItem(label: 'Home', onPressed: () {}),
+                ElogirBreadcrumbItem(label: 'Components', onPressed: () {}),
+                ElogirBreadcrumbItem(label: 'Breadcrumb'),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Timeline')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirTimeline(
+              items: [
+                ElogirTimelineItem(
+                  title: const Text('Project started'),
+                  subtitle: const Text('March 1, 2026'),
+                  content: const Text('Initial commit and project setup.'),
+                ),
+                ElogirTimelineItem(
+                  title: const Text('Theme system'),
+                  subtitle: const Text('March 5, 2026'),
+                  content: const Text(
+                      'Color palette, typography, spacing tokens.'),
+                ),
+                ElogirTimelineItem(
+                  title: const Text('Core widgets'),
+                  subtitle: const Text('March 10, 2026'),
+                ),
+                ElogirTimelineItem(
+                  title: const Text('Advanced widgets'),
+                  subtitle: const Text('March 14, 2026'),
+                  content: const Text('Drawer, bottom sheet, popover, etc.'),
+                ),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Drawer & Bottom Sheet')),
+            SizedBox(height: theme.spacing.md),
+
+            Wrap(
+              spacing: theme.spacing.sm,
+              runSpacing: theme.spacing.sm,
+              children: [
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  onPressed: () {
+                    ElogirDrawer.show(
+                      context: context,
+                      position: ElogirDrawerPosition.left,
+                      builder: (_) => Padding(
+                        padding: EdgeInsets.all(theme.spacing.lg),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ElogirText('Drawer',
+                                variant: ElogirTextVariant.titleLarge),
+                            SizedBox(height: theme.spacing.md),
+                            ElogirText(
+                                'This drawer slides in from the left.'),
+                            SizedBox(height: theme.spacing.lg),
+                            ElogirButton(
+                              size: ElogirButtonSize.sm,
+                              variant: ElogirButtonVariant.outlined,
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Left Drawer'),
+                ),
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  variant: ElogirButtonVariant.outlined,
+                  onPressed: () {
+                    ElogirDrawer.show(
+                      context: context,
+                      position: ElogirDrawerPosition.right,
+                      builder: (_) => Padding(
+                        padding: EdgeInsets.all(theme.spacing.lg),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ElogirText('Right Drawer',
+                                variant: ElogirTextVariant.titleLarge),
+                            SizedBox(height: theme.spacing.md),
+                            ElogirText('Slides in from the right side.'),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Right Drawer'),
+                ),
+                ElogirButton(
+                  size: ElogirButtonSize.sm,
+                  variant: ElogirButtonVariant.ghost,
+                  onPressed: () {
+                    ElogirBottomSheet.show(
+                      context: context,
+                      builder: (_) => Padding(
+                        padding: EdgeInsets.all(theme.spacing.lg),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ElogirText('Bottom Sheet',
+                                variant: ElogirTextVariant.titleLarge),
+                            SizedBox(height: theme.spacing.sm),
+                            ElogirText(
+                                'Drag down to dismiss, or tap the scrim.'),
+                            SizedBox(height: theme.spacing.md),
+                            ElogirTextField(
+                              label: 'Quick note',
+                              hint: 'Type something…',
+                            ),
+                            SizedBox(height: theme.spacing.md),
+                            ElogirButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Done'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Bottom Sheet'),
+                ),
+              ],
+            ),
+
+            SizedBox(height: theme.spacing.xl),
+            ElogirDivider(label: ElogirText('Popover')),
+            SizedBox(height: theme.spacing.md),
+
+            ElogirPopover(
+              key: _popoverKey,
+              anchor: ElogirButton(
+                size: ElogirButtonSize.sm,
+                variant: ElogirButtonVariant.outlined,
+                onPressed: () => _popoverKey.currentState?.toggle(),
+                child: const Text('Toggle Popover'),
+              ),
+              content: (context) => Padding(
+                padding: EdgeInsets.all(theme.spacing.md),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElogirText('Popover Content',
+                        variant: ElogirTextVariant.titleSmall),
+                    SizedBox(height: theme.spacing.xs),
+                    ElogirText(
+                        'This can contain any widget — forms, lists, etc.'),
+                  ],
+                ),
               ),
             ),
 
