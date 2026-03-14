@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 
+import 'sections/advanced_section.dart';
 import 'sections/buttons_section.dart';
 import 'sections/data_display_section.dart';
 import 'sections/feedback_section.dart';
@@ -100,6 +101,8 @@ class HomePage extends StatelessWidget {
             const NavigationSection(),
             SizedBox(height: theme.spacing.xl),
             const ThemeSection(),
+            SizedBox(height: theme.spacing.xl),
+            const AdvancedSection(),
             SizedBox(height: theme.spacing.xxl),
           ],
         ),

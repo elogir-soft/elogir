@@ -14,6 +14,10 @@ class _FormsSectionState extends State<FormsSection> {
   String? _selectedFruit;
   double _sliderValue = 0.4;
   String? _selectedDropdown;
+  DateTime? _selectedDate;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  Set<DateTime> _multiDates = {};
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +100,46 @@ class _FormsSectionState extends State<FormsSection> {
           max: 10,
           divisions: 10,
           label: (v) => v.round().toString(),
+        ),
+
+        SizedBox(height: theme.spacing.xl),
+        ElogirDivider(label: ElogirText('Date Picker')),
+        SizedBox(height: theme.spacing.md),
+        ElogirText('Single', variant: ElogirTextVariant.labelSmall),
+        SizedBox(height: theme.spacing.xs),
+        ElogirDatePicker(
+          value: _selectedDate,
+          onChanged: (date) => setState(() => _selectedDate = date),
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2030, 12, 31),
+          width: 220,
+        ),
+        SizedBox(height: theme.spacing.md),
+        ElogirText('Range', variant: ElogirTextVariant.labelSmall),
+        SizedBox(height: theme.spacing.xs),
+        ElogirDatePicker(
+          selectionMode: ElogirDateSelectionMode.range,
+          rangeStart: _rangeStart,
+          rangeEnd: _rangeEnd,
+          onRangeChanged: (s, e) => setState(() {
+            _rangeStart = s;
+            _rangeEnd = e;
+          }),
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2030, 12, 31),
+          width: 280,
+        ),
+        SizedBox(height: theme.spacing.md),
+        ElogirText('Multiple', variant: ElogirTextVariant.labelSmall),
+        SizedBox(height: theme.spacing.xs),
+        ElogirDatePicker(
+          selectionMode: ElogirDateSelectionMode.multiple,
+          selectedDates: _multiDates,
+          onMultiChanged: (dates) =>
+              setState(() => _multiDates = dates),
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2030, 12, 31),
+          width: 260,
         ),
 
         SizedBox(height: theme.spacing.xl),

@@ -135,11 +135,10 @@ Shadows are subtle or absent — depth comes from borders and layering.
 
 ---
 
-## Future Widget Ideas
+## Batch 5 — Advanced Widgets
 
-- [ ] ElogirSidebar — collapsible side nav with icon+label items, nested groups, active indicator animation
-- [ ] ElogirCommandPalette — Cmd+K style overlay with fuzzy search, keyboard navigation, action groups
-- [ ] ElogirDataTable — sortable columns, row selection, sticky headers, virtual scrolling
-- [ ] ElogirDatePicker — calendar overlay, range selection
-- [ ] ElogirAnimatedList — staggered entry animations when items appear
-- [ ] ElogirPageTransition — shared-element-style transitions between routes
+- [x] ElogirDataTable — sortable columns, row selection, thick-bordered header/rows, hover highlights
+- [x] ElogirDatePicker — overlay calendar with month navigation, day selection, today highlight
+- [x] ElogirAnimatedList — staggered fade + slide-in animations for child widgets
+- [x] ElogirCommandPalette — Cmd+K style overlay with search field, keyboard navigation, action groups
+- [x] ElogirPageTransition — route transition builder with fade, slide, scale, and fadeScale types

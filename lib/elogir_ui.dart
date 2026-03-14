@@ -31,6 +31,7 @@ export 'src/components/text/elogir_text.dart';
 
 // Components — forms
 export 'src/components/forms/elogir_checkbox.dart';
+export 'src/components/forms/elogir_date_picker.dart';
 export 'src/components/forms/elogir_dropdown.dart';
 export 'src/components/forms/elogir_radio_group.dart';
 export 'src/components/forms/elogir_search_field.dart';
@@ -49,6 +50,7 @@ export 'src/components/surfaces/elogir_card.dart';
 // Components — data display
 export 'src/components/data_display/elogir_avatar.dart';
 export 'src/components/data_display/elogir_badge.dart';
+export 'src/components/data_display/elogir_data_table.dart';
 export 'src/components/data_display/elogir_stat_card.dart';
 export 'src/components/data_display/elogir_tag.dart';
 export 'src/components/data_display/elogir_theme_showcase.dart';
@@ -57,11 +59,14 @@ export 'src/components/data_display/elogir_timeline.dart';
 // Components — navigation
 export 'src/components/navigation/elogir_bottom_nav.dart';
 export 'src/components/navigation/elogir_breadcrumb.dart';
+export 'src/components/navigation/elogir_command_palette.dart';
+export 'src/components/navigation/elogir_page_transition.dart';
 export 'src/components/navigation/elogir_segmented_control.dart';
 export 'src/components/navigation/elogir_tab_bar.dart';
 export 'src/components/navigation/elogir_theme_mode_switch.dart';
 
 // Components — utility
+export 'src/components/utility/elogir_animated_list.dart';
 export 'src/components/utility/elogir_divider.dart';
 
 // Components — feedback

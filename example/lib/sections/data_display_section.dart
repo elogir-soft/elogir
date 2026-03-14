@@ -1,8 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 
-class DataDisplaySection extends StatelessWidget {
+class DataDisplaySection extends StatefulWidget {
   const DataDisplaySection({super.key});
+
+  @override
+  State<DataDisplaySection> createState() => _DataDisplaySectionState();
+}
+
+class _DataDisplaySectionState extends State<DataDisplaySection> {
+  int? _sortColumn;
+  bool _sortAscending = true;
+  final Set<int> _selectedRows = {};
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +91,53 @@ class DataDisplaySection extends StatelessWidget {
               width: 180,
             ),
           ],
+        ),
+
+        SizedBox(height: theme.spacing.xl),
+        ElogirDivider(label: ElogirText('Data Table')),
+        SizedBox(height: theme.spacing.md),
+        ElogirDataTable(
+          columns: const [
+            ElogirDataColumn(label: Text('Name'), sortable: true),
+            ElogirDataColumn(label: Text('Role')),
+            ElogirDataColumn(
+                label: Text('Revenue'), numeric: true, sortable: true),
+          ],
+          rows: [
+            for (final entry in [
+              ('Alice Chen', 'Engineer', '\$12,400', 0),
+              ('Bob Martinez', 'Designer', '\$9,800', 1),
+              ('Carol Kim', 'PM', '\$15,200', 2),
+              ('Dan Okafor', 'Engineer', '\$11,600', 3),
+            ])
+              ElogirDataRow(
+                cells: [Text(entry.$1), Text(entry.$2), Text(entry.$3)],
+                selected: _selectedRows.contains(entry.$4),
+                onSelectChanged: (v) {
+                  setState(() {
+                    if (v) {
+                      _selectedRows.add(entry.$4);
+                    } else {
+                      _selectedRows.remove(entry.$4);
+                    }
+                  });
+                },
+              ),
+          ],
+          showCheckboxColumn: true,
+          sortColumnIndex: _sortColumn,
+          sortAscending: _sortAscending,
+          onSort: (col, asc) => setState(() {
+            _sortColumn = col;
+            _sortAscending = asc;
+          }),
+          onSelectAll: (v) => setState(() {
+            if (v) {
+              _selectedRows.addAll([0, 1, 2, 3]);
+            } else {
+              _selectedRows.clear();
+            }
+          }),
         ),
 
         SizedBox(height: theme.spacing.xl),
