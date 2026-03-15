@@ -47,3 +47,12 @@ melos:
 
   ide:
     intellij: true
+
+  command:
+    version:
+      # This tells Melos to generate tags like 'package_name-vX.Y.Z'
+      # so you can release apps independently.
+      independent: true
+      # This ensures Melos uses conventional commits to calculate the next version.
+      # You should use commit messages like 'feat(alarm): new alarm sound' or 'fix(calc): ...'
+      # linkToCommits: true

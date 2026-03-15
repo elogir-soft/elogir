@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:elogir_auto/elogir_auto.dart';
 import 'package:elogir_home/app/app.dart';
 import 'package:elogir_home/database/app_database.dart';
@@ -7,6 +9,7 @@ import 'package:elogir_home/shared/providers/auto_database_provider.dart';
 import 'package:elogir_home/shared/providers/elogir_auto_provider.dart';
 import 'package:elogir_home/shared/providers/secure_storage_provider.dart';
 import 'package:elogir_home/shared/providers/talker_provider.dart';
+import 'package:elogir_updater/elogir_updater.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -18,6 +21,10 @@ Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final talker = Talker();
+
+  // Background update check — fire-and-forget to avoid slowing down startup.
+  unawaited(_checkForUpdates(talker));
+
   final autoDb = AutoDatabase();
   final elogirAuto = ElogirAuto(database: autoDb);
   final appDb = AppDatabase();
@@ -49,4 +56,22 @@ Future<void> bootstrap() async {
       child: const App(),
     ),
   );
+}
+
+/// Checks for updates in the background.
+Future<void> _checkForUpdates(Talker talker) async {
+  try {
+    final updater = ElogirUpdater(
+      owner: 'elogir',
+      repo: 'elogir',
+      appPrefix: 'elogir_home',
+    );
+
+    final release = await updater.checkForUpdate();
+    if (release != null) {
+      talker.info('New update available: ${release.version}');
+    }
+  } catch (e) {
+    talker.error('Update check failed: $e');
+  }
 }

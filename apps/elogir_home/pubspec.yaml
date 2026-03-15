@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   elogir_ui:
+  elogir_updater:
   elogir_auto:
   flutter_riverpod:
   riverpod_annotation:

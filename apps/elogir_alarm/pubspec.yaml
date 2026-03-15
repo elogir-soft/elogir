@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   elogir_ui:
+  elogir_updater:
   flutter_riverpod:
   riverpod_annotation:
   freezed_annotation:

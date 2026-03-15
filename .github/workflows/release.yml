@@ -1,0 +1,72 @@
+name: App Release
+
+on:
+  push:
+    tags:
+      - '*-v*' # e.g. elogir_alarm-v0.1.0, elogir_calc-v1.2.3
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get Tag Info
+        id: tag_info
+        run: |
+          # The tag is e.g. elogir_alarm-v0.1.0
+          TAG=${GITHUB_REF#refs/tags/}
+          # Split by -v
+          APP_NAME=$(echo $TAG | sed 's/-v.*//')
+          VERSION=$(echo $TAG | grep -o 'v.*')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "app_name=$APP_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Map app name to directory
+          if [[ "$APP_NAME" == "elogir_alarm" ]]; then
+            echo "dir=apps/elogir_alarm" >> $GITHUB_OUTPUT
+          elif [[ "$APP_NAME" == "elogir_calc" ]]; then
+            echo "dir=apps/elogir_calc" >> $GITHUB_OUTPUT
+          elif [[ "$APP_NAME" == "elogir_home" ]]; then
+            echo "dir=apps/elogir_home" >> $GITHUB_OUTPUT
+          elif [[ "$APP_NAME" == "elogir_notes" ]]; then
+            echo "dir=apps/elogir_notes" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown app: $APP_NAME"
+            exit 1
+          fi
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap Melos
+        run: melos bootstrap
+
+      - name: Build APK
+        working-directory: ${{ steps.tag_info.outputs.dir }}
+        run: flutter build apk --release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag_info.outputs.tag }}
+          name: "${{ steps.tag_info.outputs.app_name }} ${{ steps.tag_info.outputs.version }}"
+          files: ${{ steps.tag_info.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
+          draft: false
+          prerelease: false

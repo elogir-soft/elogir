@@ -11,6 +11,7 @@ dependencies:
   drift:
   drift_flutter:
   elogir_ui:
+  elogir_updater:
   flutter:
     sdk: flutter
   flutter_riverpod:
