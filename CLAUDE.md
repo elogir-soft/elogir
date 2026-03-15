@@ -10,19 +10,22 @@ All apps use the `elogir_ui` design system ("Soft Industrial" — thick borders,
 
 ## Commit Messages
 
-All lowercase. Format: `<scope>: <type> <description>`
+Conventional Commits format (required for `melos version` to auto-detect bumps):
 
+`<type>(<scope>): <description>`
+
+- **type**: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`, `ci`
 - **scope**: app or package name (e.g. `elogir_alarm`, `elogir_ui`, `root`)
-- **type**: `add`, `fix`, `update`, `remove`, `refactor`, `test`, `docs`, `chore`
-- **description**: short summary of what changed
+- **description**: all lowercase, short summary of what changed
+- **breaking changes**: add `!` after scope, e.g. `feat(elogir_ui)!: redesign theme API`
 
 Examples:
 ```
-elogir_alarm: add alarms, timers, and stopwatch
-elogir_ui: fix text field hint alignment for multiline fields
-elogir_ui: update animation system with public widgets and curves
-root: add claude.md with monorepo guide and tech stack
-root: fix workspace globs to avoid picking up .symlinks pubspecs
+feat(elogir_alarm): add alarms, timers, and stopwatch
+fix(elogir_ui): text field hint alignment for multiline fields
+feat(elogir_ui): animation system with public widgets and curves
+chore(root): add claude.md with monorepo guide and tech stack
+fix(root): workspace globs to avoid picking up .symlinks pubspecs
 ```
 
 ## Commands
