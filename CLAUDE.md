@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 elogir is a monorepo for an offline-first Flutter app ecosystem. It uses Melos 7.x with Dart pub workspaces for package management. Currently contains one shared package (`elogir_ui`) and one app (`elogir_notes`). Future packages include `elogir_core` (local DB, sync, auth) and `elogir_auto` (automation engine), with up to 25 apps planned.
 
-All apps use the `elogir_ui` design system ("Soft Industrial" — thick borders, warm neutrals, no Material/Cupertino). Apps set `uses-material-design: false` and import only `package:flutter/widgets.dart`.
+All apps use the `elogir_ui` design system ("Soft Industrial" — thick borders, warm neutrals, no Material/Cupertino). Apps set `uses-material-design: false` and import only `package:flutter/widgets.dart`. Icons come from `font_awesome_flutter` — never use Material Icons.
 
 ## Commit Messages
 
@@ -98,6 +98,7 @@ cd apps/elogir_notes && flutter run
 - `rxdart` — reactive streams, especially in `elogir_auto`'s event engine
 - `talker`, `talker_riverpod_logger`, `talker_dio_logger` — logging
 - `envied` — type-safe environment variables
+- `font_awesome_flutter` — icons (replaces Material Icons since `uses-material-design: false`)
 - `fl_chart` — charts and graphs (Finance, Health, Habits, and data visualization apps)
 
 ### Dev & Quality Libraries
@@ -376,6 +377,7 @@ dependencies:
   talker_dio_logger:
   envied:
   intl:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:
