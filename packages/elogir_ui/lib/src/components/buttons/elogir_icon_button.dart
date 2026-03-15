@@ -113,10 +113,10 @@ class _ElogirIconButtonState extends State<ElogirIconButton> {
       case ElogirIconButtonVariant.ghost:
         fg = enabled ? colors.onSurfaceVariant : colors.onDisabled;
         if (_pressed && enabled) {
-          bg = colors.primary.withValues(alpha: 0.12);
-          fg = colors.primary;
+          bg = colors.onSurface.withValues(alpha: 0.10);
+          fg = colors.onSurface;
         } else if (_hovered && enabled) {
-          bg = colors.primary.withValues(alpha: 0.06);
+          bg = colors.onSurface.withValues(alpha: 0.06);
           fg = colors.onSurface;
         } else {
           bg = const Color(0x00000000);
@@ -167,7 +167,10 @@ class _ElogirIconButtonState extends State<ElogirIconButton> {
         height: buttonSize,
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: widget.borderRadius ?? theme.radii.full,
+          borderRadius: widget.borderRadius ??
+              (widget.variant == ElogirIconButtonVariant.ghost
+                  ? theme.radii.md
+                  : theme.radii.full),
           border: border,
         ),
         child: Center(

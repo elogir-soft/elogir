@@ -20,7 +20,7 @@ class ElogirPressable extends StatefulWidget {
     this.onPressChanged,
     this.onFocusChanged,
     this.enabled = true,
-    this.pressScale = 0.97,
+    this.pressScale = 0.95,
     this.cursor,
     this.autofocus = false,
     this.focusNode,

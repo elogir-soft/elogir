@@ -107,7 +107,7 @@ class _ElogirPopupMenuState extends State<ElogirPopupMenu>
           items: widget.items,
           width: widget.width,
           onItemPressed: (item) {
-            _close();
+            _close(immediate: true);
             item.onPressed();
           },
         );
@@ -118,15 +118,23 @@ class _ElogirPopupMenuState extends State<ElogirPopupMenu>
     setState(() {});
   }
 
-  void _close() {
+  void _close({bool immediate = false}) {
     if (!_isOpen) return;
     _isOpen = false;
-    _fadeController.reverse().then((_) {
+    if (immediate) {
+      _fadeController.reset();
       _overlayEntry?.remove();
       _overlayEntry = null;
       _barrierEntry?.remove();
       _barrierEntry = null;
-    });
+    } else {
+      _fadeController.reverse().then((_) {
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+        _barrierEntry?.remove();
+        _barrierEntry = null;
+      });
+    }
     setState(() {});
   }
 
@@ -231,6 +239,7 @@ class _PopupMenuItemWidget extends StatefulWidget {
 
 class _PopupMenuItemWidgetState extends State<_PopupMenuItemWidget> {
   bool _hovered = false;
+  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -239,14 +248,17 @@ class _PopupMenuItemWidgetState extends State<_PopupMenuItemWidget> {
     return ElogirPressable(
       onPressed: widget.onPressed,
       onHoverChanged: (v) => setState(() => _hovered = v),
-      pressScale: 1.0,
+      onPressChanged: (v) => setState(() => _pressed = v),
+      pressScale: 0.98,
       child: AnimatedContainer(
         duration: widget.theme.durations.fast,
         padding: EdgeInsets.symmetric(
           horizontal: widget.theme.spacing.md,
           vertical: widget.theme.spacing.sm + widget.theme.spacing.xxs,
         ),
-        color: _hovered ? colors.surfaceContainer : colors.surface,
+        color: _pressed || _hovered
+            ? colors.surfaceContainer
+            : colors.surface,
         child: Row(
           children: [
             if (widget.item.icon != null) ...[

@@ -2,6 +2,7 @@ import 'package:elogir_calc/features/calculator/screens/calculator_screen.dart';
 import 'package:elogir_calc/features/history/screens/history_screen.dart';
 import 'package:elogir_calc/features/settings/screens/settings_screen.dart';
 import 'package:elogir_calc/layout/app_shell.dart';
+import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,8 +13,8 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   const SettingsRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SettingsScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: const SettingsScreen());
   }
 }
 

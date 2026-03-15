@@ -3,6 +3,7 @@ import 'package:elogir_home/features/devices/screens/devices_screen.dart';
 import 'package:elogir_home/features/settings/screens/settings_screen.dart';
 import 'package:elogir_home/features/setup/screens/add_device_screen.dart';
 import 'package:elogir_home/layout/app_shell.dart';
+import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,8 +18,8 @@ class DeviceDetailRoute extends GoRouteData with $DeviceDetailRoute {
   final String deviceId;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return DeviceDetailScreen(deviceId: deviceId);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: DeviceDetailScreen(deviceId: deviceId));
   }
 }
 
@@ -28,8 +29,8 @@ class AddDeviceRoute extends GoRouteData with $AddDeviceRoute {
   const AddDeviceRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const AddDeviceScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: const AddDeviceScreen());
   }
 }
 
@@ -39,8 +40,8 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   const SettingsRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SettingsScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: const SettingsScreen());
   }
 }
 

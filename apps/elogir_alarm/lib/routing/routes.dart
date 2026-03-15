@@ -5,6 +5,7 @@ import 'package:elogir_alarm/features/stopwatch/screens/stopwatch_screen.dart';
 import 'package:elogir_alarm/features/timers/screens/timer_ringing_screen.dart';
 import 'package:elogir_alarm/features/timers/screens/timers_screen.dart';
 import 'package:elogir_alarm/layout/app_shell.dart';
+import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,8 +20,8 @@ class AlarmRingingRoute extends GoRouteData with $AlarmRingingRoute {
   final String alarmId;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return AlarmRingingScreen(alarmId: alarmId);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: AlarmRingingScreen(alarmId: alarmId));
   }
 }
 
@@ -32,8 +33,8 @@ class TimerRingingRoute extends GoRouteData with $TimerRingingRoute {
   final String timerId;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return TimerRingingScreen(timerId: timerId);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: TimerRingingScreen(timerId: timerId));
   }
 }
 
@@ -43,8 +44,8 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   const SettingsRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SettingsScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: const SettingsScreen());
   }
 }
 
