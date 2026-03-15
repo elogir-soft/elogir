@@ -21,11 +21,13 @@ class SettingsRepository {
       SettingsTableCompanion(
         id: const Value(1),
         themeMode: Value(settings.themeMode),
+        use24HourFormat: Value(settings.use24HourFormat),
       ),
     );
   }
 
   AppSettings _toModel(SettingsTableData row) => AppSettings(
         themeMode: row.themeMode,
+        use24HourFormat: row.use24HourFormat,
       );
 }

@@ -7,5 +7,6 @@ abstract class AppSettings with _$AppSettings {
   const factory AppSettings({
     /// One of 'system', 'light', 'dark'.
     @Default('system') String themeMode,
+    @Default(false) bool use24HourFormat,
   }) = _AppSettings;
 }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 mixin _$AppSettings {
 
 /// One of 'system', 'light', 'dark'.
- String get themeMode;
+ String get themeMode; bool get use24HourFormat;
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $AppSettingsCopyWith<AppSettings> get copyWith => _$AppSettingsCopyWithImpl<AppS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,themeMode);
+int get hashCode => Object.hash(runtimeType,themeMode,use24HourFormat);
 
 @override
 String toString() {
-  return 'AppSettings(themeMode: $themeMode)';
+  return 'AppSettings(themeMode: $themeMode, use24HourFormat: $use24HourFormat)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $AppSettingsCopyWith<$Res>  {
   factory $AppSettingsCopyWith(AppSettings value, $Res Function(AppSettings) _then) = _$AppSettingsCopyWithImpl;
 @useResult
 $Res call({
- String themeMode
+ String themeMode, bool use24HourFormat
 });
 
 
@@ -63,10 +63,11 @@ class _$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? use24HourFormat = null,}) {
   return _then(_self.copyWith(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
-as String,
+as String,use24HourFormat: null == use24HourFormat ? _self.use24HourFormat : use24HourFormat // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -151,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String themeMode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String themeMode,  bool use24HourFormat)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.themeMode);case _:
+return $default(_that.themeMode,_that.use24HourFormat);case _:
   return orElse();
 
 }
@@ -172,10 +173,10 @@ return $default(_that.themeMode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String themeMode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String themeMode,  bool use24HourFormat)  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings():
-return $default(_that.themeMode);case _:
+return $default(_that.themeMode,_that.use24HourFormat);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +193,10 @@ return $default(_that.themeMode);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String themeMode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String themeMode,  bool use24HourFormat)?  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.themeMode);case _:
+return $default(_that.themeMode,_that.use24HourFormat);case _:
   return null;
 
 }
@@ -207,11 +208,12 @@ return $default(_that.themeMode);case _:
 
 
 class _AppSettings implements AppSettings {
-  const _AppSettings({this.themeMode = 'system'});
+  const _AppSettings({this.themeMode = 'system', this.use24HourFormat = false});
   
 
 /// One of 'system', 'light', 'dark'.
 @override@JsonKey() final  String themeMode;
+@override@JsonKey() final  bool use24HourFormat;
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +225,16 @@ _$AppSettingsCopyWith<_AppSettings> get copyWith => __$AppSettingsCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,themeMode);
+int get hashCode => Object.hash(runtimeType,themeMode,use24HourFormat);
 
 @override
 String toString() {
-  return 'AppSettings(themeMode: $themeMode)';
+  return 'AppSettings(themeMode: $themeMode, use24HourFormat: $use24HourFormat)';
 }
 
 
@@ -243,7 +245,7 @@ abstract mixin class _$AppSettingsCopyWith<$Res> implements $AppSettingsCopyWith
   factory _$AppSettingsCopyWith(_AppSettings value, $Res Function(_AppSettings) _then) = __$AppSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- String themeMode
+ String themeMode, bool use24HourFormat
 });
 
 
@@ -260,10 +262,11 @@ class __$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? use24HourFormat = null,}) {
   return _then(_AppSettings(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
-as String,
+as String,use24HourFormat: null == use24HourFormat ? _self.use24HourFormat : use24HourFormat // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

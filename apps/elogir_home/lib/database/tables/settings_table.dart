@@ -8,6 +8,9 @@ class SettingsTable extends Table {
   TextColumn get themeMode =>
       text().withDefault(const Constant('system'))();
 
+  BoolColumn get use24HourFormat =>
+      boolean().withDefault(const Constant(false))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

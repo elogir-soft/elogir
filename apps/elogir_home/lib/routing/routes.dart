@@ -1,3 +1,5 @@
+import 'package:elogir_home/features/automation/screens/add_automation_screen.dart';
+import 'package:elogir_home/features/automation/screens/automation_screen.dart';
 import 'package:elogir_home/features/devices/screens/device_detail_screen.dart';
 import 'package:elogir_home/features/devices/screens/devices_screen.dart';
 import 'package:elogir_home/features/settings/screens/settings_screen.dart';
@@ -34,6 +36,17 @@ class AddDeviceRoute extends GoRouteData with $AddDeviceRoute {
   }
 }
 
+/// Full-screen add automation flow. Lives outside the shell.
+@TypedGoRoute<AddAutomationRoute>(path: '/add-automation')
+class AddAutomationRoute extends GoRouteData with $AddAutomationRoute {
+  const AddAutomationRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: const AddAutomationScreen());
+  }
+}
+
 /// Full-screen settings. Lives outside the shell so back navigation works.
 @TypedGoRoute<SettingsRoute>(path: '/settings')
 class SettingsRoute extends GoRouteData with $SettingsRoute {
@@ -48,6 +61,7 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 @TypedShellRoute<AppShellRoute>(
   routes: [
     TypedGoRoute<DevicesRoute>(path: '/devices'),
+    TypedGoRoute<AutomationRoute>(path: '/automation'),
   ],
 )
 class AppShellRoute extends ShellRouteData {
@@ -69,5 +83,14 @@ class DevicesRoute extends GoRouteData with $DevicesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DevicesScreen();
+  }
+}
+
+class AutomationRoute extends GoRouteData with $AutomationRoute {
+  const AutomationRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AutomationScreen();
   }
 }

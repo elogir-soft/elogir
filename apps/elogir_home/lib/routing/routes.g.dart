@@ -9,6 +9,7 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $deviceDetailRoute,
   $addDeviceRoute,
+  $addAutomationRoute,
   $settingsRoute,
   $appShellRoute,
 ];
@@ -68,6 +69,32 @@ mixin $AddDeviceRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $addAutomationRoute => GoRouteData.$route(
+  path: '/add-automation',
+  factory: $AddAutomationRoute._fromState,
+);
+
+mixin $AddAutomationRoute on GoRouteData {
+  static AddAutomationRoute _fromState(GoRouterState state) =>
+      const AddAutomationRoute();
+
+  @override
+  String get location => GoRouteData.$location('/add-automation');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 RouteBase get $settingsRoute =>
     GoRouteData.$route(path: '/settings', factory: $SettingsRoute._fromState);
 
@@ -95,6 +122,10 @@ RouteBase get $appShellRoute => ShellRouteData.$route(
   factory: $AppShellRouteExtension._fromState,
   routes: [
     GoRouteData.$route(path: '/devices', factory: $DevicesRoute._fromState),
+    GoRouteData.$route(
+      path: '/automation',
+      factory: $AutomationRoute._fromState,
+    ),
   ],
 );
 
@@ -107,6 +138,27 @@ mixin $DevicesRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/devices');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AutomationRoute on GoRouteData {
+  static AutomationRoute _fromState(GoRouterState state) =>
+      const AutomationRoute();
+
+  @override
+  String get location => GoRouteData.$location('/automation');
 
   @override
   void go(BuildContext context) => context.go(location);

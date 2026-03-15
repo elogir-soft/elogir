@@ -1,3 +1,4 @@
+import 'package:elogir_home/features/automation/providers/automation_scheduler_provider.dart';
 import 'package:elogir_home/features/settings/providers/settings_provider.dart';
 import 'package:elogir_home/routing/router.dart';
 import 'package:elogir_ui/elogir_ui.dart';
@@ -10,6 +11,9 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Start the automation scheduler as soon as the app builds.
+    ref.watch(automationSchedulerProvider);
+
     final router = ref.watch(routerProvider);
     final themeModeString = ref.watch(
       settingsProvider.select((s) => s.value?.themeMode ?? 'system'),

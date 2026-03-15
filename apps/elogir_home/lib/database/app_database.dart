@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:elogir_home/config/constants.dart';
+import 'package:elogir_home/database/daos/automation_dao.dart';
 import 'package:elogir_home/database/daos/settings_dao.dart';
+import 'package:elogir_home/database/tables/automation_table.dart';
 import 'package:elogir_home/database/tables/settings_table.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -11,8 +13,8 @@ import 'package:path_provider/path_provider.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [SettingsTable],
-  daos: [SettingsDao],
+  tables: [SettingsTable, AutomationTable],
+  daos: [SettingsDao, AutomationDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -21,7 +23,22 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 2) {
+            await migrator.createTable(automationTable);
+          }
+          if (from < 3) {
+            await migrator.addColumn(
+              settingsTable,
+              settingsTable.use24HourFormat,
+            );
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

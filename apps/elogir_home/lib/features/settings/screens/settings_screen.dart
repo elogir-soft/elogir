@@ -103,6 +103,22 @@ class _SettingsContent extends ConsumerWidget {
               ),
             ),
           ),
+          SizedBox(height: theme.spacing.sm),
+          ElogirCard(
+            padding: EdgeInsets.zero,
+            child: ElogirListTile(
+              title: const ElogirText(
+                '24-hour clock',
+              ),
+              trailing: ElogirSwitch(
+                value: settings.use24HourFormat,
+                onChanged: (v) => _update(
+                  ref,
+                  settings.copyWith(use24HourFormat: v),
+                ),
+              ),
+            ),
+          ),
 
           SizedBox(height: theme.spacing.lg),
 
