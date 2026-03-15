@@ -130,7 +130,7 @@ class _AddAutomationScreenState extends ConsumerState<AddAutomationScreen> {
 
   Future<void> _save() async {
     final name = _nameController.text.trim();
-    if (name.isEmpty || _state.actions.isEmpty) return;
+    if (_state.actions.isEmpty) return;
 
     final now = DateTime.now();
     final trigger = _state.isRecurring

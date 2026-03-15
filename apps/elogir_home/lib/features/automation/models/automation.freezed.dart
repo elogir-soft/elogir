@@ -224,11 +224,11 @@ return $default(_that.id,_that.name,_that.trigger,_that.actions,_that.createdAt,
 @JsonSerializable()
 
 class _Automation extends Automation {
-  const _Automation({required this.id, required this.name, required this.trigger, required final  List<AutomationAction> actions, required this.createdAt, required this.updatedAt, this.isEnabled = true}): _actions = actions,super._();
+  const _Automation({required this.id, this.name = '', required this.trigger, required final  List<AutomationAction> actions, required this.createdAt, required this.updatedAt, this.isEnabled = true}): _actions = actions,super._();
   factory _Automation.fromJson(Map<String, dynamic> json) => _$AutomationFromJson(json);
 
 @override final  String id;
-@override final  String name;
+@override@JsonKey() final  String name;
 @override final  AutomationTrigger trigger;
  final  List<AutomationAction> _actions;
 @override List<AutomationAction> get actions {

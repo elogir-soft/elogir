@@ -68,7 +68,9 @@ class AutomationCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ElogirText(
-                    automation.name,
+                    automation.name.isEmpty
+                        ? _actionsSummary(automation.actions)
+                        : automation.name,
                     variant: ElogirTextVariant.bodyLarge,
                     style: TextStyle(
                       color: automation.isEnabled
@@ -84,14 +86,16 @@ class AutomationCard extends ConsumerWidget {
                       color: theme.colors.onSurfaceVariant,
                     ),
                   ),
-                  SizedBox(height: theme.spacing.xxs),
-                  ElogirText(
-                    _actionsSummary(automation.actions),
-                    variant: ElogirTextVariant.bodySmall,
-                    style: TextStyle(
-                      color: theme.colors.onSurfaceVariant,
+                  if (automation.name.isNotEmpty) ...[
+                    SizedBox(height: theme.spacing.xxs),
+                    ElogirText(
+                      _actionsSummary(automation.actions),
+                      variant: ElogirTextVariant.bodySmall,
+                      style: TextStyle(
+                        color: theme.colors.onSurfaceVariant,
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

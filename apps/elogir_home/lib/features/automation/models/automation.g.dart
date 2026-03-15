@@ -8,7 +8,7 @@ part of 'automation.dart';
 
 _Automation _$AutomationFromJson(Map<String, dynamic> json) => _Automation(
   id: json['id'] as String,
-  name: json['name'] as String,
+  name: json['name'] as String? ?? '',
   trigger: AutomationTrigger.fromJson(json['trigger'] as Map<String, dynamic>),
   actions: (json['actions'] as List<dynamic>)
       .map((e) => AutomationAction.fromJson(e as Map<String, dynamic>))

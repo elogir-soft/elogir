@@ -11,7 +11,7 @@ part 'automation.g.dart';
 abstract class Automation with _$Automation {
   const factory Automation({
     required String id,
-    required String name,
+    @Default('') String name,
     required AutomationTrigger trigger,
     required List<AutomationAction> actions,
     required DateTime createdAt,
