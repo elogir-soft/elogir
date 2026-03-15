@@ -11,7 +11,9 @@ part of 'active_timers_provider.dart';
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds.
+/// and flushes state to Drift every 5 seconds. On Android, schedules
+/// native alarms via the `alarm` package so timers ring even when the
+/// app is closed.
 
 @ProviderFor(ActiveTimers)
 final activeTimersProvider = ActiveTimersProvider._();
@@ -19,13 +21,17 @@ final activeTimersProvider = ActiveTimersProvider._();
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds.
+/// and flushes state to Drift every 5 seconds. On Android, schedules
+/// native alarms via the `alarm` package so timers ring even when the
+/// app is closed.
 final class ActiveTimersProvider
     extends $NotifierProvider<ActiveTimers, List<AppTimer>> {
   /// Manages in-memory timer ticking with periodic Drift persistence.
   ///
   /// Loads initial state from Drift, ticks running timers every 100ms,
-  /// and flushes state to Drift every 5 seconds.
+  /// and flushes state to Drift every 5 seconds. On Android, schedules
+  /// native alarms via the `alarm` package so timers ring even when the
+  /// app is closed.
   ActiveTimersProvider._()
     : super(
         from: null,
@@ -53,12 +59,14 @@ final class ActiveTimersProvider
   }
 }
 
-String _$activeTimersHash() => r'bb6a4aa076cde712a2a5043959a822ac4ead1b24';
+String _$activeTimersHash() => r'c935b61d7664f1a0928cc6c543b5799c3820fb7e';
 
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds.
+/// and flushes state to Drift every 5 seconds. On Android, schedules
+/// native alarms via the `alarm` package so timers ring even when the
+/// app is closed.
 
 abstract class _$ActiveTimers extends $Notifier<List<AppTimer>> {
   List<AppTimer> build();

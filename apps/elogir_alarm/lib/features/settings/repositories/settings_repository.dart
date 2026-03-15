@@ -22,6 +22,7 @@ class SettingsRepository {
         id: const Value(1),
         defaultSnoozeMinutes: Value(settings.defaultSnoozeMinutes),
         keepScreenOnStopwatch: Value(settings.keepScreenOnStopwatch),
+        timerSoundId: Value(settings.timerSoundId),
         themeMode: Value(settings.themeMode),
         use24HourFormat: Value(settings.use24HourFormat),
         weekStartsOnMonday: Value(settings.weekStartsOnMonday),
@@ -32,6 +33,7 @@ class SettingsRepository {
   AppSettings _toModel(SettingsTableData row) => AppSettings(
         defaultSnoozeMinutes: row.defaultSnoozeMinutes,
         keepScreenOnStopwatch: row.keepScreenOnStopwatch,
+        timerSoundId: row.timerSoundId,
         themeMode: row.themeMode,
         use24HourFormat: row.use24HourFormat,
         weekStartsOnMonday: row.weekStartsOnMonday,

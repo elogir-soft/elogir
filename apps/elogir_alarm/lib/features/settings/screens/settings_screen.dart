@@ -1,9 +1,12 @@
+import 'package:elogir_alarm/config/constants.dart';
+import 'package:elogir_alarm/features/alarms/screens/sound_picker_screen.dart';
 import 'package:elogir_alarm/features/settings/models/app_settings.dart';
 import 'package:elogir_alarm/features/settings/providers/settings_provider.dart';
 import 'package:elogir_alarm/features/settings/providers/settings_repository_provider.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// App settings screen.
 class SettingsScreen extends ConsumerWidget {
@@ -43,6 +46,34 @@ class _SettingsContent extends ConsumerWidget {
     ref.read(settingsRepositoryProvider).updateSettings(updated);
   }
 
+  Future<void> _openTimerSoundPicker(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final result = await Navigator.of(context, rootNavigator: true)
+        .push<String>(
+      PageRouteBuilder<String>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            SoundPickerScreen(selectedSoundId: settings.timerSoundId),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+            )),
+            child: child,
+          );
+        },
+      ),
+    );
+    if (result != null) {
+      _update(ref, settings.copyWith(timerSoundId: result));
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ElogirTheme.of(context);
@@ -77,6 +108,43 @@ class _SettingsContent extends ConsumerWidget {
                   ],
                   onChanged: (v) =>
                       _update(ref, settings.copyWith(defaultSnoozeMinutes: v)),
+                ),
+              ),
+            ),
+          ),
+
+          SizedBox(height: theme.spacing.lg),
+
+          // ── Timers ─────────────────────────────────────────────────────
+          _SectionLabel('Timers'),
+          SizedBox(height: theme.spacing.xs),
+          ElogirCard(
+            padding: EdgeInsets.zero,
+            child: ElogirListTile(
+              title: const ElogirText(
+                'Timer sound',
+                variant: ElogirTextVariant.bodyMedium,
+              ),
+              trailing: ElogirPressable(
+                onPressed: () => _openTimerSoundPicker(context, ref),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElogirText(
+                      AppConstants.alarmSounds[settings.timerSoundId] ??
+                          settings.timerSoundId,
+                      variant: ElogirTextVariant.bodyMedium,
+                      style: TextStyle(
+                        color: theme.colors.onSurfaceVariant,
+                      ),
+                    ),
+                    SizedBox(width: theme.spacing.xs),
+                    FaIcon(
+                      FontAwesomeIcons.chevronRight,
+                      size: 10,
+                      color: theme.colors.onSurfaceVariant,
+                    ),
+                  ],
                 ),
               ),
             ),

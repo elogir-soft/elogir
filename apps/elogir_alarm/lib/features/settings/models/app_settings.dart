@@ -7,6 +7,7 @@ abstract class AppSettings with _$AppSettings {
   const factory AppSettings({
     @Default(5) int defaultSnoozeMinutes,
     @Default(false) bool keepScreenOnStopwatch,
+    @Default('marimba') String timerSoundId,
     /// One of 'system', 'light', 'dark'.
     @Default('system') String themeMode,
     @Default(false) bool use24HourFormat,

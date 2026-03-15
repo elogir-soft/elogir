@@ -1312,6 +1312,18 @@ class $SettingsTableTable extends SettingsTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _timerSoundIdMeta = const VerificationMeta(
+    'timerSoundId',
+  );
+  @override
+  late final GeneratedColumn<String> timerSoundId = GeneratedColumn<String>(
+    'timer_sound_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('marimba'),
+  );
   static const VerificationMeta _weekStartsOnMondayMeta =
       const VerificationMeta('weekStartsOnMonday');
   @override
@@ -1333,6 +1345,7 @@ class $SettingsTableTable extends SettingsTable
     keepScreenOnStopwatch,
     themeMode,
     use24HourFormat,
+    timerSoundId,
     weekStartsOnMonday,
   ];
   @override
@@ -1383,6 +1396,15 @@ class $SettingsTableTable extends SettingsTable
         ),
       );
     }
+    if (data.containsKey('timer_sound_id')) {
+      context.handle(
+        _timerSoundIdMeta,
+        timerSoundId.isAcceptableOrUnknown(
+          data['timer_sound_id']!,
+          _timerSoundIdMeta,
+        ),
+      );
+    }
     if (data.containsKey('week_starts_on_monday')) {
       context.handle(
         _weekStartsOnMondayMeta,
@@ -1421,6 +1443,10 @@ class $SettingsTableTable extends SettingsTable
         DriftSqlType.bool,
         data['${effectivePrefix}use24_hour_format'],
       )!,
+      timerSoundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timer_sound_id'],
+      )!,
       weekStartsOnMonday: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}week_starts_on_monday'],
@@ -1443,6 +1469,7 @@ class SettingsTableData extends DataClass
   /// One of 'system', 'light', 'dark'.
   final String themeMode;
   final bool use24HourFormat;
+  final String timerSoundId;
   final bool weekStartsOnMonday;
   const SettingsTableData({
     required this.id,
@@ -1450,6 +1477,7 @@ class SettingsTableData extends DataClass
     required this.keepScreenOnStopwatch,
     required this.themeMode,
     required this.use24HourFormat,
+    required this.timerSoundId,
     required this.weekStartsOnMonday,
   });
   @override
@@ -1460,6 +1488,7 @@ class SettingsTableData extends DataClass
     map['keep_screen_on_stopwatch'] = Variable<bool>(keepScreenOnStopwatch);
     map['theme_mode'] = Variable<String>(themeMode);
     map['use24_hour_format'] = Variable<bool>(use24HourFormat);
+    map['timer_sound_id'] = Variable<String>(timerSoundId);
     map['week_starts_on_monday'] = Variable<bool>(weekStartsOnMonday);
     return map;
   }
@@ -1471,6 +1500,7 @@ class SettingsTableData extends DataClass
       keepScreenOnStopwatch: Value(keepScreenOnStopwatch),
       themeMode: Value(themeMode),
       use24HourFormat: Value(use24HourFormat),
+      timerSoundId: Value(timerSoundId),
       weekStartsOnMonday: Value(weekStartsOnMonday),
     );
   }
@@ -1490,6 +1520,7 @@ class SettingsTableData extends DataClass
       ),
       themeMode: serializer.fromJson<String>(json['themeMode']),
       use24HourFormat: serializer.fromJson<bool>(json['use24HourFormat']),
+      timerSoundId: serializer.fromJson<String>(json['timerSoundId']),
       weekStartsOnMonday: serializer.fromJson<bool>(json['weekStartsOnMonday']),
     );
   }
@@ -1502,6 +1533,7 @@ class SettingsTableData extends DataClass
       'keepScreenOnStopwatch': serializer.toJson<bool>(keepScreenOnStopwatch),
       'themeMode': serializer.toJson<String>(themeMode),
       'use24HourFormat': serializer.toJson<bool>(use24HourFormat),
+      'timerSoundId': serializer.toJson<String>(timerSoundId),
       'weekStartsOnMonday': serializer.toJson<bool>(weekStartsOnMonday),
     };
   }
@@ -1512,6 +1544,7 @@ class SettingsTableData extends DataClass
     bool? keepScreenOnStopwatch,
     String? themeMode,
     bool? use24HourFormat,
+    String? timerSoundId,
     bool? weekStartsOnMonday,
   }) => SettingsTableData(
     id: id ?? this.id,
@@ -1519,6 +1552,7 @@ class SettingsTableData extends DataClass
     keepScreenOnStopwatch: keepScreenOnStopwatch ?? this.keepScreenOnStopwatch,
     themeMode: themeMode ?? this.themeMode,
     use24HourFormat: use24HourFormat ?? this.use24HourFormat,
+    timerSoundId: timerSoundId ?? this.timerSoundId,
     weekStartsOnMonday: weekStartsOnMonday ?? this.weekStartsOnMonday,
   );
   SettingsTableData copyWithCompanion(SettingsTableCompanion data) {
@@ -1534,6 +1568,9 @@ class SettingsTableData extends DataClass
       use24HourFormat: data.use24HourFormat.present
           ? data.use24HourFormat.value
           : this.use24HourFormat,
+      timerSoundId: data.timerSoundId.present
+          ? data.timerSoundId.value
+          : this.timerSoundId,
       weekStartsOnMonday: data.weekStartsOnMonday.present
           ? data.weekStartsOnMonday.value
           : this.weekStartsOnMonday,
@@ -1548,6 +1585,7 @@ class SettingsTableData extends DataClass
           ..write('keepScreenOnStopwatch: $keepScreenOnStopwatch, ')
           ..write('themeMode: $themeMode, ')
           ..write('use24HourFormat: $use24HourFormat, ')
+          ..write('timerSoundId: $timerSoundId, ')
           ..write('weekStartsOnMonday: $weekStartsOnMonday')
           ..write(')'))
         .toString();
@@ -1560,6 +1598,7 @@ class SettingsTableData extends DataClass
     keepScreenOnStopwatch,
     themeMode,
     use24HourFormat,
+    timerSoundId,
     weekStartsOnMonday,
   );
   @override
@@ -1571,6 +1610,7 @@ class SettingsTableData extends DataClass
           other.keepScreenOnStopwatch == this.keepScreenOnStopwatch &&
           other.themeMode == this.themeMode &&
           other.use24HourFormat == this.use24HourFormat &&
+          other.timerSoundId == this.timerSoundId &&
           other.weekStartsOnMonday == this.weekStartsOnMonday);
 }
 
@@ -1580,6 +1620,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
   final Value<bool> keepScreenOnStopwatch;
   final Value<String> themeMode;
   final Value<bool> use24HourFormat;
+  final Value<String> timerSoundId;
   final Value<bool> weekStartsOnMonday;
   const SettingsTableCompanion({
     this.id = const Value.absent(),
@@ -1587,6 +1628,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     this.keepScreenOnStopwatch = const Value.absent(),
     this.themeMode = const Value.absent(),
     this.use24HourFormat = const Value.absent(),
+    this.timerSoundId = const Value.absent(),
     this.weekStartsOnMonday = const Value.absent(),
   });
   SettingsTableCompanion.insert({
@@ -1595,6 +1637,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     this.keepScreenOnStopwatch = const Value.absent(),
     this.themeMode = const Value.absent(),
     this.use24HourFormat = const Value.absent(),
+    this.timerSoundId = const Value.absent(),
     this.weekStartsOnMonday = const Value.absent(),
   });
   static Insertable<SettingsTableData> custom({
@@ -1603,6 +1646,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     Expression<bool>? keepScreenOnStopwatch,
     Expression<String>? themeMode,
     Expression<bool>? use24HourFormat,
+    Expression<String>? timerSoundId,
     Expression<bool>? weekStartsOnMonday,
   }) {
     return RawValuesInsertable({
@@ -1613,6 +1657,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
         'keep_screen_on_stopwatch': keepScreenOnStopwatch,
       if (themeMode != null) 'theme_mode': themeMode,
       if (use24HourFormat != null) 'use24_hour_format': use24HourFormat,
+      if (timerSoundId != null) 'timer_sound_id': timerSoundId,
       if (weekStartsOnMonday != null)
         'week_starts_on_monday': weekStartsOnMonday,
     });
@@ -1624,6 +1669,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     Value<bool>? keepScreenOnStopwatch,
     Value<String>? themeMode,
     Value<bool>? use24HourFormat,
+    Value<String>? timerSoundId,
     Value<bool>? weekStartsOnMonday,
   }) {
     return SettingsTableCompanion(
@@ -1633,6 +1679,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
           keepScreenOnStopwatch ?? this.keepScreenOnStopwatch,
       themeMode: themeMode ?? this.themeMode,
       use24HourFormat: use24HourFormat ?? this.use24HourFormat,
+      timerSoundId: timerSoundId ?? this.timerSoundId,
       weekStartsOnMonday: weekStartsOnMonday ?? this.weekStartsOnMonday,
     );
   }
@@ -1657,6 +1704,9 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     if (use24HourFormat.present) {
       map['use24_hour_format'] = Variable<bool>(use24HourFormat.value);
     }
+    if (timerSoundId.present) {
+      map['timer_sound_id'] = Variable<String>(timerSoundId.value);
+    }
     if (weekStartsOnMonday.present) {
       map['week_starts_on_monday'] = Variable<bool>(weekStartsOnMonday.value);
     }
@@ -1671,6 +1721,7 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
           ..write('keepScreenOnStopwatch: $keepScreenOnStopwatch, ')
           ..write('themeMode: $themeMode, ')
           ..write('use24HourFormat: $use24HourFormat, ')
+          ..write('timerSoundId: $timerSoundId, ')
           ..write('weekStartsOnMonday: $weekStartsOnMonday')
           ..write(')'))
         .toString();
@@ -2306,6 +2357,7 @@ typedef $$SettingsTableTableCreateCompanionBuilder =
       Value<bool> keepScreenOnStopwatch,
       Value<String> themeMode,
       Value<bool> use24HourFormat,
+      Value<String> timerSoundId,
       Value<bool> weekStartsOnMonday,
     });
 typedef $$SettingsTableTableUpdateCompanionBuilder =
@@ -2315,6 +2367,7 @@ typedef $$SettingsTableTableUpdateCompanionBuilder =
       Value<bool> keepScreenOnStopwatch,
       Value<String> themeMode,
       Value<bool> use24HourFormat,
+      Value<String> timerSoundId,
       Value<bool> weekStartsOnMonday,
     });
 
@@ -2349,6 +2402,11 @@ class $$SettingsTableTableFilterComposer
 
   ColumnFilters<bool> get use24HourFormat => $composableBuilder(
     column: $table.use24HourFormat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timerSoundId => $composableBuilder(
+    column: $table.timerSoundId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2392,6 +2450,11 @@ class $$SettingsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get timerSoundId => $composableBuilder(
+    column: $table.timerSoundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get weekStartsOnMonday => $composableBuilder(
     column: $table.weekStartsOnMonday,
     builder: (column) => ColumnOrderings(column),
@@ -2425,6 +2488,11 @@ class $$SettingsTableTableAnnotationComposer
 
   GeneratedColumn<bool> get use24HourFormat => $composableBuilder(
     column: $table.use24HourFormat,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get timerSoundId => $composableBuilder(
+    column: $table.timerSoundId,
     builder: (column) => column,
   );
 
@@ -2474,6 +2542,7 @@ class $$SettingsTableTableTableManager
                 Value<bool> keepScreenOnStopwatch = const Value.absent(),
                 Value<String> themeMode = const Value.absent(),
                 Value<bool> use24HourFormat = const Value.absent(),
+                Value<String> timerSoundId = const Value.absent(),
                 Value<bool> weekStartsOnMonday = const Value.absent(),
               }) => SettingsTableCompanion(
                 id: id,
@@ -2481,6 +2550,7 @@ class $$SettingsTableTableTableManager
                 keepScreenOnStopwatch: keepScreenOnStopwatch,
                 themeMode: themeMode,
                 use24HourFormat: use24HourFormat,
+                timerSoundId: timerSoundId,
                 weekStartsOnMonday: weekStartsOnMonday,
               ),
           createCompanionCallback:
@@ -2490,6 +2560,7 @@ class $$SettingsTableTableTableManager
                 Value<bool> keepScreenOnStopwatch = const Value.absent(),
                 Value<String> themeMode = const Value.absent(),
                 Value<bool> use24HourFormat = const Value.absent(),
+                Value<String> timerSoundId = const Value.absent(),
                 Value<bool> weekStartsOnMonday = const Value.absent(),
               }) => SettingsTableCompanion.insert(
                 id: id,
@@ -2497,6 +2568,7 @@ class $$SettingsTableTableTableManager
                 keepScreenOnStopwatch: keepScreenOnStopwatch,
                 themeMode: themeMode,
                 use24HourFormat: use24HourFormat,
+                timerSoundId: timerSoundId,
                 weekStartsOnMonday: weekStartsOnMonday,
               ),
           withReferenceMapper: (p0) => p0

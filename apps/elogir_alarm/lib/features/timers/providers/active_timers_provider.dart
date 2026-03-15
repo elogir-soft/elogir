@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:alarm/alarm.dart' as native;
 import 'package:elogir_alarm/config/constants.dart';
+import 'package:elogir_alarm/features/settings/providers/settings_provider.dart';
 import 'package:elogir_alarm/features/timers/models/app_timer.dart';
 import 'package:elogir_alarm/features/timers/providers/timer_repository_provider.dart';
-import 'package:elogir_alarm/features/timers/providers/timers_provider.dart';
-import 'package:elogir_alarm/shared/providers/audio_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,7 +13,8 @@ part 'active_timers_provider.g.dart';
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds.
+/// and flushes state to Drift every 5 seconds. Schedules native alarms
+/// via the `alarm` package so timers ring even when the app is closed.
 @Riverpod(keepAlive: true)
 class ActiveTimers extends _$ActiveTimers {
   Timer? _tickTimer;
@@ -22,13 +23,25 @@ class ActiveTimers extends _$ActiveTimers {
 
   @override
   List<AppTimer> build() {
-    // Load initial state from Drift.
-    final persisted = ref.watch(persistedTimersProvider);
-    final timers = persisted.value ?? [];
+    _hydrateFromDrift();
+    _startTickLoop();
+    _startPersistLoop();
 
-    // Reconstruct running timers — adjust remaining time based on elapsed.
+    ref.onDispose(() {
+      _tickTimer?.cancel();
+      _persistTimer?.cancel();
+    });
+
+    return [];
+  }
+
+  /// One-time load from Drift on cold start. Adjusts running timers for
+  /// wall-clock elapsed time while the app was closed.
+  Future<void> _hydrateFromDrift() async {
+    final repo = ref.read(timerRepositoryProvider);
+    final timers = await repo.watchAll().first;
     final now = DateTime.now();
-    final adjusted = timers.map((AppTimer t) {
+    state = timers.map((AppTimer t) {
       if (t.status == TimerStatus.running && t.startedAt != null) {
         final elapsed = now.difference(t.startedAt!).inMilliseconds;
         final remaining = (t.remainingMs - elapsed).clamp(0, t.durationMs);
@@ -39,16 +52,6 @@ class ActiveTimers extends _$ActiveTimers {
       }
       return t;
     }).toList();
-
-    _startTickLoop();
-    _startPersistLoop();
-
-    ref.onDispose(() {
-      _tickTimer?.cancel();
-      _persistTimer?.cancel();
-    });
-
-    return adjusted;
   }
 
   void _startTickLoop() {
@@ -92,7 +95,7 @@ class ActiveTimers extends _$ActiveTimers {
   }
 
   void _onTimerComplete(AppTimer timer) {
-    ref.read(audioServiceProvider).play('notification');
+    // Native alarm handles sound + notification on both platforms.
   }
 
   Future<void> _persistAll() async {
@@ -115,6 +118,11 @@ class ActiveTimers extends _$ActiveTimers {
       createdAt: now,
     );
     state = [timer, ...state];
+    _scheduleNativeAlarm(
+      timer.id,
+      now.add(Duration(milliseconds: durationMs)),
+      label,
+    );
   }
 
   /// Pause a running timer.
@@ -126,18 +134,29 @@ class ActiveTimers extends _$ActiveTimers {
         pausedAt: DateTime.now(),
       );
     }).toList();
+    _cancelNativeAlarm(id);
   }
 
   /// Resume a paused timer.
   void resume(String id) {
+    final now = DateTime.now();
+    AppTimer? resumed;
     state = state.map((t) {
       if (t.id != id || t.status != TimerStatus.paused) return t;
-      return t.copyWith(
+      resumed = t.copyWith(
         status: TimerStatus.running,
-        startedAt: DateTime.now(),
+        startedAt: now,
         pausedAt: null,
       );
+      return resumed!;
     }).toList();
+    if (resumed != null) {
+      _scheduleNativeAlarm(
+        id,
+        now.add(Duration(milliseconds: resumed!.remainingMs)),
+        resumed!.label,
+      );
+    }
   }
 
   /// Cancel a timer.
@@ -146,17 +165,56 @@ class ActiveTimers extends _$ActiveTimers {
       if (t.id != id) return t;
       return t.copyWith(status: TimerStatus.cancelled);
     }).toList();
+    _cancelNativeAlarm(id);
   }
 
   /// Remove a timer from the list and database.
   Future<void> remove(String id) async {
     state = state.where((t) => t.id != id).toList();
+    _cancelNativeAlarm(id);
     await ref.read(timerRepositoryProvider).delete(id);
   }
 
   /// Remove all completed/cancelled timers.
   Future<void> clearFinished() async {
+    final finished = state.where((t) => !t.status.isActive).toList();
+    for (final t in finished) {
+      _cancelNativeAlarm(t.id);
+    }
     state = state.where((t) => t.status.isActive).toList();
     await ref.read(timerRepositoryProvider).deleteFinished();
+  }
+
+  // ── Native alarm helpers ────────────────────────────────────────────
+
+  int _nativeId(String uuid) => uuid.hashCode.abs().clamp(1, 0x7FFFFFFF);
+
+  String _timerSoundAsset() {
+    final soundId =
+        ref.read(settingsProvider).value?.timerSoundId ?? 'marimba';
+    return AppConstants.soundAssetPath(soundId);
+  }
+
+  void _scheduleNativeAlarm(String id, DateTime fireAt, String label) {
+    native.Alarm.set(
+      alarmSettings: native.AlarmSettings(
+        id: _nativeId(id),
+        dateTime: fireAt,
+        volumeSettings: const native.VolumeSettings.fixed(),
+        notificationSettings: native.NotificationSettings(
+          title: label.isEmpty ? 'Timer' : label,
+          body: 'Time is up!',
+          stopButton: 'Dismiss',
+        ),
+        assetAudioPath: _timerSoundAsset(),
+        vibrate: true,
+        androidFullScreenIntent: true,
+        warningNotificationOnKill: false,
+      ),
+    );
+  }
+
+  void _cancelNativeAlarm(String id) {
+    native.Alarm.stop(_nativeId(id));
   }
 }

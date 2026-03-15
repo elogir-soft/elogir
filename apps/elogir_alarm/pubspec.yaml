@@ -31,7 +31,6 @@ dependencies:
   alarm: ^5.2.1
   flutter_alarmkit: ^0.0.10
   permission_handler:
-  flutter_ringtone_player:
   wakelock_plus:
   uuid:
   intl:

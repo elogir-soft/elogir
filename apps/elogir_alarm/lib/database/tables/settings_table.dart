@@ -19,6 +19,10 @@ class SettingsTable extends Table {
   BoolColumn get use24HourFormat =>
       boolean().withDefault(const Constant(false))();
 
+  // Timers
+  TextColumn get timerSoundId =>
+      text().withDefault(const Constant('marimba'))();
+
   // General
   BoolColumn get weekStartsOnMonday =>
       boolean().withDefault(const Constant(true))();
