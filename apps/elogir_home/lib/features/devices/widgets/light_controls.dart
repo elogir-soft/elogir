@@ -38,7 +38,14 @@ class _LightControlsState extends State<LightControls> {
         await widget.controller.turnOff();
       }
     } on Exception {
-      if (mounted) setState(() => _pendingPower = null);
+      if (mounted) {
+        setState(() => _pendingPower = null);
+        ElogirToast.show(
+          context: context,
+          message: 'Failed to toggle light',
+          variant: ElogirToastVariant.error,
+        );
+      }
     }
   }
 

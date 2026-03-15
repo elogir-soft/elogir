@@ -1,5 +1,7 @@
+import 'package:elogir_auto/elogir_auto.dart';
 import 'package:elogir_home/features/devices/providers/devices_provider.dart';
 import 'package:elogir_home/features/devices/widgets/device_card.dart';
+import 'package:elogir_home/features/devices/widgets/switch_device_card.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +35,33 @@ class DevicesScreen extends ConsumerWidget {
       body: devicesAsync.when(
         loading: () => const Center(child: ElogirSpinner()),
         error: (e, _) => Center(
-          child: ElogirText('Failed to load devices: $e'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FaIcon(
+                FontAwesomeIcons.triangleExclamation,
+                size: 40,
+                color: theme.colors.error,
+              ),
+              SizedBox(height: theme.spacing.md),
+              const ElogirText(
+                'Something went wrong',
+                variant: ElogirTextVariant.titleMedium,
+              ),
+              SizedBox(height: theme.spacing.xs),
+              ElogirText(
+                '$e',
+                variant: ElogirTextVariant.bodySmall,
+                style: TextStyle(color: theme.colors.onSurfaceVariant),
+              ),
+              SizedBox(height: theme.spacing.lg),
+              ElogirButton(
+                variant: ElogirButtonVariant.outlined,
+                onPressed: () => ref.invalidate(devicesProvider),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
         ),
         data: (devices) {
           if (devices.isEmpty) {
@@ -74,6 +102,9 @@ class DevicesScreen extends ConsumerWidget {
                 SizedBox(height: theme.spacing.sm),
             itemBuilder: (context, index) {
               final device = devices[index];
+              if (device.type == DeviceType.switchDevice) {
+                return SwitchDeviceCard(device: device);
+              }
               return DeviceCard(
                 device: device,
                 onTap: () => context.go('/devices/${device.id}'),

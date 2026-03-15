@@ -1,4 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Network access for Tuya Cloud API -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Detect network connectivity state (connectivity_plus) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- LAN device discovery and WiFi info -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- UDP multicast for LAN device scanning -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_LOCK"/>
     <application
         android:label="elogir_home"
         android:name="${applicationName}"

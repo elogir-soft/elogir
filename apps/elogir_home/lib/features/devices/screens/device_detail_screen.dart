@@ -3,6 +3,7 @@ import 'package:elogir_home/features/devices/providers/device_controller_provide
 import 'package:elogir_home/features/devices/providers/device_provider.dart';
 import 'package:elogir_home/features/devices/providers/device_repository_provider.dart';
 import 'package:elogir_home/features/devices/widgets/cover_controls.dart';
+import 'package:elogir_home/features/devices/widgets/device_info_section.dart';
 import 'package:elogir_home/features/devices/widgets/device_type_icon.dart';
 import 'package:elogir_home/features/devices/widgets/light_controls.dart';
 import 'package:elogir_home/features/devices/widgets/switch_controls.dart';
@@ -121,14 +122,31 @@ class DeviceDetailScreen extends ConsumerWidget {
             children: [
               // Controller state / controls
               controllerAsync.when(
-                loading: () => const Center(child: ElogirSpinner()),
+                loading: () => Padding(
+                  padding: EdgeInsets.only(top: theme.spacing.xl),
+                  child: const Center(child: ElogirSpinner()),
+                ),
                 error: (e, _) => ElogirCard(
+                  border: Border.all(
+                    color: theme.colors.error,
+                    width: theme.strokes.medium,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const ElogirText(
-                        'Connection error',
-                        variant: ElogirTextVariant.bodyMedium,
+                      Row(
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.triangleExclamation,
+                            size: 16,
+                            color: theme.colors.error,
+                          ),
+                          SizedBox(width: theme.spacing.sm),
+                          const ElogirText(
+                            'Connection error',
+                            variant: ElogirTextVariant.bodyMedium,
+                          ),
+                        ],
                       ),
                       SizedBox(height: theme.spacing.xs),
                       ElogirText(
@@ -159,6 +177,10 @@ class DeviceDetailScreen extends ConsumerWidget {
                   return _buildControls(device, deviceState, ref);
                 },
               ),
+
+              // Device info
+              SizedBox(height: theme.spacing.lg),
+              DeviceInfoSection(device: device),
             ],
           ),
         );

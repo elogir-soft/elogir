@@ -50,7 +50,6 @@ abstract class TuyaCloudDeviceController<T> implements DeviceController<T> {
         }
       }
     }
-    debugPrint('Cloud status for $_tuyaDeviceId: $codes');
     final state = parseCloudStatus(codes);
     _subject.add(state);
     return state;
