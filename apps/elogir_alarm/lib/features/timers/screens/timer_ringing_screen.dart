@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:alarm/alarm.dart' as native;
+import 'package:alarm/utils/alarm_set.dart';
 import 'package:elogir_alarm/features/timers/models/app_timer.dart';
 import 'package:elogir_alarm/features/timers/providers/active_timers_provider.dart';
 import 'package:elogir_alarm/shared/extensions/duration_extensions.dart';
@@ -9,20 +12,53 @@ import 'package:go_router/go_router.dart';
 
 /// Full-screen ringing overlay shown when a timer completes.
 ///
-/// Offers Dismiss and Restart actions.
-class TimerRingingScreen extends ConsumerWidget {
+/// Offers Dismiss and Restart actions. Auto-dismisses when the timer alarm
+/// is stopped externally (e.g. from the notification action).
+class TimerRingingScreen extends ConsumerStatefulWidget {
   const TimerRingingScreen({required this.timerId, super.key});
 
   final String timerId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TimerRingingScreen> createState() =>
+      _TimerRingingScreenState();
+}
+
+class _TimerRingingScreenState extends ConsumerState<TimerRingingScreen> {
+  StreamSubscription<AlarmSet>? _ringingSub;
+  bool _navigating = false;
+
+  int get _nativeId =>
+      widget.timerId.hashCode.abs().clamp(1, 0x7FFFFFFF);
+
+  @override
+  void initState() {
+    super.initState();
+    _ringingSub = native.Alarm.ringing.listen(_onRingingUpdate);
+  }
+
+  @override
+  void dispose() {
+    _ringingSub?.cancel();
+    super.dispose();
+  }
+
+  void _onRingingUpdate(AlarmSet alarmSet) {
+    if (_navigating) return;
+    if (!alarmSet.containsId(_nativeId)) {
+      _navigating = true;
+      if (mounted) context.go('/timers');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
     final timers = ref.watch(activeTimersProvider);
 
     AppTimer? timer;
     for (final t in timers) {
-      if (t.id == timerId) {
+      if (t.id == widget.timerId) {
         timer = t;
         break;
       }
@@ -31,7 +67,10 @@ class TimerRingingScreen extends ConsumerWidget {
     // Timer not found (e.g. removed while ringing) — navigate back.
     if (timer == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) context.go('/timers');
+        if (!_navigating && mounted) {
+          _navigating = true;
+          context.go('/timers');
+        }
       });
       return const SizedBox.shrink();
     }
@@ -90,14 +129,14 @@ class TimerRingingScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     ElogirButton(
-                      onPressed: () => _dismiss(context, ref, t),
+                      onPressed: () => _dismiss(ref, t),
                       expanded: true,
                       size: ElogirButtonSize.lg,
                       child: const Text('Dismiss'),
                     ),
                     SizedBox(height: theme.spacing.md),
                     ElogirButton(
-                      onPressed: () => _restart(context, ref, t),
+                      onPressed: () => _restart(ref, t),
                       variant: ElogirButtonVariant.outlined,
                       expanded: true,
                       size: ElogirButtonSize.lg,
@@ -114,25 +153,17 @@ class TimerRingingScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _dismiss(
-    BuildContext context,
-    WidgetRef ref,
-    AppTimer timer,
-  ) async {
-    final nativeId = timer.id.hashCode.abs().clamp(1, 0x7FFFFFFF);
-    await native.Alarm.stop(nativeId);
-    if (context.mounted) context.go('/timers');
+  Future<void> _dismiss(WidgetRef ref, AppTimer timer) async {
+    _navigating = true;
+    await native.Alarm.stop(_nativeId);
+    if (mounted) context.go('/timers');
   }
 
-  Future<void> _restart(
-    BuildContext context,
-    WidgetRef ref,
-    AppTimer timer,
-  ) async {
-    final nativeId = timer.id.hashCode.abs().clamp(1, 0x7FFFFFFF);
-    await native.Alarm.stop(nativeId);
+  Future<void> _restart(WidgetRef ref, AppTimer timer) async {
+    _navigating = true;
+    await native.Alarm.stop(_nativeId);
     ref.read(activeTimersProvider.notifier).restart(timer.id);
-    if (context.mounted) context.go('/timers');
+    if (mounted) context.go('/timers');
   }
 }
 

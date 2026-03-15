@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alarm/alarm.dart' as native;
 import 'package:alarm/utils/alarm_set.dart';
+import 'package:elogir_alarm/features/alarms/providers/alarm_repository_provider.dart';
 import 'package:elogir_alarm/features/alarms/providers/alarms_provider.dart';
 import 'package:elogir_alarm/features/settings/providers/settings_provider.dart';
 import 'package:elogir_alarm/features/timers/providers/active_timers_provider.dart';
@@ -20,17 +21,21 @@ class App extends ConsumerStatefulWidget {
 
 class _AppState extends ConsumerState<App> {
   StreamSubscription<AlarmSet>? _ringingSubscription;
+  StreamSubscription<int>? _snoozedSubscription;
 
   @override
   void initState() {
     super.initState();
     // Listen for native alarm/timer ring events and push the ringing screen.
     _ringingSubscription = native.Alarm.ringing.listen(_onAlarmRinging);
+    // Listen for snooze actions from the notification to update the DB.
+    _snoozedSubscription = native.Alarm.snoozed.listen(_onAlarmSnoozed);
   }
 
   @override
   void dispose() {
     _ringingSubscription?.cancel();
+    _snoozedSubscription?.cancel();
     super.dispose();
   }
 
@@ -61,6 +66,22 @@ class _AppState extends ConsumerState<App> {
           await router.push<void>('/timer-ringing/${timer.id}');
           return;
         }
+      }
+    }
+  }
+
+  Future<void> _onAlarmSnoozed(int nativeId) async {
+    final allAlarms = ref.read(alarmsProvider).value;
+    if (allAlarms == null) return;
+
+    for (final alarm in allAlarms) {
+      if (alarm.id.hashCode.abs().clamp(1, 0x7FFFFFFF) == nativeId) {
+        final snoozeTime = DateTime.now()
+            .add(Duration(minutes: alarm.snoozeDurationMinutes));
+        await ref
+            .read(alarmRepositoryProvider)
+            .updateSnoozedUntil(alarm.id, snoozeTime);
+        return;
       }
     }
   }

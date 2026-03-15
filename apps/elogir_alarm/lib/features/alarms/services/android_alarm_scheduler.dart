@@ -23,6 +23,8 @@ class AndroidAlarmScheduler implements AlarmScheduler {
           title: alarm.label.isEmpty ? 'Alarm' : alarm.label,
           body: alarm.timeFormatted,
           stopButton: 'Dismiss',
+          snoozeButton: 'Snooze',
+          snoozeDurationMinutes: alarm.snoozeDurationMinutes,
         ),
         assetAudioPath: AppConstants.soundAssetPath(alarm.soundId),
         loopAudio: true,
