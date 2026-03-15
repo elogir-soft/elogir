@@ -61,7 +61,7 @@ class HistoryScreen extends ConsumerWidget {
                   onTap: () {
                     ref
                         .read(calculatorProvider.notifier)
-                        .loadResult(entry.result);
+                        .loadCalculation(entry.expression);
                     context.go('/calculator');
                   },
                 ),

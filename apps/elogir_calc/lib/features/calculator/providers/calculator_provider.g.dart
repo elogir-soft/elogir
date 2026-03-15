@@ -20,7 +20,7 @@ final class CalculatorProvider
         argument: null,
         retry: null,
         name: r'calculatorProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -41,7 +41,7 @@ final class CalculatorProvider
   }
 }
 
-String _$calculatorHash() => r'a77062b2d50847923b89cbc83a980d1e6bf8b087';
+String _$calculatorHash() => r'3e283dc2238bfeb58d2d8e33d7c2d56746e9bcc7';
 
 abstract class _$Calculator extends $Notifier<CalculatorState> {
   CalculatorState build();

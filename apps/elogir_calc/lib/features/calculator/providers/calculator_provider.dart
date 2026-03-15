@@ -9,7 +9,7 @@ part 'calculator_provider.g.dart';
 
 const _uuid = Uuid();
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Calculator extends _$Calculator {
   @override
   CalculatorState build() => const CalculatorState();
@@ -209,14 +209,15 @@ class Calculator extends _$Calculator {
     _updatePreview();
   }
 
-  void loadResult(String result) {
+  void loadCalculation(String expression) {
     state = state.copyWith(
-      expression: result,
-      display: result,
+      expression: expression,
+      display: expression,
       preview: '',
       justEvaluated: false,
       hasError: false,
     );
+    _updatePreview();
   }
 
   void _updatePreview() {

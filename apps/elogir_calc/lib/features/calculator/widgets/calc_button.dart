@@ -45,24 +45,22 @@ class CalcButton extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: Padding(
-        padding: EdgeInsets.all(theme.spacing.xxs),
+        padding: const EdgeInsets.all(2), // Very tight spacing
         child: ElogirPressable(
           onPressed: onPressed,
-          pressScale: 0.95,
+          pressScale: 0.96,
           child: Container(
-            height: 56,
             decoration: BoxDecoration(
               color: colors.$1,
-              borderRadius: theme.radii.md,
-              border: Border.all(
-                color: colors.$3,
-                width: theme.strokes.thick,
-              ),
+              borderRadius: theme.radii.lg, // Squircle-like rounded corners
             ),
             alignment: Alignment.center,
             child: Text(
               label,
-              style: theme.typography.titleMedium.copyWith(
+              style: (variant == CalcButtonVariant.scientific
+                      ? theme.typography.headlineSmall
+                      : theme.typography.headlineMedium)
+                  .copyWith(
                 color: colors.$2,
                 fontWeight: FontWeight.w600,
               ),
@@ -73,32 +71,27 @@ class CalcButton extends StatelessWidget {
     );
   }
 
-  (Color bg, Color fg, Color border) _resolveColors(ElogirThemeData theme) {
+  (Color bg, Color fg) _resolveColors(ElogirThemeData theme) {
     return switch (variant) {
       CalcButtonVariant.number => (
-          theme.colors.surface,
+          theme.colors.surfaceContainer,
           theme.colors.onSurface,
-          theme.colors.outlineVariant,
         ),
       CalcButtonVariant.operator => (
           theme.colors.primaryContainer,
           theme.colors.onPrimaryContainer,
-          theme.colors.outline,
         ),
       CalcButtonVariant.equals => (
           theme.colors.primary,
           theme.colors.onPrimary,
-          theme.colors.primary,
         ),
       CalcButtonVariant.clear => (
+          theme.colors.error,
           theme.colors.surface,
-          theme.colors.error,
-          theme.colors.error,
         ),
       CalcButtonVariant.scientific => (
-          theme.colors.surfaceContainer,
-          theme.colors.onSurface,
-          theme.colors.outlineVariant,
+          theme.colors.surface,
+          theme.colors.onSurfaceVariant,
         ),
     };
   }

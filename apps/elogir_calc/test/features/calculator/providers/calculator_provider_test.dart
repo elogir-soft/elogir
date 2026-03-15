@@ -203,10 +203,10 @@ void main() {
       );
     });
 
-    test('loadResult sets expression and display', () {
+    test('loadCalculation sets expression and display', () {
       container
           .read(calculatorProvider.notifier)
-          .loadResult('42');
+          .loadCalculation('42');
       final state =
           container.read(calculatorProvider);
       expect(state.expression, '42');
@@ -259,9 +259,9 @@ void main() {
 
     test('scientific notation input: 1.2e3', () {
       // Note: Calculator UI might not have 'e' button yet, 
-      // but let's see if we can input it via loadResult or if we add a way.
+      // but let's see if we can input it via loadCalculation or if we add a way.
       // For now, let's test if we can evaluate it.
-      container.read(calculatorProvider.notifier).loadResult('1.2e3');
+      container.read(calculatorProvider.notifier).loadCalculation('1.2e3');
       container.read(calculatorProvider.notifier).evaluate();
       final state = container.read(calculatorProvider);
       expect(state.display, '1200');
