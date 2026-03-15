@@ -2,6 +2,7 @@ import 'package:elogir_home/features/automation/models/automation.dart';
 import 'package:elogir_home/features/automation/models/automation_action.dart';
 import 'package:elogir_home/features/automation/models/automation_trigger.dart';
 import 'package:elogir_home/features/automation/providers/automation_repository_provider.dart';
+import 'package:elogir_home/features/settings/providers/settings_provider.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,12 +24,15 @@ class AutomationCard extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
+    final label = automation.name.isEmpty
+        ? _actionsSummary(automation.actions)
+        : automation.name;
     final confirmed = await ElogirDialog.show<bool>(
       context: context,
       builder: (context) => ElogirDialog(
         title: const Text('Delete automation?'),
         content: Text(
-          '"${automation.name}" will be permanently deleted.',
+          '"$label" will be permanently deleted.',
         ),
         actions: [
           ElogirButton(
@@ -54,6 +58,11 @@ class AutomationCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ElogirTheme.of(context);
+    final use24h = ref.watch(
+      settingsProvider.select(
+        (s) => s.value?.use24HourFormat ?? false,
+      ),
+    );
 
     return ElogirPressable(
       onPressed: () =>
@@ -80,7 +89,10 @@ class AutomationCard extends ConsumerWidget {
                   ),
                   SizedBox(height: theme.spacing.xxs),
                   ElogirText(
-                    _triggerSummary(automation.trigger),
+                    _timeSummary(
+                      automation.trigger,
+                      use24h: use24h,
+                    ),
                     variant: ElogirTextVariant.bodySmall,
                     style: TextStyle(
                       color: theme.colors.onSurfaceVariant,
@@ -94,6 +106,17 @@ class AutomationCard extends ConsumerWidget {
                       style: TextStyle(
                         color: theme.colors.onSurfaceVariant,
                       ),
+                    ),
+                  ],
+                  // Show day dots for recurring triggers with
+                  // specific repeat days.
+                  if (automation.trigger
+                      is RecurringTrigger) ...[
+                    SizedBox(height: theme.spacing.sm),
+                    _RepeatDayDots(
+                      days: (automation.trigger
+                              as RecurringTrigger)
+                          .repeatDays,
                     ),
                   ],
                 ],
@@ -117,7 +140,22 @@ class AutomationCard extends ConsumerWidget {
     );
   }
 
-  String _triggerSummary(AutomationTrigger trigger) {
+  String _formatTime(int hour, int minute, {required bool use24h}) {
+    if (use24h) {
+      final h = hour.toString().padLeft(2, '0');
+      final m = minute.toString().padLeft(2, '0');
+      return '$h:$m';
+    }
+    final period = hour < 12 ? 'AM' : 'PM';
+    final h = hour % 12 == 0 ? 12 : hour % 12;
+    final m = minute.toString().padLeft(2, '0');
+    return '${h.toString().padLeft(2, '0')}:$m $period';
+  }
+
+  String _timeSummary(
+    AutomationTrigger trigger, {
+    required bool use24h,
+  }) {
     return switch (trigger) {
       RecurringTrigger(
         :final hour,
@@ -125,24 +163,20 @@ class AutomationCard extends ConsumerWidget {
         :final repeatDays,
       ) =>
         () {
-          final h = hour.toString().padLeft(2, '0');
-          final m = minute.toString().padLeft(2, '0');
-          final time = '$h:$m';
+          final time = _formatTime(hour, minute, use24h: use24h);
           if (repeatDays.isEmpty) return '$time every day';
-          final days =
-              repeatDays.map(_dayLabel).join(', ');
-          return '$time on $days';
+          return time;
         }(),
       OneTimeTrigger(:final scheduledAt) => () {
           final date =
               '${scheduledAt.day}/${scheduledAt.month}'
               '/${scheduledAt.year}';
-          final h =
-              scheduledAt.hour.toString().padLeft(2, '0');
-          final m = scheduledAt.minute
-              .toString()
-              .padLeft(2, '0');
-          return '$date at $h:$m';
+          final time = _formatTime(
+            scheduledAt.hour,
+            scheduledAt.minute,
+            use24h: use24h,
+          );
+          return '$date at $time';
         }(),
       _ => 'Unknown trigger',
     };
@@ -171,16 +205,68 @@ class AutomationCard extends ConsumerWidget {
       _ => 'Unknown action',
     };
   }
+}
 
-  static const _dayLabels = {
-    1: 'Mon',
-    2: 'Tue',
-    3: 'Wed',
-    4: 'Thu',
-    5: 'Fri',
-    6: 'Sat',
-    7: 'Sun',
+/// Small circular day indicators matching the alarm card pattern.
+///
+/// Automation uses 1-based days (1=Mon … 7=Sun).
+class _RepeatDayDots extends StatelessWidget {
+  const _RepeatDayDots({required this.days});
+
+  final List<int> days;
+
+  // Single-letter labels indexed by ISO weekday (1=Mon … 7=Sun).
+  static const _letters = {
+    1: 'M',
+    2: 'T',
+    3: 'W',
+    4: 'T',
+    5: 'F',
+    6: 'S',
+    7: 'S',
   };
 
-  String _dayLabel(int day) => _dayLabels[day] ?? '?';
+  @override
+  Widget build(BuildContext context) {
+    final theme = ElogirTheme.of(context);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(7, (index) {
+        final day = index + 1; // 1=Mon … 7=Sun
+        final isActive = days.contains(day);
+        return Padding(
+          padding: const EdgeInsets.only(right: 3),
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive
+                  ? theme.colors.primary
+                  : theme.colors.surfaceContainer,
+              border: isActive
+                  ? null
+                  : Border.all(
+                      color: theme.colors.outlineVariant,
+                      width: theme.strokes.thin,
+                    ),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              _letters[day]!,
+              style: theme.typography.labelSmall.copyWith(
+                fontSize: 9,
+                color: isActive
+                    ? theme.colors.onPrimary
+                    : theme.colors.onSurfaceVariant
+                        .withValues(alpha: 0.5),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
 }
