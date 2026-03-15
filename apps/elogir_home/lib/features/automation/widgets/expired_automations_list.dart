@@ -6,8 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-/// List of expired (disabled) one-time automations with a
-/// "Clear All" button to remove them.
+/// List of expired (disabled) one-time automations with swipe-to-dismiss
+/// on individual items and a ghost "Clear All" button.
 class ExpiredAutomationsList extends ConsumerWidget {
   /// Creates an expired automations list.
   const ExpiredAutomationsList({
@@ -34,11 +34,13 @@ class ExpiredAutomationsList extends ConsumerWidget {
         actions: [
           ElogirButton(
             variant: ElogirButtonVariant.outlined,
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () =>
+                Navigator.of(context).pop(false),
             child: const Text('Cancel'),
           ),
           ElogirButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () =>
+                Navigator.of(context).pop(true),
             child: const Text('Clear All'),
           ),
         ],
@@ -77,10 +79,18 @@ class ExpiredAutomationsList extends ConsumerWidget {
                 ),
               ),
               ElogirButton(
-                variant: ElogirButtonVariant.outlined,
+                variant: ElogirButtonVariant.ghost,
                 size: ElogirButtonSize.sm,
+                icon: FaIcon(
+                  FontAwesomeIcons.trashCan,
+                  size: 12,
+                  color: theme.colors.error,
+                ),
                 onPressed: () => _clearAll(context, ref),
-                child: const Text('Clear All'),
+                child: Text(
+                  'Clear All',
+                  style: TextStyle(color: theme.colors.error),
+                ),
               ),
             ],
           ),
@@ -94,10 +104,35 @@ class ExpiredAutomationsList extends ConsumerWidget {
             separatorBuilder: (_, _) =>
                 SizedBox(height: theme.spacing.sm),
             itemBuilder: (context, index) {
-              return Opacity(
-                opacity: 0.6,
-                child: AutomationCard(
-                  automation: automations[index],
+              final automation = automations[index];
+              return Dismissible(
+                key: ValueKey(automation.id),
+                direction: DismissDirection.endToStart,
+                onDismissed: (_) async {
+                  await ref
+                      .read(automationRepositoryProvider)
+                      .delete(automation.id);
+                },
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(
+                    right: theme.spacing.lg,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colors.error,
+                    borderRadius: theme.radii.lg,
+                  ),
+                  child: FaIcon(
+                    FontAwesomeIcons.trashCan,
+                    size: 18,
+                    color: theme.colors.onPrimary,
+                  ),
+                ),
+                child: Opacity(
+                  opacity: 0.6,
+                  child: AutomationCard(
+                    automation: automation,
+                  ),
                 ),
               );
             },
