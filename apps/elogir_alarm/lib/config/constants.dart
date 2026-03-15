@@ -21,8 +21,8 @@ abstract final class AppConstants {
   /// Stopwatch tick interval (milliseconds).
   static const int stopwatchTickIntervalMs = 16; // ~60fps
 
-  /// Timer preset durations in seconds.
-  static const List<int> timerPresetSeconds = [
+  /// Default timer preset durations in seconds.
+  static const List<int> defaultTimerPresetSeconds = [
     60, // 1 min
     180, // 3 min
     300, // 5 min

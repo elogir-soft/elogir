@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 mixin _$AppSettings {
 
  int get defaultSnoozeMinutes; bool get keepScreenOnStopwatch; String get timerSoundId;/// One of 'system', 'light', 'dark'.
- String get themeMode; bool get use24HourFormat; bool get weekStartsOnMonday;
+ String get themeMode; bool get use24HourFormat; bool get weekStartsOnMonday; List<int> get timerPresets;
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $AppSettingsCopyWith<AppSettings> get copyWith => _$AppSettingsCopyWithImpl<AppS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.defaultSnoozeMinutes, defaultSnoozeMinutes) || other.defaultSnoozeMinutes == defaultSnoozeMinutes)&&(identical(other.keepScreenOnStopwatch, keepScreenOnStopwatch) || other.keepScreenOnStopwatch == keepScreenOnStopwatch)&&(identical(other.timerSoundId, timerSoundId) || other.timerSoundId == timerSoundId)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat)&&(identical(other.weekStartsOnMonday, weekStartsOnMonday) || other.weekStartsOnMonday == weekStartsOnMonday));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.defaultSnoozeMinutes, defaultSnoozeMinutes) || other.defaultSnoozeMinutes == defaultSnoozeMinutes)&&(identical(other.keepScreenOnStopwatch, keepScreenOnStopwatch) || other.keepScreenOnStopwatch == keepScreenOnStopwatch)&&(identical(other.timerSoundId, timerSoundId) || other.timerSoundId == timerSoundId)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat)&&(identical(other.weekStartsOnMonday, weekStartsOnMonday) || other.weekStartsOnMonday == weekStartsOnMonday)&&const DeepCollectionEquality().equals(other.timerPresets, timerPresets));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,defaultSnoozeMinutes,keepScreenOnStopwatch,timerSoundId,themeMode,use24HourFormat,weekStartsOnMonday);
+int get hashCode => Object.hash(runtimeType,defaultSnoozeMinutes,keepScreenOnStopwatch,timerSoundId,themeMode,use24HourFormat,weekStartsOnMonday,const DeepCollectionEquality().hash(timerPresets));
 
 @override
 String toString() {
-  return 'AppSettings(defaultSnoozeMinutes: $defaultSnoozeMinutes, keepScreenOnStopwatch: $keepScreenOnStopwatch, timerSoundId: $timerSoundId, themeMode: $themeMode, use24HourFormat: $use24HourFormat, weekStartsOnMonday: $weekStartsOnMonday)';
+  return 'AppSettings(defaultSnoozeMinutes: $defaultSnoozeMinutes, keepScreenOnStopwatch: $keepScreenOnStopwatch, timerSoundId: $timerSoundId, themeMode: $themeMode, use24HourFormat: $use24HourFormat, weekStartsOnMonday: $weekStartsOnMonday, timerPresets: $timerPresets)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $AppSettingsCopyWith<$Res>  {
   factory $AppSettingsCopyWith(AppSettings value, $Res Function(AppSettings) _then) = _$AppSettingsCopyWithImpl;
 @useResult
 $Res call({
- int defaultSnoozeMinutes, bool keepScreenOnStopwatch, String timerSoundId, String themeMode, bool use24HourFormat, bool weekStartsOnMonday
+ int defaultSnoozeMinutes, bool keepScreenOnStopwatch, String timerSoundId, String themeMode, bool use24HourFormat, bool weekStartsOnMonday, List<int> timerPresets
 });
 
 
@@ -63,7 +63,7 @@ class _$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? defaultSnoozeMinutes = null,Object? keepScreenOnStopwatch = null,Object? timerSoundId = null,Object? themeMode = null,Object? use24HourFormat = null,Object? weekStartsOnMonday = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? defaultSnoozeMinutes = null,Object? keepScreenOnStopwatch = null,Object? timerSoundId = null,Object? themeMode = null,Object? use24HourFormat = null,Object? weekStartsOnMonday = null,Object? timerPresets = null,}) {
   return _then(_self.copyWith(
 defaultSnoozeMinutes: null == defaultSnoozeMinutes ? _self.defaultSnoozeMinutes : defaultSnoozeMinutes // ignore: cast_nullable_to_non_nullable
 as int,keepScreenOnStopwatch: null == keepScreenOnStopwatch ? _self.keepScreenOnStopwatch : keepScreenOnStopwatch // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as bool,timerSoundId: null == timerSoundId ? _self.timerSoundId : timerSoundId /
 as String,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as String,use24HourFormat: null == use24HourFormat ? _self.use24HourFormat : use24HourFormat // ignore: cast_nullable_to_non_nullable
 as bool,weekStartsOnMonday: null == weekStartsOnMonday ? _self.weekStartsOnMonday : weekStartsOnMonday // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,timerPresets: null == timerPresets ? _self.timerPresets : timerPresets // ignore: cast_nullable_to_non_nullable
+as List<int>,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int defaultSnoozeMinutes,  bool keepScreenOnStopwatch,  String timerSoundId,  String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int defaultSnoozeMinutes,  bool keepScreenOnStopwatch,  String timerSoundId,  String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday,  List<int> timerPresets)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.timerSoundId,_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday);case _:
+return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.timerSoundId,_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday,_that.timerPresets);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.tim
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int defaultSnoozeMinutes,  bool keepScreenOnStopwatch,  String timerSoundId,  String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int defaultSnoozeMinutes,  bool keepScreenOnStopwatch,  String timerSoundId,  String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday,  List<int> timerPresets)  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings():
-return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.timerSoundId,_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday);case _:
+return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.timerSoundId,_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday,_that.timerPresets);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.tim
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int defaultSnoozeMinutes,  bool keepScreenOnStopwatch,  String timerSoundId,  String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int defaultSnoozeMinutes,  bool keepScreenOnStopwatch,  String timerSoundId,  String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday,  List<int> timerPresets)?  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.timerSoundId,_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday);case _:
+return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.timerSoundId,_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday,_that.timerPresets);case _:
   return null;
 
 }
@@ -212,7 +213,7 @@ return $default(_that.defaultSnoozeMinutes,_that.keepScreenOnStopwatch,_that.tim
 
 
 class _AppSettings implements AppSettings {
-  const _AppSettings({this.defaultSnoozeMinutes = 5, this.keepScreenOnStopwatch = false, this.timerSoundId = 'marimba', this.themeMode = 'system', this.use24HourFormat = false, this.weekStartsOnMonday = true});
+  const _AppSettings({this.defaultSnoozeMinutes = 5, this.keepScreenOnStopwatch = false, this.timerSoundId = 'marimba', this.themeMode = 'system', this.use24HourFormat = false, this.weekStartsOnMonday = true, final  List<int> timerPresets = const [60, 180, 300, 600, 900, 1800, 3600]}): _timerPresets = timerPresets;
   
 
 @override@JsonKey() final  int defaultSnoozeMinutes;
@@ -222,6 +223,13 @@ class _AppSettings implements AppSettings {
 @override@JsonKey() final  String themeMode;
 @override@JsonKey() final  bool use24HourFormat;
 @override@JsonKey() final  bool weekStartsOnMonday;
+ final  List<int> _timerPresets;
+@override@JsonKey() List<int> get timerPresets {
+  if (_timerPresets is EqualUnmodifiableListView) return _timerPresets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_timerPresets);
+}
+
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +241,16 @@ _$AppSettingsCopyWith<_AppSettings> get copyWith => __$AppSettingsCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.defaultSnoozeMinutes, defaultSnoozeMinutes) || other.defaultSnoozeMinutes == defaultSnoozeMinutes)&&(identical(other.keepScreenOnStopwatch, keepScreenOnStopwatch) || other.keepScreenOnStopwatch == keepScreenOnStopwatch)&&(identical(other.timerSoundId, timerSoundId) || other.timerSoundId == timerSoundId)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat)&&(identical(other.weekStartsOnMonday, weekStartsOnMonday) || other.weekStartsOnMonday == weekStartsOnMonday));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.defaultSnoozeMinutes, defaultSnoozeMinutes) || other.defaultSnoozeMinutes == defaultSnoozeMinutes)&&(identical(other.keepScreenOnStopwatch, keepScreenOnStopwatch) || other.keepScreenOnStopwatch == keepScreenOnStopwatch)&&(identical(other.timerSoundId, timerSoundId) || other.timerSoundId == timerSoundId)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat)&&(identical(other.weekStartsOnMonday, weekStartsOnMonday) || other.weekStartsOnMonday == weekStartsOnMonday)&&const DeepCollectionEquality().equals(other._timerPresets, _timerPresets));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,defaultSnoozeMinutes,keepScreenOnStopwatch,timerSoundId,themeMode,use24HourFormat,weekStartsOnMonday);
+int get hashCode => Object.hash(runtimeType,defaultSnoozeMinutes,keepScreenOnStopwatch,timerSoundId,themeMode,use24HourFormat,weekStartsOnMonday,const DeepCollectionEquality().hash(_timerPresets));
 
 @override
 String toString() {
-  return 'AppSettings(defaultSnoozeMinutes: $defaultSnoozeMinutes, keepScreenOnStopwatch: $keepScreenOnStopwatch, timerSoundId: $timerSoundId, themeMode: $themeMode, use24HourFormat: $use24HourFormat, weekStartsOnMonday: $weekStartsOnMonday)';
+  return 'AppSettings(defaultSnoozeMinutes: $defaultSnoozeMinutes, keepScreenOnStopwatch: $keepScreenOnStopwatch, timerSoundId: $timerSoundId, themeMode: $themeMode, use24HourFormat: $use24HourFormat, weekStartsOnMonday: $weekStartsOnMonday, timerPresets: $timerPresets)';
 }
 
 
@@ -253,7 +261,7 @@ abstract mixin class _$AppSettingsCopyWith<$Res> implements $AppSettingsCopyWith
   factory _$AppSettingsCopyWith(_AppSettings value, $Res Function(_AppSettings) _then) = __$AppSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- int defaultSnoozeMinutes, bool keepScreenOnStopwatch, String timerSoundId, String themeMode, bool use24HourFormat, bool weekStartsOnMonday
+ int defaultSnoozeMinutes, bool keepScreenOnStopwatch, String timerSoundId, String themeMode, bool use24HourFormat, bool weekStartsOnMonday, List<int> timerPresets
 });
 
 
@@ -270,7 +278,7 @@ class __$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? defaultSnoozeMinutes = null,Object? keepScreenOnStopwatch = null,Object? timerSoundId = null,Object? themeMode = null,Object? use24HourFormat = null,Object? weekStartsOnMonday = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? defaultSnoozeMinutes = null,Object? keepScreenOnStopwatch = null,Object? timerSoundId = null,Object? themeMode = null,Object? use24HourFormat = null,Object? weekStartsOnMonday = null,Object? timerPresets = null,}) {
   return _then(_AppSettings(
 defaultSnoozeMinutes: null == defaultSnoozeMinutes ? _self.defaultSnoozeMinutes : defaultSnoozeMinutes // ignore: cast_nullable_to_non_nullable
 as int,keepScreenOnStopwatch: null == keepScreenOnStopwatch ? _self.keepScreenOnStopwatch : keepScreenOnStopwatch // ignore: cast_nullable_to_non_nullable
@@ -278,7 +286,8 @@ as bool,timerSoundId: null == timerSoundId ? _self.timerSoundId : timerSoundId /
 as String,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as String,use24HourFormat: null == use24HourFormat ? _self.use24HourFormat : use24HourFormat // ignore: cast_nullable_to_non_nullable
 as bool,weekStartsOnMonday: null == weekStartsOnMonday ? _self.weekStartsOnMonday : weekStartsOnMonday // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,timerPresets: null == timerPresets ? _self._timerPresets : timerPresets // ignore: cast_nullable_to_non_nullable
+as List<int>,
   ));
 }
 

@@ -37,11 +37,14 @@ extension DurationFormatting on Duration {
     return 'in < 1m';
   }
 
-  /// Format preset duration for display (e.g., "5 min", "1 hr").
+  /// Format preset duration for display (e.g., "30 sec", "5 min", "1 hr").
   String get presetLabel {
     if (inMinutes >= 60) {
       final hours = inHours;
       return '$hours hr';
+    }
+    if (inMinutes == 0) {
+      return '${inSeconds} sec';
     }
     return '${inMinutes} min';
   }

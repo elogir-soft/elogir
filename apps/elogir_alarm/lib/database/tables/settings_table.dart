@@ -22,6 +22,8 @@ class SettingsTable extends Table {
   // Timers
   TextColumn get timerSoundId =>
       text().withDefault(const Constant('marimba'))();
+  TextColumn get timerPresets => text()
+      .withDefault(const Constant('[60,180,300,600,900,1800,3600]'))();
 
   // General
   BoolColumn get weekStartsOnMonday =>
