@@ -4,6 +4,7 @@ import 'package:elogir_alarm/features/alarms/providers/alarms_provider.dart';
 import 'package:elogir_alarm/features/alarms/widgets/day_of_week_selector.dart';
 import 'package:elogir_alarm/features/alarms/widgets/sound_selector.dart';
 import 'package:elogir_alarm/features/alarms/widgets/time_picker_wheel.dart';
+import 'package:elogir_alarm/features/settings/providers/settings_provider.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,6 +45,7 @@ class _AlarmEditSheetContentState
   String _soundId = 'alarm';
   int _snoozeDuration = 5;
   bool _initialized = false;
+  bool _snoozeInitialized = false;
 
   bool get _isEditing => widget.alarmId != null;
 
@@ -51,6 +53,19 @@ class _AlarmEditSheetContentState
   void initState() {
     super.initState();
     _labelController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isEditing && !_snoozeInitialized) {
+      _snoozeInitialized = true;
+      final snooze =
+          ref.read(settingsProvider).value?.defaultSnoozeMinutes;
+      if (snooze != null) {
+        _snoozeDuration = snooze;
+      }
+    }
   }
 
   @override
@@ -94,6 +109,9 @@ class _AlarmEditSheetContentState
   @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
+    final settings = ref.watch(settingsProvider).value;
+    final weekStartsOnMonday = settings?.weekStartsOnMonday ?? true;
+    final use24HourFormat = settings?.use24HourFormat ?? false;
 
     // If editing, watch the alarm to init form fields.
     if (_isEditing) {
@@ -131,6 +149,7 @@ class _AlarmEditSheetContentState
               TimePickerWheel(
                 hour: _hour,
                 minute: _minute,
+                use24HourFormat: use24HourFormat,
                 onTimeChanged: (h, m) => setState(() {
                   _hour = h;
                   _minute = m;
@@ -156,6 +175,7 @@ class _AlarmEditSheetContentState
               DayOfWeekSelector(
                 selectedDays: _repeatDays,
                 onChanged: (days) => setState(() => _repeatDays = days),
+                weekStartsOnMonday: weekStartsOnMonday,
               ),
               SizedBox(height: theme.spacing.lg),
 

@@ -10,6 +10,7 @@ void main() {
         DayOfWeekSelector(
           selectedDays: const [],
           onChanged: (_) {},
+          weekStartsOnMonday: true,
         ),
       );
 
@@ -25,6 +26,7 @@ void main() {
         DayOfWeekSelector(
           selectedDays: const [],
           onChanged: (days) => result = days,
+          weekStartsOnMonday: true,
         ),
       );
 
@@ -41,6 +43,7 @@ void main() {
         DayOfWeekSelector(
           selectedDays: const [0],
           onChanged: (days) => result = days,
+          weekStartsOnMonday: true,
         ),
       );
 

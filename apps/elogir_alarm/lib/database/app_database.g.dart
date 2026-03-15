@@ -1135,18 +1135,457 @@ class TimerTableCompanion extends UpdateCompanion<TimerTableData> {
   }
 }
 
+class $SettingsTableTable extends SettingsTable
+    with TableInfo<$SettingsTableTable, SettingsTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SettingsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _defaultSnoozeMinutesMeta =
+      const VerificationMeta('defaultSnoozeMinutes');
+  @override
+  late final GeneratedColumn<int> defaultSnoozeMinutes = GeneratedColumn<int>(
+    'default_snooze_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(5),
+  );
+  static const VerificationMeta _keepScreenOnStopwatchMeta =
+      const VerificationMeta('keepScreenOnStopwatch');
+  @override
+  late final GeneratedColumn<bool> keepScreenOnStopwatch =
+      GeneratedColumn<bool>(
+        'keep_screen_on_stopwatch',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("keep_screen_on_stopwatch" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _themeModeMeta = const VerificationMeta(
+    'themeMode',
+  );
+  @override
+  late final GeneratedColumn<String> themeMode = GeneratedColumn<String>(
+    'theme_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('system'),
+  );
+  static const VerificationMeta _use24HourFormatMeta = const VerificationMeta(
+    'use24HourFormat',
+  );
+  @override
+  late final GeneratedColumn<bool> use24HourFormat = GeneratedColumn<bool>(
+    'use24_hour_format',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("use24_hour_format" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _weekStartsOnMondayMeta =
+      const VerificationMeta('weekStartsOnMonday');
+  @override
+  late final GeneratedColumn<bool> weekStartsOnMonday = GeneratedColumn<bool>(
+    'week_starts_on_monday',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("week_starts_on_monday" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    defaultSnoozeMinutes,
+    keepScreenOnStopwatch,
+    themeMode,
+    use24HourFormat,
+    weekStartsOnMonday,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'settings_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SettingsTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('default_snooze_minutes')) {
+      context.handle(
+        _defaultSnoozeMinutesMeta,
+        defaultSnoozeMinutes.isAcceptableOrUnknown(
+          data['default_snooze_minutes']!,
+          _defaultSnoozeMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('keep_screen_on_stopwatch')) {
+      context.handle(
+        _keepScreenOnStopwatchMeta,
+        keepScreenOnStopwatch.isAcceptableOrUnknown(
+          data['keep_screen_on_stopwatch']!,
+          _keepScreenOnStopwatchMeta,
+        ),
+      );
+    }
+    if (data.containsKey('theme_mode')) {
+      context.handle(
+        _themeModeMeta,
+        themeMode.isAcceptableOrUnknown(data['theme_mode']!, _themeModeMeta),
+      );
+    }
+    if (data.containsKey('use24_hour_format')) {
+      context.handle(
+        _use24HourFormatMeta,
+        use24HourFormat.isAcceptableOrUnknown(
+          data['use24_hour_format']!,
+          _use24HourFormatMeta,
+        ),
+      );
+    }
+    if (data.containsKey('week_starts_on_monday')) {
+      context.handle(
+        _weekStartsOnMondayMeta,
+        weekStartsOnMonday.isAcceptableOrUnknown(
+          data['week_starts_on_monday']!,
+          _weekStartsOnMondayMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SettingsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SettingsTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      defaultSnoozeMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}default_snooze_minutes'],
+      )!,
+      keepScreenOnStopwatch: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}keep_screen_on_stopwatch'],
+      )!,
+      themeMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}theme_mode'],
+      )!,
+      use24HourFormat: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}use24_hour_format'],
+      )!,
+      weekStartsOnMonday: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}week_starts_on_monday'],
+      )!,
+    );
+  }
+
+  @override
+  $SettingsTableTable createAlias(String alias) {
+    return $SettingsTableTable(attachedDatabase, alias);
+  }
+}
+
+class SettingsTableData extends DataClass
+    implements Insertable<SettingsTableData> {
+  final int id;
+  final int defaultSnoozeMinutes;
+  final bool keepScreenOnStopwatch;
+
+  /// One of 'system', 'light', 'dark'.
+  final String themeMode;
+  final bool use24HourFormat;
+  final bool weekStartsOnMonday;
+  const SettingsTableData({
+    required this.id,
+    required this.defaultSnoozeMinutes,
+    required this.keepScreenOnStopwatch,
+    required this.themeMode,
+    required this.use24HourFormat,
+    required this.weekStartsOnMonday,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['default_snooze_minutes'] = Variable<int>(defaultSnoozeMinutes);
+    map['keep_screen_on_stopwatch'] = Variable<bool>(keepScreenOnStopwatch);
+    map['theme_mode'] = Variable<String>(themeMode);
+    map['use24_hour_format'] = Variable<bool>(use24HourFormat);
+    map['week_starts_on_monday'] = Variable<bool>(weekStartsOnMonday);
+    return map;
+  }
+
+  SettingsTableCompanion toCompanion(bool nullToAbsent) {
+    return SettingsTableCompanion(
+      id: Value(id),
+      defaultSnoozeMinutes: Value(defaultSnoozeMinutes),
+      keepScreenOnStopwatch: Value(keepScreenOnStopwatch),
+      themeMode: Value(themeMode),
+      use24HourFormat: Value(use24HourFormat),
+      weekStartsOnMonday: Value(weekStartsOnMonday),
+    );
+  }
+
+  factory SettingsTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SettingsTableData(
+      id: serializer.fromJson<int>(json['id']),
+      defaultSnoozeMinutes: serializer.fromJson<int>(
+        json['defaultSnoozeMinutes'],
+      ),
+      keepScreenOnStopwatch: serializer.fromJson<bool>(
+        json['keepScreenOnStopwatch'],
+      ),
+      themeMode: serializer.fromJson<String>(json['themeMode']),
+      use24HourFormat: serializer.fromJson<bool>(json['use24HourFormat']),
+      weekStartsOnMonday: serializer.fromJson<bool>(json['weekStartsOnMonday']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'defaultSnoozeMinutes': serializer.toJson<int>(defaultSnoozeMinutes),
+      'keepScreenOnStopwatch': serializer.toJson<bool>(keepScreenOnStopwatch),
+      'themeMode': serializer.toJson<String>(themeMode),
+      'use24HourFormat': serializer.toJson<bool>(use24HourFormat),
+      'weekStartsOnMonday': serializer.toJson<bool>(weekStartsOnMonday),
+    };
+  }
+
+  SettingsTableData copyWith({
+    int? id,
+    int? defaultSnoozeMinutes,
+    bool? keepScreenOnStopwatch,
+    String? themeMode,
+    bool? use24HourFormat,
+    bool? weekStartsOnMonday,
+  }) => SettingsTableData(
+    id: id ?? this.id,
+    defaultSnoozeMinutes: defaultSnoozeMinutes ?? this.defaultSnoozeMinutes,
+    keepScreenOnStopwatch: keepScreenOnStopwatch ?? this.keepScreenOnStopwatch,
+    themeMode: themeMode ?? this.themeMode,
+    use24HourFormat: use24HourFormat ?? this.use24HourFormat,
+    weekStartsOnMonday: weekStartsOnMonday ?? this.weekStartsOnMonday,
+  );
+  SettingsTableData copyWithCompanion(SettingsTableCompanion data) {
+    return SettingsTableData(
+      id: data.id.present ? data.id.value : this.id,
+      defaultSnoozeMinutes: data.defaultSnoozeMinutes.present
+          ? data.defaultSnoozeMinutes.value
+          : this.defaultSnoozeMinutes,
+      keepScreenOnStopwatch: data.keepScreenOnStopwatch.present
+          ? data.keepScreenOnStopwatch.value
+          : this.keepScreenOnStopwatch,
+      themeMode: data.themeMode.present ? data.themeMode.value : this.themeMode,
+      use24HourFormat: data.use24HourFormat.present
+          ? data.use24HourFormat.value
+          : this.use24HourFormat,
+      weekStartsOnMonday: data.weekStartsOnMonday.present
+          ? data.weekStartsOnMonday.value
+          : this.weekStartsOnMonday,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SettingsTableData(')
+          ..write('id: $id, ')
+          ..write('defaultSnoozeMinutes: $defaultSnoozeMinutes, ')
+          ..write('keepScreenOnStopwatch: $keepScreenOnStopwatch, ')
+          ..write('themeMode: $themeMode, ')
+          ..write('use24HourFormat: $use24HourFormat, ')
+          ..write('weekStartsOnMonday: $weekStartsOnMonday')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    defaultSnoozeMinutes,
+    keepScreenOnStopwatch,
+    themeMode,
+    use24HourFormat,
+    weekStartsOnMonday,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SettingsTableData &&
+          other.id == this.id &&
+          other.defaultSnoozeMinutes == this.defaultSnoozeMinutes &&
+          other.keepScreenOnStopwatch == this.keepScreenOnStopwatch &&
+          other.themeMode == this.themeMode &&
+          other.use24HourFormat == this.use24HourFormat &&
+          other.weekStartsOnMonday == this.weekStartsOnMonday);
+}
+
+class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
+  final Value<int> id;
+  final Value<int> defaultSnoozeMinutes;
+  final Value<bool> keepScreenOnStopwatch;
+  final Value<String> themeMode;
+  final Value<bool> use24HourFormat;
+  final Value<bool> weekStartsOnMonday;
+  const SettingsTableCompanion({
+    this.id = const Value.absent(),
+    this.defaultSnoozeMinutes = const Value.absent(),
+    this.keepScreenOnStopwatch = const Value.absent(),
+    this.themeMode = const Value.absent(),
+    this.use24HourFormat = const Value.absent(),
+    this.weekStartsOnMonday = const Value.absent(),
+  });
+  SettingsTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.defaultSnoozeMinutes = const Value.absent(),
+    this.keepScreenOnStopwatch = const Value.absent(),
+    this.themeMode = const Value.absent(),
+    this.use24HourFormat = const Value.absent(),
+    this.weekStartsOnMonday = const Value.absent(),
+  });
+  static Insertable<SettingsTableData> custom({
+    Expression<int>? id,
+    Expression<int>? defaultSnoozeMinutes,
+    Expression<bool>? keepScreenOnStopwatch,
+    Expression<String>? themeMode,
+    Expression<bool>? use24HourFormat,
+    Expression<bool>? weekStartsOnMonday,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (defaultSnoozeMinutes != null)
+        'default_snooze_minutes': defaultSnoozeMinutes,
+      if (keepScreenOnStopwatch != null)
+        'keep_screen_on_stopwatch': keepScreenOnStopwatch,
+      if (themeMode != null) 'theme_mode': themeMode,
+      if (use24HourFormat != null) 'use24_hour_format': use24HourFormat,
+      if (weekStartsOnMonday != null)
+        'week_starts_on_monday': weekStartsOnMonday,
+    });
+  }
+
+  SettingsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? defaultSnoozeMinutes,
+    Value<bool>? keepScreenOnStopwatch,
+    Value<String>? themeMode,
+    Value<bool>? use24HourFormat,
+    Value<bool>? weekStartsOnMonday,
+  }) {
+    return SettingsTableCompanion(
+      id: id ?? this.id,
+      defaultSnoozeMinutes: defaultSnoozeMinutes ?? this.defaultSnoozeMinutes,
+      keepScreenOnStopwatch:
+          keepScreenOnStopwatch ?? this.keepScreenOnStopwatch,
+      themeMode: themeMode ?? this.themeMode,
+      use24HourFormat: use24HourFormat ?? this.use24HourFormat,
+      weekStartsOnMonday: weekStartsOnMonday ?? this.weekStartsOnMonday,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (defaultSnoozeMinutes.present) {
+      map['default_snooze_minutes'] = Variable<int>(defaultSnoozeMinutes.value);
+    }
+    if (keepScreenOnStopwatch.present) {
+      map['keep_screen_on_stopwatch'] = Variable<bool>(
+        keepScreenOnStopwatch.value,
+      );
+    }
+    if (themeMode.present) {
+      map['theme_mode'] = Variable<String>(themeMode.value);
+    }
+    if (use24HourFormat.present) {
+      map['use24_hour_format'] = Variable<bool>(use24HourFormat.value);
+    }
+    if (weekStartsOnMonday.present) {
+      map['week_starts_on_monday'] = Variable<bool>(weekStartsOnMonday.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SettingsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('defaultSnoozeMinutes: $defaultSnoozeMinutes, ')
+          ..write('keepScreenOnStopwatch: $keepScreenOnStopwatch, ')
+          ..write('themeMode: $themeMode, ')
+          ..write('use24HourFormat: $use24HourFormat, ')
+          ..write('weekStartsOnMonday: $weekStartsOnMonday')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $AlarmTableTable alarmTable = $AlarmTableTable(this);
   late final $TimerTableTable timerTable = $TimerTableTable(this);
+  late final $SettingsTableTable settingsTable = $SettingsTableTable(this);
   late final AlarmDao alarmDao = AlarmDao(this as AppDatabase);
   late final TimerDao timerDao = TimerDao(this as AppDatabase);
+  late final SettingsDao settingsDao = SettingsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [alarmTable, timerTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    alarmTable,
+    timerTable,
+    settingsTable,
+  ];
 }
 
 typedef $$AlarmTableTableCreateCompanionBuilder =
@@ -1709,6 +2148,231 @@ typedef $$TimerTableTableProcessedTableManager =
       TimerTableData,
       PrefetchHooks Function()
     >;
+typedef $$SettingsTableTableCreateCompanionBuilder =
+    SettingsTableCompanion Function({
+      Value<int> id,
+      Value<int> defaultSnoozeMinutes,
+      Value<bool> keepScreenOnStopwatch,
+      Value<String> themeMode,
+      Value<bool> use24HourFormat,
+      Value<bool> weekStartsOnMonday,
+    });
+typedef $$SettingsTableTableUpdateCompanionBuilder =
+    SettingsTableCompanion Function({
+      Value<int> id,
+      Value<int> defaultSnoozeMinutes,
+      Value<bool> keepScreenOnStopwatch,
+      Value<String> themeMode,
+      Value<bool> use24HourFormat,
+      Value<bool> weekStartsOnMonday,
+    });
+
+class $$SettingsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $SettingsTableTable> {
+  $$SettingsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get defaultSnoozeMinutes => $composableBuilder(
+    column: $table.defaultSnoozeMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get keepScreenOnStopwatch => $composableBuilder(
+    column: $table.keepScreenOnStopwatch,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get themeMode => $composableBuilder(
+    column: $table.themeMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get use24HourFormat => $composableBuilder(
+    column: $table.use24HourFormat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get weekStartsOnMonday => $composableBuilder(
+    column: $table.weekStartsOnMonday,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SettingsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $SettingsTableTable> {
+  $$SettingsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get defaultSnoozeMinutes => $composableBuilder(
+    column: $table.defaultSnoozeMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get keepScreenOnStopwatch => $composableBuilder(
+    column: $table.keepScreenOnStopwatch,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get themeMode => $composableBuilder(
+    column: $table.themeMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get use24HourFormat => $composableBuilder(
+    column: $table.use24HourFormat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get weekStartsOnMonday => $composableBuilder(
+    column: $table.weekStartsOnMonday,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SettingsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SettingsTableTable> {
+  $$SettingsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get defaultSnoozeMinutes => $composableBuilder(
+    column: $table.defaultSnoozeMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get keepScreenOnStopwatch => $composableBuilder(
+    column: $table.keepScreenOnStopwatch,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get themeMode =>
+      $composableBuilder(column: $table.themeMode, builder: (column) => column);
+
+  GeneratedColumn<bool> get use24HourFormat => $composableBuilder(
+    column: $table.use24HourFormat,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get weekStartsOnMonday => $composableBuilder(
+    column: $table.weekStartsOnMonday,
+    builder: (column) => column,
+  );
+}
+
+class $$SettingsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SettingsTableTable,
+          SettingsTableData,
+          $$SettingsTableTableFilterComposer,
+          $$SettingsTableTableOrderingComposer,
+          $$SettingsTableTableAnnotationComposer,
+          $$SettingsTableTableCreateCompanionBuilder,
+          $$SettingsTableTableUpdateCompanionBuilder,
+          (
+            SettingsTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $SettingsTableTable,
+              SettingsTableData
+            >,
+          ),
+          SettingsTableData,
+          PrefetchHooks Function()
+        > {
+  $$SettingsTableTableTableManager(_$AppDatabase db, $SettingsTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SettingsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SettingsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SettingsTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> defaultSnoozeMinutes = const Value.absent(),
+                Value<bool> keepScreenOnStopwatch = const Value.absent(),
+                Value<String> themeMode = const Value.absent(),
+                Value<bool> use24HourFormat = const Value.absent(),
+                Value<bool> weekStartsOnMonday = const Value.absent(),
+              }) => SettingsTableCompanion(
+                id: id,
+                defaultSnoozeMinutes: defaultSnoozeMinutes,
+                keepScreenOnStopwatch: keepScreenOnStopwatch,
+                themeMode: themeMode,
+                use24HourFormat: use24HourFormat,
+                weekStartsOnMonday: weekStartsOnMonday,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> defaultSnoozeMinutes = const Value.absent(),
+                Value<bool> keepScreenOnStopwatch = const Value.absent(),
+                Value<String> themeMode = const Value.absent(),
+                Value<bool> use24HourFormat = const Value.absent(),
+                Value<bool> weekStartsOnMonday = const Value.absent(),
+              }) => SettingsTableCompanion.insert(
+                id: id,
+                defaultSnoozeMinutes: defaultSnoozeMinutes,
+                keepScreenOnStopwatch: keepScreenOnStopwatch,
+                themeMode: themeMode,
+                use24HourFormat: use24HourFormat,
+                weekStartsOnMonday: weekStartsOnMonday,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SettingsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SettingsTableTable,
+      SettingsTableData,
+      $$SettingsTableTableFilterComposer,
+      $$SettingsTableTableOrderingComposer,
+      $$SettingsTableTableAnnotationComposer,
+      $$SettingsTableTableCreateCompanionBuilder,
+      $$SettingsTableTableUpdateCompanionBuilder,
+      (
+        SettingsTableData,
+        BaseReferences<_$AppDatabase, $SettingsTableTable, SettingsTableData>,
+      ),
+      SettingsTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1717,4 +2381,6 @@ class $AppDatabaseManager {
       $$AlarmTableTableTableManager(_db, _db.alarmTable);
   $$TimerTableTableTableManager get timerTable =>
       $$TimerTableTableTableManager(_db, _db.timerTable);
+  $$SettingsTableTableTableManager get settingsTable =>
+      $$SettingsTableTableTableManager(_db, _db.settingsTable);
 }

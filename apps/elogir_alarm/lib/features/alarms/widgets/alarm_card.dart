@@ -1,10 +1,13 @@
 import 'package:elogir_alarm/features/alarms/models/alarm.dart';
+import 'package:elogir_alarm/features/settings/providers/settings_provider.dart';
+import 'package:elogir_alarm/shared/extensions/day_index_extensions.dart';
 import 'package:elogir_alarm/shared/extensions/duration_extensions.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A card displaying alarm info with toggle, time, label, and repeat days.
-class AlarmCard extends StatelessWidget {
+class AlarmCard extends ConsumerWidget {
   const AlarmCard({
     required this.alarm,
     required this.onToggle,
@@ -18,9 +21,25 @@ class AlarmCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
+  String _formatTime({
+    required int hour,
+    required int minute,
+    required bool use24Hour,
+  }) {
+    if (use24Hour) {
+      return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+    }
+    final period = hour < 12 ? 'AM' : 'PM';
+    final h = hour % 12 == 0 ? 12 : hour % 12;
+    return '${h.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = ElogirTheme.of(context);
+    final settings = ref.watch(settingsProvider).value;
+    final use24Hour = settings?.use24HourFormat ?? false;
+    final weekStartsOnMonday = settings?.weekStartsOnMonday ?? true;
 
     return ElogirPressable(
       onPressed: onTap,
@@ -38,7 +57,11 @@ class AlarmCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElogirText(
-                      alarm.timeFormatted,
+                      _formatTime(
+                        hour: alarm.hour,
+                        minute: alarm.minute,
+                        use24Hour: use24Hour,
+                      ),
                       variant: ElogirTextVariant.displaySmall,
                     ),
                   ),
@@ -62,7 +85,10 @@ class AlarmCard extends StatelessWidget {
               Row(
                 children: [
                   if (alarm.repeatDays.isNotEmpty) ...[
-                    _RepeatDayDots(days: alarm.repeatDays),
+                    _RepeatDayDots(
+                      days: alarm.repeatDays,
+                      weekStartsOnMonday: weekStartsOnMonday,
+                    ),
                     SizedBox(width: theme.spacing.sm),
                   ],
                   if (alarm.isEnabled)
@@ -82,9 +108,13 @@ class AlarmCard extends StatelessWidget {
 }
 
 class _RepeatDayDots extends StatelessWidget {
-  const _RepeatDayDots({required this.days});
+  const _RepeatDayDots({
+    required this.days,
+    required this.weekStartsOnMonday,
+  });
 
   final List<int> days;
+  final bool weekStartsOnMonday;
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +122,10 @@ class _RepeatDayDots extends StatelessWidget {
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: List.generate(7, (index) {
-        final isActive = days.contains(index);
+      children: List.generate(7, (displayIndex) {
+        final dayIndex =
+            displayToDay(displayIndex, weekStartsOnMonday: weekStartsOnMonday);
+        final isActive = days.contains(dayIndex);
         return Padding(
           padding: const EdgeInsets.only(right: 3),
           child: Container(
@@ -113,7 +145,7 @@ class _RepeatDayDots extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              Alarm.dayLetters[index],
+              Alarm.dayLetters[dayIndex],
               style: theme.typography.labelSmall.copyWith(
                 fontSize: 9,
                 color: isActive

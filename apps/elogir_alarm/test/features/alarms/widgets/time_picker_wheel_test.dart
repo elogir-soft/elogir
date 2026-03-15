@@ -11,6 +11,7 @@ void main() {
         TimePickerWheel(
           hour: 14,
           minute: 30,
+          use24HourFormat: true,
           onTimeChanged: (_, __) {},
         ),
       );
@@ -24,6 +25,7 @@ void main() {
         TimePickerWheel(
           hour: 0,
           minute: 0,
+          use24HourFormat: true,
           onTimeChanged: (_, __) {},
         ),
       );

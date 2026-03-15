@@ -1,4 +1,5 @@
 import 'package:elogir_alarm/features/alarms/screens/alarms_screen.dart';
+import 'package:elogir_alarm/features/settings/screens/settings_screen.dart';
 import 'package:elogir_alarm/features/stopwatch/screens/stopwatch_screen.dart';
 import 'package:elogir_alarm/features/timers/screens/timers_screen.dart';
 import 'package:elogir_alarm/layout/app_shell.dart';
@@ -12,6 +13,7 @@ part 'routes.g.dart';
     TypedGoRoute<AlarmsRoute>(path: '/alarms'),
     TypedGoRoute<TimersRoute>(path: '/timers'),
     TypedGoRoute<StopwatchRoute>(path: '/stopwatch'),
+    TypedGoRoute<SettingsRoute>(path: '/settings'),
   ],
 )
 class AppShellRoute extends ShellRouteData {
@@ -51,5 +53,14 @@ class StopwatchRoute extends GoRouteData with $StopwatchRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const StopwatchScreen();
+  }
+}
+
+class SettingsRoute extends GoRouteData with $SettingsRoute {
+  const SettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SettingsScreen();
   }
 }

@@ -15,6 +15,7 @@ class ElogirWheelDrum extends StatefulWidget {
     this.initialValue = 0,
     this.label,
     this.itemExtent = 44,
+    this.labelBuilder,
   });
 
   /// Number of items in the wheel (e.g. 24 for hours, 60 for minutes).
@@ -31,6 +32,9 @@ class ElogirWheelDrum extends StatefulWidget {
 
   /// Height of each item in the wheel.
   final double itemExtent;
+
+  /// Optional builder for item text. Defaults to zero-padded index.
+  final String Function(int index)? labelBuilder;
 
   @override
   State<ElogirWheelDrum> createState() => ElogirWheelDrumState();
@@ -108,7 +112,8 @@ class ElogirWheelDrumState extends State<ElogirWheelDrum> {
                     builder: (context, index) {
                       return Center(
                         child: Text(
-                          index.toString().padLeft(2, '0'),
+                          widget.labelBuilder?.call(index) ??
+                              index.toString().padLeft(2, '0'),
                           style: theme.typography.headlineLarge.copyWith(
                             color: theme.colors.onSurface,
                             fontFeatures: const [

@@ -4,14 +4,19 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:elogir_alarm/config/constants.dart';
 import 'package:elogir_alarm/database/daos/alarm_dao.dart';
+import 'package:elogir_alarm/database/daos/settings_dao.dart';
 import 'package:elogir_alarm/database/daos/timer_dao.dart';
 import 'package:elogir_alarm/database/tables/alarm_table.dart';
+import 'package:elogir_alarm/database/tables/settings_table.dart';
 import 'package:elogir_alarm/database/tables/timer_table.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [AlarmTable, TimerTable], daos: [AlarmDao, TimerDao])
+@DriftDatabase(
+  tables: [AlarmTable, TimerTable, SettingsTable],
+  daos: [AlarmDao, TimerDao, SettingsDao],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -19,7 +24,16 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 2) {
+            await migrator.createTable(settingsTable);
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

@@ -18,6 +18,7 @@ class AppShell extends StatelessWidget {
     _NavDestination(path: '/alarms', label: 'Alarms'),
     _NavDestination(path: '/timers', label: 'Timers'),
     _NavDestination(path: '/stopwatch', label: 'Stopwatch'),
+    _NavDestination(path: '/settings', label: 'Settings'),
   ];
 
   int _currentIndex(BuildContext context) {
@@ -101,6 +102,10 @@ class _CompactLayout extends StatelessWidget {
               icon: StopwatchIcon(),
               label: 'Stopwatch',
             ),
+            ElogirBottomNavItem(
+              icon: SettingsIcon(),
+              label: 'Settings',
+            ),
           ],
         ),
       ],
@@ -173,6 +178,16 @@ class _MediumLayout extends StatelessWidget {
                   label: 'Stopwatch',
                   isSelected: currentIndex == 2,
                   onPressed: () => onNavigate(2),
+                ),
+                _RailItem(
+                  icon: SettingsIcon(
+                    color: currentIndex == 3
+                        ? theme.colors.primary
+                        : theme.colors.onSurfaceVariant,
+                  ),
+                  label: 'Settings',
+                  isSelected: currentIndex == 3,
+                  onPressed: () => onNavigate(3),
                 ),
               ],
             ),
@@ -293,6 +308,14 @@ class _ExpandedLayout extends StatelessWidget {
                   label: 'Stopwatch',
                   isSelected: currentIndex == 2,
                   onPressed: () => onNavigate(2),
+                ),
+                _SidebarItem(
+                  icon: SettingsIcon(
+                    color: _sidebarIconColor(context, 3),
+                  ),
+                  label: 'Settings',
+                  isSelected: currentIndex == 3,
+                  onPressed: () => onNavigate(3),
                 ),
               ],
             ),

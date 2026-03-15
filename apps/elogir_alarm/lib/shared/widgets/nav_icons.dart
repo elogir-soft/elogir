@@ -7,6 +7,101 @@ import 'package:flutter/widgets.dart';
 /// Since `uses-material-design: false`, we draw all icons with
 /// [CustomPainter] using stroke style to match Soft Industrial.
 
+/// Gear/cog icon for settings — 6 teeth drawn with strokes.
+class SettingsIcon extends StatelessWidget {
+  const SettingsIcon({super.key, this.size = 24, this.color});
+
+  final double size;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconTheme = IconTheme.of(context);
+    return CustomPaint(
+      size: Size(size, size),
+      painter: _SettingsIconPainter(
+        color: color ?? iconTheme.color ?? const Color(0xFF1D1B20),
+      ),
+    );
+  }
+}
+
+class _SettingsIconPainter extends CustomPainter {
+  _SettingsIconPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.08
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final center = Offset(size.width / 2, size.height / 2);
+    final outerRadius = size.width * 0.42;
+    final innerRadius = size.width * 0.28;
+    final toothHalfAngle = math.pi / 18; // 10° half-width per tooth
+    const teethCount = 6;
+    const angleStep = 2 * math.pi / teethCount;
+
+    // Draw the gear outline as a closed path.
+    final path = Path();
+    for (var i = 0; i < teethCount; i++) {
+      final baseAngle = i * angleStep - math.pi / 2;
+
+      // Rising inner → outer edge of tooth
+      final innerStart = Offset(
+        center.dx + innerRadius * math.cos(baseAngle - toothHalfAngle),
+        center.dy + innerRadius * math.sin(baseAngle - toothHalfAngle),
+      );
+      final outerLeft = Offset(
+        center.dx + outerRadius * math.cos(baseAngle - toothHalfAngle),
+        center.dy + outerRadius * math.sin(baseAngle - toothHalfAngle),
+      );
+      final outerRight = Offset(
+        center.dx + outerRadius * math.cos(baseAngle + toothHalfAngle),
+        center.dy + outerRadius * math.sin(baseAngle + toothHalfAngle),
+      );
+      final innerEnd = Offset(
+        center.dx + innerRadius * math.cos(baseAngle + toothHalfAngle),
+        center.dy + innerRadius * math.sin(baseAngle + toothHalfAngle),
+      );
+
+      if (i == 0) {
+        path.moveTo(innerStart.dx, innerStart.dy);
+      } else {
+        path.lineTo(innerStart.dx, innerStart.dy);
+      }
+      path
+        ..lineTo(outerLeft.dx, outerLeft.dy)
+        ..lineTo(outerRight.dx, outerRight.dy)
+        ..lineTo(innerEnd.dx, innerEnd.dy);
+
+      // Arc along inner rim to next tooth
+      final nextBaseAngle = (i + 1) * angleStep - math.pi / 2;
+      final nextInnerStart = Offset(
+        center.dx +
+            innerRadius * math.cos(nextBaseAngle - toothHalfAngle),
+        center.dy +
+            innerRadius * math.sin(nextBaseAngle - toothHalfAngle),
+      );
+      path.lineTo(nextInnerStart.dx, nextInnerStart.dy);
+    }
+    path.close();
+    canvas.drawPath(path, paint);
+
+    // Centre hole
+    canvas.drawCircle(center, size.width * 0.1, paint);
+  }
+
+  @override
+  bool shouldRepaint(_SettingsIconPainter oldDelegate) =>
+      color != oldDelegate.color;
+}
+
 /// Alarm clock icon: circle with two ears and clock hands.
 class AlarmIcon extends StatelessWidget {
   const AlarmIcon({super.key, this.size = 24, this.color});

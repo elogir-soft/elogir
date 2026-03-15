@@ -1,4 +1,5 @@
 import 'package:elogir_alarm/features/alarms/models/alarm.dart';
+import 'package:elogir_alarm/shared/extensions/day_index_extensions.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 
@@ -7,6 +8,7 @@ class DayOfWeekSelector extends StatelessWidget {
   const DayOfWeekSelector({
     required this.selectedDays,
     required this.onChanged,
+    required this.weekStartsOnMonday,
     super.key,
   });
 
@@ -14,23 +16,28 @@ class DayOfWeekSelector extends StatelessWidget {
   final List<int> selectedDays;
   final ValueChanged<List<int>> onChanged;
 
+  /// When true, the first circle is Monday; when false, Sunday.
+  final bool weekStartsOnMonday;
+
   @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(7, (index) {
-        final isSelected = selectedDays.contains(index);
+      children: List.generate(7, (displayIndex) {
+        final dayIndex =
+            displayToDay(displayIndex, weekStartsOnMonday: weekStartsOnMonday);
+        final isSelected = selectedDays.contains(dayIndex);
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: theme.spacing.xs / 2),
           child: ElogirPressable(
             onPressed: () {
               final updated = List<int>.from(selectedDays);
               if (isSelected) {
-                updated.remove(index);
+                updated.remove(dayIndex);
               } else {
-                updated.add(index);
+                updated.add(dayIndex);
               }
               updated.sort();
               onChanged(updated);
@@ -54,7 +61,7 @@ class DayOfWeekSelector extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Text(
-                Alarm.dayLetters[index],
+                Alarm.dayLetters[dayIndex],
                 style: theme.typography.labelMedium.copyWith(
                   color: isSelected
                       ? theme.colors.onPrimary
