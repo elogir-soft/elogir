@@ -35,12 +35,21 @@ class _TimerRingingScreenState extends ConsumerState<TimerRingingScreen> {
   void initState() {
     super.initState();
     _ringingSub = native.Alarm.ringing.listen(_onRingingUpdate);
+    _checkIfStillRinging();
   }
 
   @override
   void dispose() {
     _ringingSub?.cancel();
     super.dispose();
+  }
+
+  Future<void> _checkIfStillRinging() async {
+    final stillRinging = await native.Alarm.isRinging(_nativeId);
+    if (!stillRinging && !_navigating && mounted) {
+      _navigating = true;
+      context.go('/timers');
+    }
   }
 
   void _onRingingUpdate(AlarmSet alarmSet) {

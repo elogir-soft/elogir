@@ -43,10 +43,16 @@ class _AppState extends ConsumerState<App> {
     if (alarmSet.alarms.isEmpty) return;
     final router = ref.read(routerProvider);
 
-    // Check alarms first.
-    final allAlarms = ref.read(alarmsProvider).value;
-    if (allAlarms != null) {
-      for (final alarmSetting in alarmSet.alarms) {
+    for (final alarmSetting in alarmSet.alarms) {
+      // Verify the alarm is actually still ringing on the native side.
+      // The BehaviorSubject can be stale if the app was backgrounded when
+      // the user dismissed from the notification.
+      final stillRinging = await native.Alarm.isRinging(alarmSetting.id);
+      if (!stillRinging) continue;
+
+      // Check alarms.
+      final allAlarms = ref.read(alarmsProvider).value;
+      if (allAlarms != null) {
         for (final alarm in allAlarms) {
           if (alarm.id.hashCode.abs().clamp(1, 0x7FFFFFFF) ==
               alarmSetting.id) {
@@ -55,11 +61,9 @@ class _AppState extends ConsumerState<App> {
           }
         }
       }
-    }
 
-    // Check timers.
-    final allTimers = ref.read(activeTimersProvider);
-    for (final alarmSetting in alarmSet.alarms) {
+      // Check timers.
+      final allTimers = ref.read(activeTimersProvider);
       for (final timer in allTimers) {
         if (timer.id.hashCode.abs().clamp(1, 0x7FFFFFFF) ==
             alarmSetting.id) {

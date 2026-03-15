@@ -37,12 +37,24 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   void initState() {
     super.initState();
     _ringingSub = native.Alarm.ringing.listen(_onRingingUpdate);
+    _checkIfStillRinging();
   }
 
   @override
   void dispose() {
     _ringingSub?.cancel();
     super.dispose();
+  }
+
+  /// Ask the native platform whether this alarm is actually still ringing.
+  /// Covers the case where the Pigeon callback was never delivered (e.g. the
+  /// app was backgrounded when the user dismissed from the notification).
+  Future<void> _checkIfStillRinging() async {
+    final stillRinging = await native.Alarm.isRinging(_nativeId);
+    if (!stillRinging && !_navigating && mounted) {
+      _navigating = true;
+      context.go('/alarms');
+    }
   }
 
   void _onRingingUpdate(AlarmSet alarmSet) {
