@@ -24,7 +24,12 @@ export 'src/database/auto_database.dart';
 export 'src/database/daos/device_dao.dart';
 
 // Tuya platform
+export 'src/tuya/tuya_adaptive_controller.dart';
+export 'src/tuya/tuya_cloud_cover_controller.dart';
+export 'src/tuya/tuya_cloud_device_controller.dart';
+export 'src/tuya/tuya_cloud_light_controller.dart';
 export 'src/tuya/tuya_cloud_service.dart';
+export 'src/tuya/tuya_cloud_switch_controller.dart';
 export 'src/tuya/tuya_cover_controller.dart';
 export 'src/tuya/tuya_device_controller.dart';
 export 'src/tuya/tuya_light_controller.dart';
