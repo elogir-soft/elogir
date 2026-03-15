@@ -50,7 +50,7 @@ Future<void> bootstrap() async {
 Future<void> _checkForUpdates(Talker talker) async {
   try {
     final updater = ElogirUpdater(
-      owner: 'elogir',
+      owner: 'elogir-soft',
       repo: 'elogir',
       appPrefix: 'elogir_alarm',
     );

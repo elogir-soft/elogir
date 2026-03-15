@@ -1,17 +1,22 @@
 # elogir_alarm
 
-A new Flutter project.
+Alarm clock app with alarms, timers, and a stopwatch. Uses native alarm scheduling for reliable background triggering on Android and iOS.
 
-## Getting Started
+Part of the [elogir monorepo](../../README.md).
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- **Alarms** -- schedule recurring or one-time alarms with native platform integration
+- **Timers** -- countdown timers with background execution
+- **Stopwatch** -- stopwatch with lap tracking
+- **Settings** -- theme mode, notification preferences
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Tech Stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **UI**: [elogir_ui](../../packages/elogir_ui) design system
+- **State management**: Riverpod with code generation
+- **Database**: Drift (SQLite) for persisting alarms and timer configs
+- **Routing**: go_router with type-safe route generation
+- **Native alarms**: `alarm` + `flutter_alarmkit` for platform-level alarm scheduling
+- **Background**: `wakelock_plus` and `permission_handler` for reliable background execution
+- **Auto-update**: [elogir_updater](../../packages/elogir_updater) for OTA updates via GitHub Releases

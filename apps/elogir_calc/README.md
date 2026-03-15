@@ -1,17 +1,21 @@
 # elogir_calc
 
-A new Flutter project.
+Calculator app with basic and scientific modes, real-time expression preview, and calculation history.
 
-## Getting Started
+Part of the [elogir monorepo](../../README.md).
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- **Basic calculator** -- standard arithmetic with a 4x5 button grid
+- **Scientific mode** -- trigonometry (sin/cos/tan), logarithms, constants (pi, e), parentheses, degrees/radians toggle
+- **Expression preview** -- real-time result preview as you type
+- **History** -- persistent calculation history stored in Drift
+- **Settings** -- theme mode, default calculator mode
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Tech Stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **UI**: [elogir_ui](../../packages/elogir_ui) design system
+- **State management**: Riverpod with code generation
+- **Database**: Drift (SQLite) for calculation history
+- **Routing**: go_router with type-safe route generation
+- **Auto-update**: [elogir_updater](../../packages/elogir_updater) for OTA updates via GitHub Releases

@@ -1,17 +1,23 @@
 # elogir_home
 
-A new Flutter project.
+Smart home app for controlling and automating IoT devices. Currently supports Tuya-compatible devices over LAN and Cloud API.
 
-## Getting Started
+Part of the [elogir monorepo](../../README.md).
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- **Device control** -- on/off, brightness, color temperature for lights; position for covers; toggle for switches
+- **Device discovery** -- scan the local network for Tuya devices
+- **Device setup** -- configure device connections and assign rooms
+- **Automation** -- set up device automations with reactive event streams
+- **Settings** -- theme mode, Tuya credentials
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Tech Stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **UI**: [elogir_ui](../../packages/elogir_ui) design system
+- **Smart devices**: [elogir_auto](../../packages/elogir_auto) library (Tuya LAN + Cloud API)
+- **State management**: Riverpod with code generation
+- **Reactive streams**: RxDart for device state and automation events
+- **Database**: Drift (SQLite) for device persistence
+- **Routing**: go_router with type-safe route generation
+- **Auto-update**: [elogir_updater](../../packages/elogir_updater) for OTA updates via GitHub Releases
