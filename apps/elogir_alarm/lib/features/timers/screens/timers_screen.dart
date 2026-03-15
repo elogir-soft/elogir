@@ -2,6 +2,7 @@ import 'package:elogir_alarm/features/timers/providers/active_timers_provider.da
 import 'package:elogir_alarm/features/timers/widgets/duration_input.dart';
 import 'package:elogir_alarm/features/timers/widgets/preset_grid.dart';
 import 'package:elogir_alarm/features/timers/widgets/timer_card.dart';
+import 'package:elogir_alarm/shared/widgets/overflow_menu.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,7 @@ class _TimersScreenState extends ConsumerState<TimersScreen> {
     return ElogirScaffold(
       appBar: const ElogirAppBar(
         title: ElogirText('Timers', variant: ElogirTextVariant.titleLarge),
+        trailing: AppOverflowMenu(),
       ),
       body: ListView(
         padding: EdgeInsets.all(theme.spacing.md),

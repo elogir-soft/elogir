@@ -4,15 +4,17 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:elogir_calc/config/constants.dart';
 import 'package:elogir_calc/database/daos/history_dao.dart';
+import 'package:elogir_calc/database/daos/settings_dao.dart';
 import 'package:elogir_calc/database/tables/history_table.dart';
+import 'package:elogir_calc/database/tables/settings_table.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [HistoryTable],
-  daos: [HistoryDao],
+  tables: [HistoryTable, SettingsTable],
+  daos: [HistoryDao, SettingsDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -21,7 +23,17 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(settingsTable);
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

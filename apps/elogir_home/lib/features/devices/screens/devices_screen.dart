@@ -23,13 +23,27 @@ class DevicesScreen extends ConsumerWidget {
           'Devices',
           variant: ElogirTextVariant.titleLarge,
         ),
-        trailing: ElogirIconButton(
-          icon: FaIcon(
-            FontAwesomeIcons.plus,
-            size: 18,
-            color: theme.colors.primary,
-          ),
-          onPressed: () => context.go('/add-device'),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElogirIconButton(
+              icon: FaIcon(
+                FontAwesomeIcons.plus,
+                size: 18,
+                color: theme.colors.primary,
+              ),
+              onPressed: () => context.go('/add-device'),
+            ),
+            ElogirPopupMenu(
+              items: [
+                ElogirPopupMenuItem(
+                  icon: const FaIcon(FontAwesomeIcons.gear, size: 16),
+                  label: 'Settings',
+                  onPressed: () => context.push('/settings'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       body: devicesAsync.when(

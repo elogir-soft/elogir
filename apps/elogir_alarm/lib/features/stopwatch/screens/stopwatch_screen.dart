@@ -2,6 +2,7 @@ import 'package:elogir_alarm/features/settings/providers/settings_provider.dart'
 import 'package:elogir_alarm/features/stopwatch/providers/stopwatch_provider.dart';
 import 'package:elogir_alarm/features/stopwatch/widgets/lap_time_list.dart';
 import 'package:elogir_alarm/features/stopwatch/widgets/stopwatch_display.dart';
+import 'package:elogir_alarm/shared/widgets/overflow_menu.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,6 +60,7 @@ class _StopwatchScreenState extends ConsumerState<StopwatchScreen> {
     return ElogirScaffold(
       appBar: const ElogirAppBar(
         title: ElogirText('Stopwatch', variant: ElogirTextVariant.titleLarge),
+        trailing: AppOverflowMenu(),
       ),
       body: Column(
         children: [

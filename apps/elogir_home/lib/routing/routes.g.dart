@@ -9,6 +9,7 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $deviceDetailRoute,
   $addDeviceRoute,
+  $settingsRoute,
   $appShellRoute,
 ];
 
@@ -67,23 +68,14 @@ mixin $AddDeviceRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $appShellRoute => ShellRouteData.$route(
-  factory: $AppShellRouteExtension._fromState,
-  routes: [
-    GoRouteData.$route(path: '/devices', factory: $DevicesRoute._fromState),
-    GoRouteData.$route(path: '/settings', factory: $SettingsRoute._fromState),
-  ],
-);
+RouteBase get $settingsRoute =>
+    GoRouteData.$route(path: '/settings', factory: $SettingsRoute._fromState);
 
-extension $AppShellRouteExtension on AppShellRoute {
-  static AppShellRoute _fromState(GoRouterState state) => const AppShellRoute();
-}
-
-mixin $DevicesRoute on GoRouteData {
-  static DevicesRoute _fromState(GoRouterState state) => const DevicesRoute();
+mixin $SettingsRoute on GoRouteData {
+  static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
 
   @override
-  String get location => GoRouteData.$location('/devices');
+  String get location => GoRouteData.$location('/settings');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -99,11 +91,22 @@ mixin $DevicesRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $SettingsRoute on GoRouteData {
-  static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
+RouteBase get $appShellRoute => ShellRouteData.$route(
+  factory: $AppShellRouteExtension._fromState,
+  routes: [
+    GoRouteData.$route(path: '/devices', factory: $DevicesRoute._fromState),
+  ],
+);
+
+extension $AppShellRouteExtension on AppShellRoute {
+  static AppShellRoute _fromState(GoRouterState state) => const AppShellRoute();
+}
+
+mixin $DevicesRoute on GoRouteData {
+  static DevicesRoute _fromState(GoRouterState state) => const DevicesRoute();
 
   @override
-  String get location => GoRouteData.$location('/settings');
+  String get location => GoRouteData.$location('/devices');
 
   @override
   void go(BuildContext context) => context.go(location);

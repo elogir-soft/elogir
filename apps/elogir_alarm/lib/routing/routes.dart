@@ -37,12 +37,22 @@ class TimerRingingRoute extends GoRouteData with $TimerRingingRoute {
   }
 }
 
+/// Full-screen settings. Lives outside the shell so back navigation works.
+@TypedGoRoute<SettingsRoute>(path: '/settings')
+class SettingsRoute extends GoRouteData with $SettingsRoute {
+  const SettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SettingsScreen();
+  }
+}
+
 @TypedShellRoute<AppShellRoute>(
   routes: [
     TypedGoRoute<AlarmsRoute>(path: '/alarms'),
     TypedGoRoute<TimersRoute>(path: '/timers'),
     TypedGoRoute<StopwatchRoute>(path: '/stopwatch'),
-    TypedGoRoute<SettingsRoute>(path: '/settings'),
   ],
 )
 class AppShellRoute extends ShellRouteData {
@@ -82,14 +92,5 @@ class StopwatchRoute extends GoRouteData with $StopwatchRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const StopwatchScreen();
-  }
-}
-
-class SettingsRoute extends GoRouteData with $SettingsRoute {
-  const SettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SettingsScreen();
   }
 }

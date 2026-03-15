@@ -1,6 +1,7 @@
 import 'package:elogir_calc/features/calculator/providers/calculator_provider.dart';
 import 'package:elogir_calc/features/calculator/widgets/calc_button.dart';
 import 'package:elogir_calc/features/calculator/widgets/calc_display.dart';
+import 'package:elogir_calc/shared/widgets/overflow_menu.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,7 @@ class CalculatorScreen extends ConsumerWidget {
           'Calculator',
           variant: ElogirTextVariant.titleLarge,
         ),
+        trailing: AppOverflowMenu(),
       ),
       body: SafeArea(
         child: Column(

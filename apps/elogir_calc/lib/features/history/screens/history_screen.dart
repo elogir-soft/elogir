@@ -2,6 +2,7 @@ import 'package:elogir_calc/features/calculator/providers/calculator_provider.da
 import 'package:elogir_calc/features/history/providers/history_provider.dart';
 import 'package:elogir_calc/features/history/providers/history_repository_provider.dart';
 import 'package:elogir_calc/features/history/widgets/history_entry_card.dart';
+import 'package:elogir_calc/shared/widgets/overflow_menu.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,21 +23,27 @@ class HistoryScreen extends ConsumerWidget {
           'History',
           variant: ElogirTextVariant.titleLarge,
         ),
-        trailing: ElogirPressable(
-          onPressed: () => _confirmClearAll(context, ref),
-          pressScale: 0.9,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: theme.spacing.sm,
-            ),
-            child: Text(
-              'Clear',
-              style: theme.typography.labelLarge.copyWith(
-                color: theme.colors.error,
-                fontWeight: FontWeight.w700,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElogirPressable(
+              onPressed: () => _confirmClearAll(context, ref),
+              pressScale: 0.9,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: theme.spacing.sm,
+                ),
+                child: Text(
+                  'Clear',
+                  style: theme.typography.labelLarge.copyWith(
+                    color: theme.colors.error,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
-          ),
+            const AppOverflowMenu(),
+          ],
         ),
       ),
       body: historyAsync.when(

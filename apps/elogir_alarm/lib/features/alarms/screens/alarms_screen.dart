@@ -2,6 +2,7 @@ import 'package:elogir_alarm/features/alarms/providers/alarm_repository_provider
 import 'package:elogir_alarm/features/alarms/providers/alarms_provider.dart';
 import 'package:elogir_alarm/features/alarms/screens/alarm_edit_sheet.dart';
 import 'package:elogir_alarm/features/alarms/widgets/alarm_card.dart';
+import 'package:elogir_alarm/shared/widgets/overflow_menu.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ class AlarmsScreen extends ConsumerWidget {
     return ElogirScaffold(
       appBar: const ElogirAppBar(
         title: ElogirText('Alarms', variant: ElogirTextVariant.titleLarge),
+        trailing: AppOverflowMenu(),
       ),
       body: Stack(
         children: [

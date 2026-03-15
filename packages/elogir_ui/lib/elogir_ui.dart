@@ -78,6 +78,7 @@ export 'src/components/data_display/elogir_timeline.dart';
 
 // Components — navigation
 export 'src/components/navigation/elogir_bottom_nav.dart';
+export 'src/components/navigation/elogir_popup_menu.dart';
 export 'src/components/navigation/elogir_breadcrumb.dart';
 export 'src/components/navigation/elogir_command_palette.dart';
 export 'src/components/navigation/elogir_page_transition.dart';

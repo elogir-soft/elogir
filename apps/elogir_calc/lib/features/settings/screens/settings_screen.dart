@@ -1,7 +1,6 @@
-import 'package:elogir_home/features/settings/models/app_settings.dart';
-import 'package:elogir_home/features/settings/providers/settings_provider.dart';
-import 'package:elogir_home/features/settings/providers/settings_repository_provider.dart';
-import 'package:elogir_home/features/setup/providers/credentials_service_provider.dart';
+import 'package:elogir_calc/features/settings/models/app_settings.dart';
+import 'package:elogir_calc/features/settings/providers/settings_provider.dart';
+import 'package:elogir_calc/features/settings/providers/settings_repository_provider.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,7 +61,6 @@ class _SettingsContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ElogirTheme.of(context);
-    final credentialsService = ref.watch(credentialsServiceProvider);
 
     return ElogirScaffold(
       appBar: ElogirAppBar(
@@ -101,49 +99,6 @@ class _SettingsContent extends ConsumerWidget {
                       _update(ref, settings.copyWith(themeMode: v)),
                 ),
               ),
-            ),
-          ),
-
-          SizedBox(height: theme.spacing.lg),
-
-          // ── Tuya Credentials ─────────────────────────────────────────────
-          _SectionLabel('Tuya Credentials'),
-          SizedBox(height: theme.spacing.xs),
-          ElogirCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                FutureBuilder<bool>(
-                  future: credentialsService.hasTuyaCredentials(),
-                  builder: (context, snapshot) {
-                    final hasCreds = snapshot.data ?? false;
-                    return ElogirListTile(
-                      title: ElogirText(
-                        hasCreds ? 'Credentials saved' : 'No credentials',
-                        variant: ElogirTextVariant.bodyMedium,
-                      ),
-                      trailing: hasCreds
-                          ? ElogirButton(
-                              variant: ElogirButtonVariant.outlined,
-                              size: ElogirButtonSize.sm,
-                              onPressed: () async {
-                                await credentialsService
-                                    .deleteTuyaCredentials();
-                                // Force rebuild to show updated state.
-                                if (context.mounted) {
-                                  (context as Element).markNeedsBuild();
-                                }
-                              },
-                              child: const Text('Clear'),
-                            )
-                          : const ElogirText(
-                              'Set up in Add Device',
-                              variant: ElogirTextVariant.bodySmall,
-                            ),
-                    );
-                  },
-                ),
-              ],
             ),
           ),
 

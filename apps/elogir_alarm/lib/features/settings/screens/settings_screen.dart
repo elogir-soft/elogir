@@ -7,6 +7,7 @@ import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 /// App settings screen.
 class SettingsScreen extends ConsumerWidget {
@@ -17,16 +18,29 @@ class SettingsScreen extends ConsumerWidget {
     final settingsAsync = ref.watch(settingsProvider);
 
     return settingsAsync.when(
-      loading: () => const ElogirScaffold(
+      loading: () => ElogirScaffold(
         appBar: ElogirAppBar(
-          title: ElogirText('Settings', variant: ElogirTextVariant.titleLarge),
+          leading: ElogirIconButton(
+            onPressed: () => context.pop(),
+            icon: const FaIcon(FontAwesomeIcons.arrowLeft, size: 18),
+          ),
+          title: const ElogirText(
+            'Settings',
+            variant: ElogirTextVariant.titleLarge,
+          ),
         ),
-        body: SizedBox.shrink(),
+        body: const SizedBox.shrink(),
       ),
       error: (e, _) => ElogirScaffold(
-        appBar: const ElogirAppBar(
-          title:
-              ElogirText('Settings', variant: ElogirTextVariant.titleLarge),
+        appBar: ElogirAppBar(
+          leading: ElogirIconButton(
+            onPressed: () => context.pop(),
+            icon: const FaIcon(FontAwesomeIcons.arrowLeft, size: 18),
+          ),
+          title: const ElogirText(
+            'Settings',
+            variant: ElogirTextVariant.titleLarge,
+          ),
         ),
         body: Center(
           child: ElogirText('Failed to load settings'),
@@ -79,8 +93,15 @@ class _SettingsContent extends ConsumerWidget {
     final theme = ElogirTheme.of(context);
 
     return ElogirScaffold(
-      appBar: const ElogirAppBar(
-        title: ElogirText('Settings', variant: ElogirTextVariant.titleLarge),
+      appBar: ElogirAppBar(
+        leading: ElogirIconButton(
+          onPressed: () => context.pop(),
+          icon: const FaIcon(FontAwesomeIcons.arrowLeft, size: 18),
+        ),
+        title: const ElogirText(
+          'Settings',
+          variant: ElogirTextVariant.titleLarge,
+        ),
       ),
       body: ListView(
         padding: EdgeInsets.all(theme.spacing.md),

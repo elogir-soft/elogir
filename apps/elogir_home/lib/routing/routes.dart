@@ -33,10 +33,20 @@ class AddDeviceRoute extends GoRouteData with $AddDeviceRoute {
   }
 }
 
+/// Full-screen settings. Lives outside the shell so back navigation works.
+@TypedGoRoute<SettingsRoute>(path: '/settings')
+class SettingsRoute extends GoRouteData with $SettingsRoute {
+  const SettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const SettingsScreen();
+  }
+}
+
 @TypedShellRoute<AppShellRoute>(
   routes: [
     TypedGoRoute<DevicesRoute>(path: '/devices'),
-    TypedGoRoute<SettingsRoute>(path: '/settings'),
   ],
 )
 class AppShellRoute extends ShellRouteData {
@@ -58,14 +68,5 @@ class DevicesRoute extends GoRouteData with $DevicesRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const DevicesScreen();
-  }
-}
-
-class SettingsRoute extends GoRouteData with $SettingsRoute {
-  const SettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SettingsScreen();
   }
 }
