@@ -1,6 +1,6 @@
 name: elogir_auto
 description: Smart device control library for the elogir ecosystem.
-version: 0.1.0
+version: 0.1.0+1
 resolution: workspace
 
 environment:

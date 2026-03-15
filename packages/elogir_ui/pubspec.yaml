@@ -1,6 +1,6 @@
 name: elogir_ui
 description: A custom Flutter UI component library built from Flutter primitives.
-version: 0.1.0
+version: 0.1.0+1
 resolution: workspace
 
 environment:
