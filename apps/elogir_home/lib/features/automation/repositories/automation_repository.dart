@@ -32,6 +32,36 @@ class AutomationRepository {
     );
   }
 
+  /// Watch only active (enabled) one-time automations.
+  Stream<List<Automation>> watchActiveOneTime() {
+    return watchAll().map(
+      (list) => list
+          .where((a) => a.isOneTime && a.isEnabled)
+          .toList(),
+    );
+  }
+
+  /// Watch only expired (disabled) one-time automations.
+  Stream<List<Automation>> watchExpiredOneTime() {
+    return watchAll().map(
+      (list) => list
+          .where((a) => a.isOneTime && !a.isEnabled)
+          .toList(),
+    );
+  }
+
+  /// Delete all expired (disabled) one-time automations.
+  Future<void> clearExpired() {
+    return _dao.deleteDisabledOneTime();
+  }
+
+  /// Get a single automation by ID.
+  Future<Automation?> getById(String id) async {
+    final row = await _dao.getById(id);
+    if (row == null) return null;
+    return _toModel(row);
+  }
+
   /// Save (insert or update) an automation.
   Future<void> save(Automation automation) {
     return _dao.upsert(_toCompanion(automation));

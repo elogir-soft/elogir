@@ -28,6 +28,22 @@ class AutomationDao extends DatabaseAccessor<AppDatabase>
     return (delete(automationTable)..where((t) => t.id.equals(id))).go();
   }
 
+  /// Get a single automation by ID.
+  Future<AutomationTableData?> getById(String id) {
+    return (select(automationTable)
+          ..where((t) => t.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  /// Delete all disabled one-time automations.
+  Future<void> deleteDisabledOneTime() {
+    return (delete(automationTable)
+          ..where(
+            (t) => t.isEnabled.equals(false),
+          ))
+        .go();
+  }
+
   /// Toggle the enabled state of an automation.
   Future<void> toggleEnabled({
     required String id,

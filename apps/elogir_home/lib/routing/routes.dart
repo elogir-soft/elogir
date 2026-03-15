@@ -43,7 +43,26 @@ class AddAutomationRoute extends GoRouteData with $AddAutomationRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ElogirPage(key: state.pageKey, child: const AddAutomationScreen());
+    return ElogirPage(
+      key: state.pageKey,
+      child: const AddAutomationScreen(),
+    );
+  }
+}
+
+/// Full-screen edit automation flow. Lives outside the shell.
+@TypedGoRoute<EditAutomationRoute>(path: '/edit-automation/:automationId')
+class EditAutomationRoute extends GoRouteData with $EditAutomationRoute {
+  const EditAutomationRoute({required this.automationId});
+
+  final String automationId;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(
+      key: state.pageKey,
+      child: AddAutomationScreen(automationId: automationId),
+    );
   }
 }
 

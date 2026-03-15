@@ -127,3 +127,83 @@ final class OneTimeAutomationsProvider
 
 String _$oneTimeAutomationsHash() =>
     r'b468e7bbdff48689de8cc5557ca88d1b68bb0b4e';
+
+@ProviderFor(activeOneTimeAutomations)
+final activeOneTimeAutomationsProvider = ActiveOneTimeAutomationsProvider._();
+
+final class ActiveOneTimeAutomationsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Automation>>,
+          List<Automation>,
+          Stream<List<Automation>>
+        >
+    with $FutureModifier<List<Automation>>, $StreamProvider<List<Automation>> {
+  ActiveOneTimeAutomationsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'activeOneTimeAutomationsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeOneTimeAutomationsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Automation>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Automation>> create(Ref ref) {
+    return activeOneTimeAutomations(ref);
+  }
+}
+
+String _$activeOneTimeAutomationsHash() =>
+    r'c4292cc8c296dd09f94c997b2dc675c8a9e0cd8f';
+
+@ProviderFor(expiredOneTimeAutomations)
+final expiredOneTimeAutomationsProvider = ExpiredOneTimeAutomationsProvider._();
+
+final class ExpiredOneTimeAutomationsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Automation>>,
+          List<Automation>,
+          Stream<List<Automation>>
+        >
+    with $FutureModifier<List<Automation>>, $StreamProvider<List<Automation>> {
+  ExpiredOneTimeAutomationsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'expiredOneTimeAutomationsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$expiredOneTimeAutomationsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Automation>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Automation>> create(Ref ref) {
+    return expiredOneTimeAutomations(ref);
+  }
+}
+
+String _$expiredOneTimeAutomationsHash() =>
+    r'efba63b21df6e88ebce86d38be30a115397d0bc2';

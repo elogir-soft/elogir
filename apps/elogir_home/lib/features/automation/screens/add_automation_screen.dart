@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:elogir_auto/elogir_auto.dart';
 import 'package:elogir_home/features/automation/models/add_automation_state.dart';
 import 'package:elogir_home/features/automation/models/automation.dart';
@@ -17,14 +19,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
-/// Multi-step flow for creating a new automation.
+/// Multi-step flow for creating or editing an automation.
 ///
 /// Steps:
 /// 0 — Trigger: recurring/one-time selection + time/date configuration
 /// 1 — Actions: pick devices and actions
 /// 2 — Name + confirm: enter name, review, save
 class AddAutomationScreen extends ConsumerStatefulWidget {
-  const AddAutomationScreen({super.key});
+  /// Creates the add/edit automation screen.
+  ///
+  /// If [automationId] is provided, the screen loads the existing
+  /// automation for editing.
+  const AddAutomationScreen({this.automationId, super.key});
+
+  /// Optional ID of an existing automation to edit.
+  final String? automationId;
 
   @override
   ConsumerState<AddAutomationScreen> createState() =>
@@ -37,6 +46,59 @@ class _AddAutomationScreenState extends ConsumerState<AddAutomationScreen> {
   );
 
   final _nameController = TextEditingController();
+  bool _isLoading = false;
+  String? _existingId;
+  DateTime? _existingCreatedAt;
+
+  bool get _isEditing => widget.automationId != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditing) {
+      unawaited(_loadExisting());
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    setState(() => _isLoading = true);
+    final automation = await ref
+        .read(automationRepositoryProvider)
+        .getById(widget.automationId!);
+
+    if (automation == null || !mounted) {
+      if (mounted) context.go('/automation');
+      return;
+    }
+
+    _existingId = automation.id;
+    _existingCreatedAt = automation.createdAt;
+    _nameController.text = automation.name;
+
+    setState(() {
+      _state = switch (automation.trigger) {
+        RecurringTrigger(
+          :final hour,
+          :final minute,
+          :final repeatDays,
+        ) =>
+          _state.copyWith(
+            isRecurring: true,
+            hour: hour,
+            minute: minute,
+            repeatDays: repeatDays,
+            actions: automation.actions,
+          ),
+        OneTimeTrigger(:final scheduledAt) => _state.copyWith(
+            isRecurring: false,
+            scheduledAt: scheduledAt,
+            actions: automation.actions,
+          ),
+        _ => _state.copyWith(actions: automation.actions),
+      };
+      _isLoading = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -47,7 +109,9 @@ class _AddAutomationScreenState extends ConsumerState<AddAutomationScreen> {
   void _goBack() {
     if (_state.currentStep > 0) {
       setState(() {
-        _state = _state.copyWith(currentStep: _state.currentStep - 1);
+        _state = _state.copyWith(
+          currentStep: _state.currentStep - 1,
+        );
       });
     } else {
       context.go('/automation');
@@ -57,7 +121,9 @@ class _AddAutomationScreenState extends ConsumerState<AddAutomationScreen> {
   void _goForward() {
     if (_state.currentStep < 2) {
       setState(() {
-        _state = _state.copyWith(currentStep: _state.currentStep + 1);
+        _state = _state.copyWith(
+          currentStep: _state.currentStep + 1,
+        );
       });
     }
   }
@@ -73,14 +139,16 @@ class _AddAutomationScreenState extends ConsumerState<AddAutomationScreen> {
             minute: _state.minute,
             repeatDays: _state.repeatDays,
           )
-        : AutomationTrigger.oneTime(scheduledAt: _state.scheduledAt!);
+        : AutomationTrigger.oneTime(
+            scheduledAt: _state.scheduledAt!,
+          );
 
     final automation = Automation(
-      id: const Uuid().v4(),
+      id: _existingId ?? const Uuid().v4(),
       name: name,
       trigger: trigger,
       actions: _state.actions,
-      createdAt: now,
+      createdAt: _existingCreatedAt ?? now,
       updatedAt: now,
     );
 
@@ -93,10 +161,31 @@ class _AddAutomationScreenState extends ConsumerState<AddAutomationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final title = _isEditing ? 'Edit Automation' : 'Add Automation';
+
+    if (_isLoading) {
+      return ElogirScaffold(
+        appBar: ElogirAppBar(
+          title: ElogirText(
+            title,
+            variant: ElogirTextVariant.titleLarge,
+          ),
+          leading: ElogirIconButton(
+            icon: const FaIcon(
+              FontAwesomeIcons.arrowLeft,
+              size: 18,
+            ),
+            onPressed: _goBack,
+          ),
+        ),
+        body: const Center(child: ElogirSpinner()),
+      );
+    }
+
     return ElogirScaffold(
       appBar: ElogirAppBar(
-        title: const ElogirText(
-          'Add Automation',
+        title: ElogirText(
+          title,
           variant: ElogirTextVariant.titleLarge,
         ),
         leading: ElogirIconButton(

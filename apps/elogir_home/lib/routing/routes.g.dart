@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $deviceDetailRoute,
   $addDeviceRoute,
   $addAutomationRoute,
+  $editAutomationRoute,
   $settingsRoute,
   $appShellRoute,
 ];
@@ -80,6 +81,36 @@ mixin $AddAutomationRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/add-automation');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $editAutomationRoute => GoRouteData.$route(
+  path: '/edit-automation/:automationId',
+  factory: $EditAutomationRoute._fromState,
+);
+
+mixin $EditAutomationRoute on GoRouteData {
+  static EditAutomationRoute _fromState(GoRouterState state) =>
+      EditAutomationRoute(automationId: state.pathParameters['automationId']!);
+
+  EditAutomationRoute get _self => this as EditAutomationRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/edit-automation/${Uri.encodeComponent(_self.automationId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

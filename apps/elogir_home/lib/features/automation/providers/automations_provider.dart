@@ -18,3 +18,15 @@ Stream<List<Automation>> recurringAutomations(Ref ref) {
 Stream<List<Automation>> oneTimeAutomations(Ref ref) {
   return ref.watch(automationRepositoryProvider).watchOneTime();
 }
+
+@Riverpod(keepAlive: true)
+Stream<List<Automation>> activeOneTimeAutomations(Ref ref) {
+  return ref.watch(automationRepositoryProvider).watchActiveOneTime();
+}
+
+@Riverpod(keepAlive: true)
+Stream<List<Automation>> expiredOneTimeAutomations(Ref ref) {
+  return ref
+      .watch(automationRepositoryProvider)
+      .watchExpiredOneTime();
+}
