@@ -119,6 +119,22 @@ class _SettingsContent extends ConsumerWidget {
               ),
             ),
           ),
+          SizedBox(height: theme.spacing.sm),
+          ElogirCard(
+            padding: EdgeInsets.zero,
+            child: ElogirListTile(
+              title: const ElogirText(
+                'Week starts on Monday',
+              ),
+              trailing: ElogirSwitch(
+                value: settings.weekStartsOnMonday,
+                onChanged: (v) => _update(
+                  ref,
+                  settings.copyWith(weekStartsOnMonday: v),
+                ),
+              ),
+            ),
+          ),
 
           SizedBox(height: theme.spacing.lg),
 

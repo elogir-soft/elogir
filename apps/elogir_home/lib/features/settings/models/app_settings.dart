@@ -8,5 +8,6 @@ abstract class AppSettings with _$AppSettings {
     /// One of 'system', 'light', 'dark'.
     @Default('system') String themeMode,
     @Default(false) bool use24HourFormat,
+    @Default(true) bool weekStartsOnMonday,
   }) = _AppSettings;
 }

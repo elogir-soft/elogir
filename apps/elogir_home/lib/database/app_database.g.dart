@@ -45,8 +45,27 @@ class $SettingsTableTable extends SettingsTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _weekStartsOnMondayMeta =
+      const VerificationMeta('weekStartsOnMonday');
   @override
-  List<GeneratedColumn> get $columns => [id, themeMode, use24HourFormat];
+  late final GeneratedColumn<bool> weekStartsOnMonday = GeneratedColumn<bool>(
+    'week_starts_on_monday',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("week_starts_on_monday" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    themeMode,
+    use24HourFormat,
+    weekStartsOnMonday,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -77,6 +96,15 @@ class $SettingsTableTable extends SettingsTable
         ),
       );
     }
+    if (data.containsKey('week_starts_on_monday')) {
+      context.handle(
+        _weekStartsOnMondayMeta,
+        weekStartsOnMonday.isAcceptableOrUnknown(
+          data['week_starts_on_monday']!,
+          _weekStartsOnMondayMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -98,6 +126,10 @@ class $SettingsTableTable extends SettingsTable
         DriftSqlType.bool,
         data['${effectivePrefix}use24_hour_format'],
       )!,
+      weekStartsOnMonday: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}week_starts_on_monday'],
+      )!,
     );
   }
 
@@ -114,10 +146,12 @@ class SettingsTableData extends DataClass
   /// One of 'system', 'light', 'dark'.
   final String themeMode;
   final bool use24HourFormat;
+  final bool weekStartsOnMonday;
   const SettingsTableData({
     required this.id,
     required this.themeMode,
     required this.use24HourFormat,
+    required this.weekStartsOnMonday,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -125,6 +159,7 @@ class SettingsTableData extends DataClass
     map['id'] = Variable<int>(id);
     map['theme_mode'] = Variable<String>(themeMode);
     map['use24_hour_format'] = Variable<bool>(use24HourFormat);
+    map['week_starts_on_monday'] = Variable<bool>(weekStartsOnMonday);
     return map;
   }
 
@@ -133,6 +168,7 @@ class SettingsTableData extends DataClass
       id: Value(id),
       themeMode: Value(themeMode),
       use24HourFormat: Value(use24HourFormat),
+      weekStartsOnMonday: Value(weekStartsOnMonday),
     );
   }
 
@@ -145,6 +181,7 @@ class SettingsTableData extends DataClass
       id: serializer.fromJson<int>(json['id']),
       themeMode: serializer.fromJson<String>(json['themeMode']),
       use24HourFormat: serializer.fromJson<bool>(json['use24HourFormat']),
+      weekStartsOnMonday: serializer.fromJson<bool>(json['weekStartsOnMonday']),
     );
   }
   @override
@@ -154,6 +191,7 @@ class SettingsTableData extends DataClass
       'id': serializer.toJson<int>(id),
       'themeMode': serializer.toJson<String>(themeMode),
       'use24HourFormat': serializer.toJson<bool>(use24HourFormat),
+      'weekStartsOnMonday': serializer.toJson<bool>(weekStartsOnMonday),
     };
   }
 
@@ -161,10 +199,12 @@ class SettingsTableData extends DataClass
     int? id,
     String? themeMode,
     bool? use24HourFormat,
+    bool? weekStartsOnMonday,
   }) => SettingsTableData(
     id: id ?? this.id,
     themeMode: themeMode ?? this.themeMode,
     use24HourFormat: use24HourFormat ?? this.use24HourFormat,
+    weekStartsOnMonday: weekStartsOnMonday ?? this.weekStartsOnMonday,
   );
   SettingsTableData copyWithCompanion(SettingsTableCompanion data) {
     return SettingsTableData(
@@ -173,6 +213,9 @@ class SettingsTableData extends DataClass
       use24HourFormat: data.use24HourFormat.present
           ? data.use24HourFormat.value
           : this.use24HourFormat,
+      weekStartsOnMonday: data.weekStartsOnMonday.present
+          ? data.weekStartsOnMonday.value
+          : this.weekStartsOnMonday,
     );
   }
 
@@ -181,45 +224,54 @@ class SettingsTableData extends DataClass
     return (StringBuffer('SettingsTableData(')
           ..write('id: $id, ')
           ..write('themeMode: $themeMode, ')
-          ..write('use24HourFormat: $use24HourFormat')
+          ..write('use24HourFormat: $use24HourFormat, ')
+          ..write('weekStartsOnMonday: $weekStartsOnMonday')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, themeMode, use24HourFormat);
+  int get hashCode =>
+      Object.hash(id, themeMode, use24HourFormat, weekStartsOnMonday);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SettingsTableData &&
           other.id == this.id &&
           other.themeMode == this.themeMode &&
-          other.use24HourFormat == this.use24HourFormat);
+          other.use24HourFormat == this.use24HourFormat &&
+          other.weekStartsOnMonday == this.weekStartsOnMonday);
 }
 
 class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
   final Value<int> id;
   final Value<String> themeMode;
   final Value<bool> use24HourFormat;
+  final Value<bool> weekStartsOnMonday;
   const SettingsTableCompanion({
     this.id = const Value.absent(),
     this.themeMode = const Value.absent(),
     this.use24HourFormat = const Value.absent(),
+    this.weekStartsOnMonday = const Value.absent(),
   });
   SettingsTableCompanion.insert({
     this.id = const Value.absent(),
     this.themeMode = const Value.absent(),
     this.use24HourFormat = const Value.absent(),
+    this.weekStartsOnMonday = const Value.absent(),
   });
   static Insertable<SettingsTableData> custom({
     Expression<int>? id,
     Expression<String>? themeMode,
     Expression<bool>? use24HourFormat,
+    Expression<bool>? weekStartsOnMonday,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (themeMode != null) 'theme_mode': themeMode,
       if (use24HourFormat != null) 'use24_hour_format': use24HourFormat,
+      if (weekStartsOnMonday != null)
+        'week_starts_on_monday': weekStartsOnMonday,
     });
   }
 
@@ -227,11 +279,13 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     Value<int>? id,
     Value<String>? themeMode,
     Value<bool>? use24HourFormat,
+    Value<bool>? weekStartsOnMonday,
   }) {
     return SettingsTableCompanion(
       id: id ?? this.id,
       themeMode: themeMode ?? this.themeMode,
       use24HourFormat: use24HourFormat ?? this.use24HourFormat,
+      weekStartsOnMonday: weekStartsOnMonday ?? this.weekStartsOnMonday,
     );
   }
 
@@ -247,6 +301,9 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     if (use24HourFormat.present) {
       map['use24_hour_format'] = Variable<bool>(use24HourFormat.value);
     }
+    if (weekStartsOnMonday.present) {
+      map['week_starts_on_monday'] = Variable<bool>(weekStartsOnMonday.value);
+    }
     return map;
   }
 
@@ -255,7 +312,8 @@ class SettingsTableCompanion extends UpdateCompanion<SettingsTableData> {
     return (StringBuffer('SettingsTableCompanion(')
           ..write('id: $id, ')
           ..write('themeMode: $themeMode, ')
-          ..write('use24HourFormat: $use24HourFormat')
+          ..write('use24HourFormat: $use24HourFormat, ')
+          ..write('weekStartsOnMonday: $weekStartsOnMonday')
           ..write(')'))
         .toString();
   }
@@ -746,12 +804,14 @@ typedef $$SettingsTableTableCreateCompanionBuilder =
       Value<int> id,
       Value<String> themeMode,
       Value<bool> use24HourFormat,
+      Value<bool> weekStartsOnMonday,
     });
 typedef $$SettingsTableTableUpdateCompanionBuilder =
     SettingsTableCompanion Function({
       Value<int> id,
       Value<String> themeMode,
       Value<bool> use24HourFormat,
+      Value<bool> weekStartsOnMonday,
     });
 
 class $$SettingsTableTableFilterComposer
@@ -775,6 +835,11 @@ class $$SettingsTableTableFilterComposer
 
   ColumnFilters<bool> get use24HourFormat => $composableBuilder(
     column: $table.use24HourFormat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get weekStartsOnMonday => $composableBuilder(
+    column: $table.weekStartsOnMonday,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -802,6 +867,11 @@ class $$SettingsTableTableOrderingComposer
     column: $table.use24HourFormat,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get weekStartsOnMonday => $composableBuilder(
+    column: $table.weekStartsOnMonday,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SettingsTableTableAnnotationComposer
@@ -821,6 +891,11 @@ class $$SettingsTableTableAnnotationComposer
 
   GeneratedColumn<bool> get use24HourFormat => $composableBuilder(
     column: $table.use24HourFormat,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get weekStartsOnMonday => $composableBuilder(
+    column: $table.weekStartsOnMonday,
     builder: (column) => column,
   );
 }
@@ -863,20 +938,24 @@ class $$SettingsTableTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> themeMode = const Value.absent(),
                 Value<bool> use24HourFormat = const Value.absent(),
+                Value<bool> weekStartsOnMonday = const Value.absent(),
               }) => SettingsTableCompanion(
                 id: id,
                 themeMode: themeMode,
                 use24HourFormat: use24HourFormat,
+                weekStartsOnMonday: weekStartsOnMonday,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> themeMode = const Value.absent(),
                 Value<bool> use24HourFormat = const Value.absent(),
+                Value<bool> weekStartsOnMonday = const Value.absent(),
               }) => SettingsTableCompanion.insert(
                 id: id,
                 themeMode: themeMode,
                 use24HourFormat: use24HourFormat,
+                weekStartsOnMonday: weekStartsOnMonday,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

@@ -11,6 +11,9 @@ class SettingsTable extends Table {
   BoolColumn get use24HourFormat =>
       boolean().withDefault(const Constant(false))();
 
+  BoolColumn get weekStartsOnMonday =>
+      boolean().withDefault(const Constant(true))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

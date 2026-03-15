@@ -63,6 +63,11 @@ class AutomationCard extends ConsumerWidget {
         (s) => s.value?.use24HourFormat ?? false,
       ),
     );
+    final weekStartsOnMonday = ref.watch(
+      settingsProvider.select(
+        (s) => s.value?.weekStartsOnMonday ?? true,
+      ),
+    );
 
     return ElogirPressable(
       onPressed: () =>
@@ -117,6 +122,7 @@ class AutomationCard extends ConsumerWidget {
                       days: (automation.trigger
                               as RecurringTrigger)
                           .repeatDays,
+                      weekStartsOnMonday: weekStartsOnMonday,
                     ),
                   ],
                 ],
@@ -211,9 +217,13 @@ class AutomationCard extends ConsumerWidget {
 ///
 /// Automation uses 1-based days (1=Mon … 7=Sun).
 class _RepeatDayDots extends StatelessWidget {
-  const _RepeatDayDots({required this.days});
+  const _RepeatDayDots({
+    required this.days,
+    required this.weekStartsOnMonday,
+  });
 
   final List<int> days;
+  final bool weekStartsOnMonday;
 
   // Single-letter labels indexed by ISO weekday (1=Mon … 7=Sun).
   static const _letters = {
@@ -226,6 +236,13 @@ class _RepeatDayDots extends StatelessWidget {
     7: 'S',
   };
 
+  /// Maps display position to ISO weekday.
+  int _displayToDay(int displayIndex) {
+    if (weekStartsOnMonday) return displayIndex + 1;
+    // Sunday-first: display 0 → 7 (Sun), 1–6 → 1–6 (Mon–Sat).
+    return displayIndex == 0 ? 7 : displayIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = ElogirTheme.of(context);
@@ -233,7 +250,7 @@ class _RepeatDayDots extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(7, (index) {
-        final day = index + 1; // 1=Mon … 7=Sun
+        final day = _displayToDay(index);
         final isActive = days.contains(day);
         return Padding(
           padding: const EdgeInsets.only(right: 3),

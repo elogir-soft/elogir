@@ -238,6 +238,11 @@ class _TriggerStep extends ConsumerWidget {
         (s) => s.value?.use24HourFormat ?? false,
       ),
     );
+    final weekStartsOnMonday = ref.watch(
+      settingsProvider.select(
+        (s) => s.value?.weekStartsOnMonday ?? true,
+      ),
+    );
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(theme.spacing.md),
@@ -293,6 +298,7 @@ class _TriggerStep extends ConsumerWidget {
             SizedBox(height: theme.spacing.sm),
             DayOfWeekSelector(
               selectedDays: state.repeatDays,
+              weekStartsOnMonday: weekStartsOnMonday,
               onChanged: (days) => onStateChanged(
                 state.copyWith(repeatDays: days),
               ),

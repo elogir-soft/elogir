@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 mixin _$AppSettings {
 
 /// One of 'system', 'light', 'dark'.
- String get themeMode; bool get use24HourFormat;
+ String get themeMode; bool get use24HourFormat; bool get weekStartsOnMonday;
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $AppSettingsCopyWith<AppSettings> get copyWith => _$AppSettingsCopyWithImpl<AppS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat)&&(identical(other.weekStartsOnMonday, weekStartsOnMonday) || other.weekStartsOnMonday == weekStartsOnMonday));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,themeMode,use24HourFormat);
+int get hashCode => Object.hash(runtimeType,themeMode,use24HourFormat,weekStartsOnMonday);
 
 @override
 String toString() {
-  return 'AppSettings(themeMode: $themeMode, use24HourFormat: $use24HourFormat)';
+  return 'AppSettings(themeMode: $themeMode, use24HourFormat: $use24HourFormat, weekStartsOnMonday: $weekStartsOnMonday)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $AppSettingsCopyWith<$Res>  {
   factory $AppSettingsCopyWith(AppSettings value, $Res Function(AppSettings) _then) = _$AppSettingsCopyWithImpl;
 @useResult
 $Res call({
- String themeMode, bool use24HourFormat
+ String themeMode, bool use24HourFormat, bool weekStartsOnMonday
 });
 
 
@@ -63,10 +63,11 @@ class _$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? use24HourFormat = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? use24HourFormat = null,Object? weekStartsOnMonday = null,}) {
   return _then(_self.copyWith(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as String,use24HourFormat: null == use24HourFormat ? _self.use24HourFormat : use24HourFormat // ignore: cast_nullable_to_non_nullable
+as bool,weekStartsOnMonday: null == weekStartsOnMonday ? _self.weekStartsOnMonday : weekStartsOnMonday // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String themeMode,  bool use24HourFormat)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.themeMode,_that.use24HourFormat);case _:
+return $default(_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.themeMode,_that.use24HourFormat);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String themeMode,  bool use24HourFormat)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday)  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings():
-return $default(_that.themeMode,_that.use24HourFormat);case _:
+return $default(_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.themeMode,_that.use24HourFormat);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String themeMode,  bool use24HourFormat)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String themeMode,  bool use24HourFormat,  bool weekStartsOnMonday)?  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.themeMode,_that.use24HourFormat);case _:
+return $default(_that.themeMode,_that.use24HourFormat,_that.weekStartsOnMonday);case _:
   return null;
 
 }
@@ -208,12 +209,13 @@ return $default(_that.themeMode,_that.use24HourFormat);case _:
 
 
 class _AppSettings implements AppSettings {
-  const _AppSettings({this.themeMode = 'system', this.use24HourFormat = false});
+  const _AppSettings({this.themeMode = 'system', this.use24HourFormat = false, this.weekStartsOnMonday = true});
   
 
 /// One of 'system', 'light', 'dark'.
 @override@JsonKey() final  String themeMode;
 @override@JsonKey() final  bool use24HourFormat;
+@override@JsonKey() final  bool weekStartsOnMonday;
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +227,16 @@ _$AppSettingsCopyWith<_AppSettings> get copyWith => __$AppSettingsCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.use24HourFormat, use24HourFormat) || other.use24HourFormat == use24HourFormat)&&(identical(other.weekStartsOnMonday, weekStartsOnMonday) || other.weekStartsOnMonday == weekStartsOnMonday));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,themeMode,use24HourFormat);
+int get hashCode => Object.hash(runtimeType,themeMode,use24HourFormat,weekStartsOnMonday);
 
 @override
 String toString() {
-  return 'AppSettings(themeMode: $themeMode, use24HourFormat: $use24HourFormat)';
+  return 'AppSettings(themeMode: $themeMode, use24HourFormat: $use24HourFormat, weekStartsOnMonday: $weekStartsOnMonday)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$AppSettingsCopyWith<$Res> implements $AppSettingsCopyWith
   factory _$AppSettingsCopyWith(_AppSettings value, $Res Function(_AppSettings) _then) = __$AppSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- String themeMode, bool use24HourFormat
+ String themeMode, bool use24HourFormat, bool weekStartsOnMonday
 });
 
 
@@ -262,10 +264,11 @@ class __$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? use24HourFormat = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? use24HourFormat = null,Object? weekStartsOnMonday = null,}) {
   return _then(_AppSettings(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as String,use24HourFormat: null == use24HourFormat ? _self.use24HourFormat : use24HourFormat // ignore: cast_nullable_to_non_nullable
+as bool,weekStartsOnMonday: null == weekStartsOnMonday ? _self.weekStartsOnMonday : weekStartsOnMonday // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
