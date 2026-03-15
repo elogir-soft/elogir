@@ -185,6 +185,29 @@ class ActiveTimers extends _$ActiveTimers {
     await ref.read(timerRepositoryProvider).deleteFinished();
   }
 
+  /// Restart a completed timer from the beginning.
+  void restart(String id) {
+    final now = DateTime.now();
+    AppTimer? restarted;
+    state = state.map((t) {
+      if (t.id != id) return t;
+      restarted = t.copyWith(
+        remainingMs: t.durationMs,
+        status: TimerStatus.running,
+        startedAt: now,
+        pausedAt: null,
+      );
+      return restarted!;
+    }).toList();
+    if (restarted != null) {
+      _scheduleNativeAlarm(
+        id,
+        now.add(Duration(milliseconds: restarted!.durationMs)),
+        restarted!.label,
+      );
+    }
+  }
+
   // ── Native alarm helpers ────────────────────────────────────────────
 
   int _nativeId(String uuid) => uuid.hashCode.abs().clamp(1, 0x7FFFFFFF);

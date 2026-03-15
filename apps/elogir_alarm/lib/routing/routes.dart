@@ -2,6 +2,7 @@ import 'package:elogir_alarm/features/alarms/screens/alarm_ringing_screen.dart';
 import 'package:elogir_alarm/features/alarms/screens/alarms_screen.dart';
 import 'package:elogir_alarm/features/settings/screens/settings_screen.dart';
 import 'package:elogir_alarm/features/stopwatch/screens/stopwatch_screen.dart';
+import 'package:elogir_alarm/features/timers/screens/timer_ringing_screen.dart';
 import 'package:elogir_alarm/features/timers/screens/timers_screen.dart';
 import 'package:elogir_alarm/layout/app_shell.dart';
 import 'package:flutter/widgets.dart';
@@ -20,6 +21,19 @@ class AlarmRingingRoute extends GoRouteData with $AlarmRingingRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AlarmRingingScreen(alarmId: alarmId);
+  }
+}
+
+/// Full-screen timer completion overlay. Lives outside the shell.
+@TypedGoRoute<TimerRingingRoute>(path: '/timer-ringing/:timerId')
+class TimerRingingRoute extends GoRouteData with $TimerRingingRoute {
+  const TimerRingingRoute({required this.timerId});
+
+  final String timerId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TimerRingingScreen(timerId: timerId);
   }
 }
 

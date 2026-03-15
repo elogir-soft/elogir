@@ -1,44 +1,42 @@
 import 'package:alarm/alarm.dart' as native;
-import 'package:elogir_alarm/config/constants.dart';
-import 'package:elogir_alarm/features/alarms/models/alarm.dart';
-import 'package:elogir_alarm/features/alarms/providers/alarm_repository_provider.dart';
-import 'package:elogir_alarm/features/alarms/providers/alarm_scheduler_provider.dart';
-import 'package:elogir_alarm/features/alarms/providers/alarms_provider.dart';
+import 'package:elogir_alarm/features/timers/models/app_timer.dart';
+import 'package:elogir_alarm/features/timers/providers/active_timers_provider.dart';
+import 'package:elogir_alarm/shared/extensions/duration_extensions.dart';
 import 'package:elogir_ui/elogir_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Full-screen ringing alarm overlay shown when an alarm fires.
+/// Full-screen ringing overlay shown when a timer completes.
 ///
-/// Looks up the alarm model by [alarmId] and offers Snooze / Dismiss actions.
-class AlarmRingingScreen extends ConsumerWidget {
-  const AlarmRingingScreen({required this.alarmId, super.key});
+/// Offers Dismiss and Restart actions.
+class TimerRingingScreen extends ConsumerWidget {
+  const TimerRingingScreen({required this.timerId, super.key});
 
-  final String alarmId;
+  final String timerId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ElogirTheme.of(context);
-    final alarmsAsync = ref.watch(alarmsProvider);
+    final timers = ref.watch(activeTimersProvider);
 
-    Alarm? alarm;
-    for (final a in alarmsAsync.value ?? <Alarm>[]) {
-      if (a.id == alarmId) {
-        alarm = a;
+    AppTimer? timer;
+    for (final t in timers) {
+      if (t.id == timerId) {
+        timer = t;
         break;
       }
     }
 
-    // Alarm not found (e.g. deleted while ringing) — navigate back.
-    if (alarm == null) {
+    // Timer not found (e.g. removed while ringing) — navigate back.
+    if (timer == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) context.go('/alarms');
+        if (context.mounted) context.go('/timers');
       });
       return const SizedBox.shrink();
     }
 
-    final a = alarm;
+    final t = timer;
 
     return ElogirScaffold(
       body: SafeArea(
@@ -54,17 +52,17 @@ class AlarmRingingScreen extends ConsumerWidget {
                   mode: ElogirPulseMode.scale,
                   minScale: 0.96,
                   maxScale: 1.04,
-                  child: _TimeRing(text: a.timeFormatted),
+                  child: _TimeRing(text: t.remaining.formatted),
                 ),
               ),
               SizedBox(height: theme.spacing.lg),
 
               // Label
-              if (a.label.isNotEmpty) ...[
+              if (t.label.isNotEmpty) ...[
                 ElogirFadeIn(
                   delay: const Duration(milliseconds: 100),
                   child: ElogirText(
-                    a.label,
+                    t.label,
                     variant: ElogirTextVariant.headlineMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -76,7 +74,7 @@ class AlarmRingingScreen extends ConsumerWidget {
               ElogirFadeIn(
                 delay: const Duration(milliseconds: 150),
                 child: ElogirText(
-                  'Alarm',
+                  'Timer',
                   variant: ElogirTextVariant.bodyLarge,
                   style: TextStyle(color: theme.colors.onSurfaceVariant),
                   textAlign: TextAlign.center,
@@ -92,18 +90,18 @@ class AlarmRingingScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     ElogirButton(
-                      onPressed: () => _dismiss(context, ref, a),
+                      onPressed: () => _dismiss(context, ref, t),
                       expanded: true,
                       size: ElogirButtonSize.lg,
                       child: const Text('Dismiss'),
                     ),
                     SizedBox(height: theme.spacing.md),
                     ElogirButton(
-                      onPressed: () => _snooze(context, ref, a),
+                      onPressed: () => _restart(context, ref, t),
                       variant: ElogirButtonVariant.outlined,
                       expanded: true,
                       size: ElogirButtonSize.lg,
-                      child: Text('Snooze ${a.snoozeDurationMinutes} min'),
+                      child: const Text('Restart'),
                     ),
                   ],
                 ),
@@ -116,51 +114,25 @@ class AlarmRingingScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _snooze(
-    BuildContext context,
-    WidgetRef ref,
-    Alarm alarm,
-  ) async {
-    final nativeId = alarm.id.hashCode.abs().clamp(1, 0x7FFFFFFF);
-    await native.Alarm.stop(nativeId);
-    final snoozeTime =
-        DateTime.now().add(Duration(minutes: alarm.snoozeDurationMinutes));
-    await ref
-        .read(alarmRepositoryProvider)
-        .updateSnoozedUntil(alarm.id, snoozeTime);
-    await native.Alarm.set(
-      alarmSettings: native.AlarmSettings(
-        id: nativeId,
-        dateTime: snoozeTime,
-        volumeSettings: const native.VolumeSettings.fixed(),
-        notificationSettings: native.NotificationSettings(
-          title: alarm.label.isEmpty ? 'Alarm' : alarm.label,
-          body: alarm.timeFormatted,
-          stopButton: 'Dismiss',
-        ),
-        assetAudioPath: AppConstants.soundAssetPath(alarm.soundId),
-        loopAudio: true,
-        vibrate: true,
-        androidFullScreenIntent: true,
-        warningNotificationOnKill: false,
-      ),
-    );
-    if (context.mounted) context.go('/alarms');
-  }
-
   Future<void> _dismiss(
     BuildContext context,
     WidgetRef ref,
-    Alarm alarm,
+    AppTimer timer,
   ) async {
-    final nativeId = alarm.id.hashCode.abs().clamp(1, 0x7FFFFFFF);
+    final nativeId = timer.id.hashCode.abs().clamp(1, 0x7FFFFFFF);
     await native.Alarm.stop(nativeId);
-    await ref.read(alarmRepositoryProvider).updateSnoozedUntil(alarm.id, null);
-    // Repeating alarms: schedule the next occurrence after dismissal.
-    if (alarm.repeatDays.isNotEmpty) {
-      await ref.read(alarmSchedulerProvider).schedule(alarm);
-    }
-    if (context.mounted) context.go('/alarms');
+    if (context.mounted) context.go('/timers');
+  }
+
+  Future<void> _restart(
+    BuildContext context,
+    WidgetRef ref,
+    AppTimer timer,
+  ) async {
+    final nativeId = timer.id.hashCode.abs().clamp(1, 0x7FFFFFFF);
+    await native.Alarm.stop(nativeId);
+    ref.read(activeTimersProvider.notifier).restart(timer.id);
+    if (context.mounted) context.go('/timers');
   }
 }
 

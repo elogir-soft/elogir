@@ -6,7 +6,11 @@ part of 'routes.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$alarmRingingRoute, $appShellRoute];
+List<RouteBase> get $appRoutes => [
+  $alarmRingingRoute,
+  $timerRingingRoute,
+  $appShellRoute,
+];
 
 RouteBase get $alarmRingingRoute => GoRouteData.$route(
   path: '/alarm-ringing/:alarmId',
@@ -22,6 +26,36 @@ mixin $AlarmRingingRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/alarm-ringing/${Uri.encodeComponent(_self.alarmId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $timerRingingRoute => GoRouteData.$route(
+  path: '/timer-ringing/:timerId',
+  factory: $TimerRingingRoute._fromState,
+);
+
+mixin $TimerRingingRoute on GoRouteData {
+  static TimerRingingRoute _fromState(GoRouterState state) =>
+      TimerRingingRoute(timerId: state.pathParameters['timerId']!);
+
+  TimerRingingRoute get _self => this as TimerRingingRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/timer-ringing/${Uri.encodeComponent(_self.timerId)}',
   );
 
   @override

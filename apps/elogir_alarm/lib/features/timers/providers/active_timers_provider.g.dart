@@ -11,9 +11,8 @@ part of 'active_timers_provider.dart';
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds. On Android, schedules
-/// native alarms via the `alarm` package so timers ring even when the
-/// app is closed.
+/// and flushes state to Drift every 5 seconds. Schedules native alarms
+/// via the `alarm` package so timers ring even when the app is closed.
 
 @ProviderFor(ActiveTimers)
 final activeTimersProvider = ActiveTimersProvider._();
@@ -21,17 +20,15 @@ final activeTimersProvider = ActiveTimersProvider._();
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds. On Android, schedules
-/// native alarms via the `alarm` package so timers ring even when the
-/// app is closed.
+/// and flushes state to Drift every 5 seconds. Schedules native alarms
+/// via the `alarm` package so timers ring even when the app is closed.
 final class ActiveTimersProvider
     extends $NotifierProvider<ActiveTimers, List<AppTimer>> {
   /// Manages in-memory timer ticking with periodic Drift persistence.
   ///
   /// Loads initial state from Drift, ticks running timers every 100ms,
-  /// and flushes state to Drift every 5 seconds. On Android, schedules
-  /// native alarms via the `alarm` package so timers ring even when the
-  /// app is closed.
+  /// and flushes state to Drift every 5 seconds. Schedules native alarms
+  /// via the `alarm` package so timers ring even when the app is closed.
   ActiveTimersProvider._()
     : super(
         from: null,
@@ -59,14 +56,13 @@ final class ActiveTimersProvider
   }
 }
 
-String _$activeTimersHash() => r'c935b61d7664f1a0928cc6c543b5799c3820fb7e';
+String _$activeTimersHash() => r'acde05d671c946d151f549b3ba0460109da1b45f';
 
 /// Manages in-memory timer ticking with periodic Drift persistence.
 ///
 /// Loads initial state from Drift, ticks running timers every 100ms,
-/// and flushes state to Drift every 5 seconds. On Android, schedules
-/// native alarms via the `alarm` package so timers ring even when the
-/// app is closed.
+/// and flushes state to Drift every 5 seconds. Schedules native alarms
+/// via the `alarm` package so timers ring even when the app is closed.
 
 abstract class _$ActiveTimers extends $Notifier<List<AppTimer>> {
   List<AppTimer> build();

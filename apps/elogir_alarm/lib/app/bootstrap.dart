@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:alarm/alarm.dart' as native;
 import 'package:elogir_alarm/app/app.dart';
 import 'package:elogir_alarm/database/app_database.dart';
 import 'package:elogir_alarm/features/alarms/providers/alarm_scheduler_provider.dart';
@@ -18,14 +17,15 @@ Future<void> bootstrap() async {
 
   final talker = Talker();
   final db = AppDatabase();
+
+  // Init alarm package on both platforms — needed for timer notifications.
+  await native.Alarm.init();
+
   final scheduler = AlarmScheduler.create();
   await scheduler.init();
 
-  // Android 13+ requires runtime notification permission for alarms to fire
-  // when the app is closed.
-  if (Platform.isAndroid) {
-    await Permission.notification.request();
-  }
+  // Request notification permission for alarms/timers to ring when closed.
+  await Permission.notification.request();
 
   runApp(
     ProviderScope(
