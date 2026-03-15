@@ -24,7 +24,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -43,6 +43,16 @@ class AppDatabase extends _$AppDatabase {
               settingsTable,
               settingsTable.timerSoundId,
             );
+          }
+          if (from < 6) {
+            try {
+              await migrator.addColumn(
+                settingsTable,
+                settingsTable.timerPresets,
+              );
+            } on Exception catch (_) {
+              // Column may already exist from a prior build.
+            }
           }
         },
       );

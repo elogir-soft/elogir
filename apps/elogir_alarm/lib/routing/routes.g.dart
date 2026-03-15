@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $alarmRingingRoute,
   $timerRingingRoute,
   $settingsRoute,
+  $editPresetsRoute,
   $appShellRoute,
 ];
 
@@ -81,6 +82,32 @@ mixin $SettingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $editPresetsRoute => GoRouteData.$route(
+  path: '/edit-presets',
+  factory: $EditPresetsRoute._fromState,
+);
+
+mixin $EditPresetsRoute on GoRouteData {
+  static EditPresetsRoute _fromState(GoRouterState state) =>
+      const EditPresetsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/edit-presets');
 
   @override
   void go(BuildContext context) => context.go(location);

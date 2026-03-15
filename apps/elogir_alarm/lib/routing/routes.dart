@@ -2,6 +2,7 @@ import 'package:elogir_alarm/features/alarms/screens/alarm_ringing_screen.dart';
 import 'package:elogir_alarm/features/alarms/screens/alarms_screen.dart';
 import 'package:elogir_alarm/features/settings/screens/settings_screen.dart';
 import 'package:elogir_alarm/features/stopwatch/screens/stopwatch_screen.dart';
+import 'package:elogir_alarm/features/timers/screens/edit_presets_screen.dart';
 import 'package:elogir_alarm/features/timers/screens/timer_ringing_screen.dart';
 import 'package:elogir_alarm/features/timers/screens/timers_screen.dart';
 import 'package:elogir_alarm/layout/app_shell.dart';
@@ -46,6 +47,17 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ElogirPage(key: state.pageKey, child: const SettingsScreen());
+  }
+}
+
+/// Full-screen preset editor. Lives outside the shell so back navigation works.
+@TypedGoRoute<EditPresetsRoute>(path: '/edit-presets')
+class EditPresetsRoute extends GoRouteData with $EditPresetsRoute {
+  const EditPresetsRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ElogirPage(key: state.pageKey, child: const EditPresetsScreen());
   }
 }
 

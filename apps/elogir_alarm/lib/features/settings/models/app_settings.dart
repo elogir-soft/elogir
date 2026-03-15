@@ -12,5 +12,6 @@ abstract class AppSettings with _$AppSettings {
     @Default('system') String themeMode,
     @Default(false) bool use24HourFormat,
     @Default(true) bool weekStartsOnMonday,
+    @Default([60, 180, 300, 600, 900, 1800, 3600]) List<int> timerPresets,
   }) = _AppSettings;
 }
