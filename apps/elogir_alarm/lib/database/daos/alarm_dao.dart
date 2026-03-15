@@ -40,4 +40,18 @@ class AlarmDao extends DatabaseAccessor<AppDatabase> with _$AlarmDaoMixin {
       AlarmTableCompanion(isEnabled: Value(isEnabled)),
     );
   }
+
+  /// Fetch a single alarm row by ID (non-streaming).
+  Future<AlarmTableData?> getAlarm(String id) =>
+      (select(alarmTable)..where((t) => t.id.equals(id))).getSingleOrNull();
+
+  /// Update the stored AlarmKit native ID for an alarm (iOS only).
+  Future<void> updateAlarmkitId(String id, String? alarmkitId) =>
+      (update(alarmTable)..where((t) => t.id.equals(id)))
+          .write(AlarmTableCompanion(alarmkitId: Value(alarmkitId)));
+
+  /// Update the snooze-end time for an alarm. Pass null to clear.
+  Future<void> updateSnoozedUntil(String id, DateTime? snoozedUntil) =>
+      (update(alarmTable)..where((t) => t.id.equals(id)))
+          .write(AlarmTableCompanion(snoozedUntil: Value(snoozedUntil)));
 }

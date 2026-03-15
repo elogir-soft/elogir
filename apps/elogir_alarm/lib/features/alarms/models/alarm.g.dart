@@ -19,8 +19,11 @@ _Alarm _$AlarmFromJson(Map<String, dynamic> json) => _Alarm(
           ?.map((e) => (e as num).toInt())
           .toList() ??
       const [],
-  soundId: json['soundId'] as String? ?? 'alarm',
+  soundId: json['soundId'] as String? ?? 'marimba',
   snoozeDurationMinutes: (json['snoozeDurationMinutes'] as num?)?.toInt() ?? 5,
+  snoozedUntil: json['snoozedUntil'] == null
+      ? null
+      : DateTime.parse(json['snoozedUntil'] as String),
 );
 
 Map<String, dynamic> _$AlarmToJson(_Alarm instance) => <String, dynamic>{
@@ -34,4 +37,5 @@ Map<String, dynamic> _$AlarmToJson(_Alarm instance) => <String, dynamic>{
   'repeatDays': instance.repeatDays,
   'soundId': instance.soundId,
   'snoozeDurationMinutes': instance.snoozeDurationMinutes,
+  'snoozedUntil': instance.snoozedUntil?.toIso8601String(),
 };

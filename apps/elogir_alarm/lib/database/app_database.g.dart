@@ -96,6 +96,28 @@ class $AlarmTableTable extends AlarmTable
     requiredDuringInsert: false,
     defaultValue: const Constant(5),
   );
+  static const VerificationMeta _alarmkitIdMeta = const VerificationMeta(
+    'alarmkitId',
+  );
+  @override
+  late final GeneratedColumn<String> alarmkitId = GeneratedColumn<String>(
+    'alarmkit_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _snoozedUntilMeta = const VerificationMeta(
+    'snoozedUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> snoozedUntil = GeneratedColumn<DateTime>(
+    'snoozed_until',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -128,6 +150,8 @@ class $AlarmTableTable extends AlarmTable
     repeatDays,
     soundId,
     snoozeDurationMinutes,
+    alarmkitId,
+    snoozedUntil,
     createdAt,
     updatedAt,
   ];
@@ -197,6 +221,21 @@ class $AlarmTableTable extends AlarmTable
         ),
       );
     }
+    if (data.containsKey('alarmkit_id')) {
+      context.handle(
+        _alarmkitIdMeta,
+        alarmkitId.isAcceptableOrUnknown(data['alarmkit_id']!, _alarmkitIdMeta),
+      );
+    }
+    if (data.containsKey('snoozed_until')) {
+      context.handle(
+        _snoozedUntilMeta,
+        snoozedUntil.isAcceptableOrUnknown(
+          data['snoozed_until']!,
+          _snoozedUntilMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -254,6 +293,14 @@ class $AlarmTableTable extends AlarmTable
         DriftSqlType.int,
         data['${effectivePrefix}snooze_duration_minutes'],
       )!,
+      alarmkitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alarmkit_id'],
+      ),
+      snoozedUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}snoozed_until'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -284,6 +331,12 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
   /// System sound type: 'alarm', 'ringtone', 'notification'.
   final String soundId;
   final int snoozeDurationMinutes;
+
+  /// Native AlarmKit alarm UUID (iOS only). Null on Android.
+  final String? alarmkitId;
+
+  /// Non-null when the alarm is currently snoozed. Stores the snooze-end time.
+  final DateTime? snoozedUntil;
   final DateTime createdAt;
   final DateTime updatedAt;
   const AlarmTableData({
@@ -295,6 +348,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
     required this.repeatDays,
     required this.soundId,
     required this.snoozeDurationMinutes,
+    this.alarmkitId,
+    this.snoozedUntil,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -309,6 +364,12 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
     map['repeat_days'] = Variable<String>(repeatDays);
     map['sound_id'] = Variable<String>(soundId);
     map['snooze_duration_minutes'] = Variable<int>(snoozeDurationMinutes);
+    if (!nullToAbsent || alarmkitId != null) {
+      map['alarmkit_id'] = Variable<String>(alarmkitId);
+    }
+    if (!nullToAbsent || snoozedUntil != null) {
+      map['snoozed_until'] = Variable<DateTime>(snoozedUntil);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -324,6 +385,12 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
       repeatDays: Value(repeatDays),
       soundId: Value(soundId),
       snoozeDurationMinutes: Value(snoozeDurationMinutes),
+      alarmkitId: alarmkitId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alarmkitId),
+      snoozedUntil: snoozedUntil == null && nullToAbsent
+          ? const Value.absent()
+          : Value(snoozedUntil),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -345,6 +412,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
       snoozeDurationMinutes: serializer.fromJson<int>(
         json['snoozeDurationMinutes'],
       ),
+      alarmkitId: serializer.fromJson<String?>(json['alarmkitId']),
+      snoozedUntil: serializer.fromJson<DateTime?>(json['snoozedUntil']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -361,6 +430,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
       'repeatDays': serializer.toJson<String>(repeatDays),
       'soundId': serializer.toJson<String>(soundId),
       'snoozeDurationMinutes': serializer.toJson<int>(snoozeDurationMinutes),
+      'alarmkitId': serializer.toJson<String?>(alarmkitId),
+      'snoozedUntil': serializer.toJson<DateTime?>(snoozedUntil),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -375,6 +446,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
     String? repeatDays,
     String? soundId,
     int? snoozeDurationMinutes,
+    Value<String?> alarmkitId = const Value.absent(),
+    Value<DateTime?> snoozedUntil = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => AlarmTableData(
@@ -386,6 +459,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
     repeatDays: repeatDays ?? this.repeatDays,
     soundId: soundId ?? this.soundId,
     snoozeDurationMinutes: snoozeDurationMinutes ?? this.snoozeDurationMinutes,
+    alarmkitId: alarmkitId.present ? alarmkitId.value : this.alarmkitId,
+    snoozedUntil: snoozedUntil.present ? snoozedUntil.value : this.snoozedUntil,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -403,6 +478,12 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
       snoozeDurationMinutes: data.snoozeDurationMinutes.present
           ? data.snoozeDurationMinutes.value
           : this.snoozeDurationMinutes,
+      alarmkitId: data.alarmkitId.present
+          ? data.alarmkitId.value
+          : this.alarmkitId,
+      snoozedUntil: data.snoozedUntil.present
+          ? data.snoozedUntil.value
+          : this.snoozedUntil,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -419,6 +500,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
           ..write('repeatDays: $repeatDays, ')
           ..write('soundId: $soundId, ')
           ..write('snoozeDurationMinutes: $snoozeDurationMinutes, ')
+          ..write('alarmkitId: $alarmkitId, ')
+          ..write('snoozedUntil: $snoozedUntil, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -435,6 +518,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
     repeatDays,
     soundId,
     snoozeDurationMinutes,
+    alarmkitId,
+    snoozedUntil,
     createdAt,
     updatedAt,
   );
@@ -450,6 +535,8 @@ class AlarmTableData extends DataClass implements Insertable<AlarmTableData> {
           other.repeatDays == this.repeatDays &&
           other.soundId == this.soundId &&
           other.snoozeDurationMinutes == this.snoozeDurationMinutes &&
+          other.alarmkitId == this.alarmkitId &&
+          other.snoozedUntil == this.snoozedUntil &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -463,6 +550,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
   final Value<String> repeatDays;
   final Value<String> soundId;
   final Value<int> snoozeDurationMinutes;
+  final Value<String?> alarmkitId;
+  final Value<DateTime?> snoozedUntil;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -475,6 +564,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
     this.repeatDays = const Value.absent(),
     this.soundId = const Value.absent(),
     this.snoozeDurationMinutes = const Value.absent(),
+    this.alarmkitId = const Value.absent(),
+    this.snoozedUntil = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -488,6 +579,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
     this.repeatDays = const Value.absent(),
     this.soundId = const Value.absent(),
     this.snoozeDurationMinutes = const Value.absent(),
+    this.alarmkitId = const Value.absent(),
+    this.snoozedUntil = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -505,6 +598,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
     Expression<String>? repeatDays,
     Expression<String>? soundId,
     Expression<int>? snoozeDurationMinutes,
+    Expression<String>? alarmkitId,
+    Expression<DateTime>? snoozedUntil,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -519,6 +614,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
       if (soundId != null) 'sound_id': soundId,
       if (snoozeDurationMinutes != null)
         'snooze_duration_minutes': snoozeDurationMinutes,
+      if (alarmkitId != null) 'alarmkit_id': alarmkitId,
+      if (snoozedUntil != null) 'snoozed_until': snoozedUntil,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -534,6 +631,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
     Value<String>? repeatDays,
     Value<String>? soundId,
     Value<int>? snoozeDurationMinutes,
+    Value<String?>? alarmkitId,
+    Value<DateTime?>? snoozedUntil,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -548,6 +647,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
       soundId: soundId ?? this.soundId,
       snoozeDurationMinutes:
           snoozeDurationMinutes ?? this.snoozeDurationMinutes,
+      alarmkitId: alarmkitId ?? this.alarmkitId,
+      snoozedUntil: snoozedUntil ?? this.snoozedUntil,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -583,6 +684,12 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
         snoozeDurationMinutes.value,
       );
     }
+    if (alarmkitId.present) {
+      map['alarmkit_id'] = Variable<String>(alarmkitId.value);
+    }
+    if (snoozedUntil.present) {
+      map['snoozed_until'] = Variable<DateTime>(snoozedUntil.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -606,6 +713,8 @@ class AlarmTableCompanion extends UpdateCompanion<AlarmTableData> {
           ..write('repeatDays: $repeatDays, ')
           ..write('soundId: $soundId, ')
           ..write('snoozeDurationMinutes: $snoozeDurationMinutes, ')
+          ..write('alarmkitId: $alarmkitId, ')
+          ..write('snoozedUntil: $snoozedUntil, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -1598,6 +1707,8 @@ typedef $$AlarmTableTableCreateCompanionBuilder =
       Value<String> repeatDays,
       Value<String> soundId,
       Value<int> snoozeDurationMinutes,
+      Value<String?> alarmkitId,
+      Value<DateTime?> snoozedUntil,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -1612,6 +1723,8 @@ typedef $$AlarmTableTableUpdateCompanionBuilder =
       Value<String> repeatDays,
       Value<String> soundId,
       Value<int> snoozeDurationMinutes,
+      Value<String?> alarmkitId,
+      Value<DateTime?> snoozedUntil,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -1663,6 +1776,16 @@ class $$AlarmTableTableFilterComposer
 
   ColumnFilters<int> get snoozeDurationMinutes => $composableBuilder(
     column: $table.snoozeDurationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alarmkitId => $composableBuilder(
+    column: $table.alarmkitId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get snoozedUntil => $composableBuilder(
+    column: $table.snoozedUntil,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1726,6 +1849,16 @@ class $$AlarmTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get alarmkitId => $composableBuilder(
+    column: $table.alarmkitId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get snoozedUntil => $composableBuilder(
+    column: $table.snoozedUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -1771,6 +1904,16 @@ class $$AlarmTableTableAnnotationComposer
 
   GeneratedColumn<int> get snoozeDurationMinutes => $composableBuilder(
     column: $table.snoozeDurationMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get alarmkitId => $composableBuilder(
+    column: $table.alarmkitId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get snoozedUntil => $composableBuilder(
+    column: $table.snoozedUntil,
     builder: (column) => column,
   );
 
@@ -1820,6 +1963,8 @@ class $$AlarmTableTableTableManager
                 Value<String> repeatDays = const Value.absent(),
                 Value<String> soundId = const Value.absent(),
                 Value<int> snoozeDurationMinutes = const Value.absent(),
+                Value<String?> alarmkitId = const Value.absent(),
+                Value<DateTime?> snoozedUntil = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -1832,6 +1977,8 @@ class $$AlarmTableTableTableManager
                 repeatDays: repeatDays,
                 soundId: soundId,
                 snoozeDurationMinutes: snoozeDurationMinutes,
+                alarmkitId: alarmkitId,
+                snoozedUntil: snoozedUntil,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -1846,6 +1993,8 @@ class $$AlarmTableTableTableManager
                 Value<String> repeatDays = const Value.absent(),
                 Value<String> soundId = const Value.absent(),
                 Value<int> snoozeDurationMinutes = const Value.absent(),
+                Value<String?> alarmkitId = const Value.absent(),
+                Value<DateTime?> snoozedUntil = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -1858,6 +2007,8 @@ class $$AlarmTableTableTableManager
                 repeatDays: repeatDays,
                 soundId: soundId,
                 snoozeDurationMinutes: snoozeDurationMinutes,
+                alarmkitId: alarmkitId,
+                snoozedUntil: snoozedUntil,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

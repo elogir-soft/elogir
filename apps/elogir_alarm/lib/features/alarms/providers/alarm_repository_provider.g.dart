@@ -49,4 +49,4 @@ final class AlarmRepositoryProvider
   }
 }
 
-String _$alarmRepositoryHash() => r'03f70caa7b0bbcc51dcad0503803978583135e24';
+String _$alarmRepositoryHash() => r'9f3568a6ab1ec0d9ff0a5cfc5f72de82393f7520';

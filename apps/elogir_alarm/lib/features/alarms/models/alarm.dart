@@ -14,8 +14,9 @@ abstract class Alarm with _$Alarm {
     @Default('') String label,
     @Default(true) bool isEnabled,
     @Default([]) List<int> repeatDays,
-    @Default('alarm') String soundId,
+    @Default('marimba') String soundId,
     @Default(5) int snoozeDurationMinutes,
+    DateTime? snoozedUntil,
   }) = _Alarm;
 
   const Alarm._();

@@ -16,6 +16,13 @@ class AlarmTable extends Table {
 
   IntColumn get snoozeDurationMinutes =>
       integer().withDefault(const Constant(5))();
+
+  /// Native AlarmKit alarm UUID (iOS only). Null on Android.
+  TextColumn get alarmkitId => text().nullable()();
+
+  /// Non-null when the alarm is currently snoozed. Stores the snooze-end time.
+  DateTimeColumn get snoozedUntil => dateTime().nullable()();
+
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 

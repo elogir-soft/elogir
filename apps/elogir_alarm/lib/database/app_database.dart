@@ -24,13 +24,19 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (migrator, from, to) async {
           if (from < 2) {
             await migrator.createTable(settingsTable);
+          }
+          if (from < 3) {
+            await migrator.addColumn(alarmTable, alarmTable.alarmkitId);
+          }
+          if (from < 4) {
+            await migrator.addColumn(alarmTable, alarmTable.snoozedUntil);
           }
         },
       );

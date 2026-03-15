@@ -32,10 +32,19 @@ abstract final class AppConstants {
     3600, // 1 hour
   ];
 
-  /// Available alarm sound types mapped to display names.
+  /// Available alarm sounds mapped to display names.
+  /// Keys are asset filenames (without extension).
   static const Map<String, String> alarmSounds = {
-    'alarm': 'Alarm',
-    'ringtone': 'Ringtone',
-    'notification': 'Notification',
+    'marimba': 'Marimba',
+    'mozart': 'Mozart',
+    'nokia': 'Nokia',
+    'one_piece': 'One Piece',
+    'star_wars': 'Star Wars',
   };
+
+  /// Returns the asset path for a given sound ID, with fallback to marimba.
+  static String soundAssetPath(String soundId) {
+    final id = alarmSounds.containsKey(soundId) ? soundId : 'marimba';
+    return 'assets/$id.mp3';
+  }
 }

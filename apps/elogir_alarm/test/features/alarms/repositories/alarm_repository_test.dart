@@ -1,17 +1,30 @@
 import 'package:drift/native.dart';
 import 'package:elogir_alarm/database/app_database.dart';
 import 'package:elogir_alarm/features/alarms/repositories/alarm_repository.dart';
+import 'package:elogir_alarm/features/alarms/models/alarm.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/alarm_fixtures.dart';
+import '../../../helpers/mocks.dart';
 
 void main() {
   late AppDatabase db;
+  late MockAlarmScheduler scheduler;
   late AlarmRepository repository;
+
+  setUpAll(() {
+    registerFallbackValue(createAlarm());
+  });
 
   setUp(() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
-    repository = AlarmRepository(db.alarmDao);
+    scheduler = MockAlarmScheduler();
+    // Stub scheduler so it no-ops in integration tests.
+    when(() => scheduler.schedule(any())).thenAnswer((_) async => null);
+    when(() => scheduler.cancel(any(), nativeId: any(named: 'nativeId')))
+        .thenAnswer((_) async {});
+    repository = AlarmRepository(db.alarmDao, scheduler);
   });
 
   tearDown(() async {

@@ -1,3 +1,4 @@
+import 'package:elogir_alarm/features/alarms/screens/alarm_ringing_screen.dart';
 import 'package:elogir_alarm/features/alarms/screens/alarms_screen.dart';
 import 'package:elogir_alarm/features/settings/screens/settings_screen.dart';
 import 'package:elogir_alarm/features/stopwatch/screens/stopwatch_screen.dart';
@@ -7,6 +8,20 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 part 'routes.g.dart';
+
+/// Full-screen ringing alarm overlay. Lives outside the shell so it covers
+/// the navigation chrome entirely.
+@TypedGoRoute<AlarmRingingRoute>(path: '/alarm-ringing/:alarmId')
+class AlarmRingingRoute extends GoRouteData with $AlarmRingingRoute {
+  const AlarmRingingRoute({required this.alarmId});
+
+  final String alarmId;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AlarmRingingScreen(alarmId: alarmId);
+  }
+}
 
 @TypedShellRoute<AppShellRoute>(
   routes: [

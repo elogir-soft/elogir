@@ -6,7 +6,37 @@ part of 'routes.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$appShellRoute];
+List<RouteBase> get $appRoutes => [$alarmRingingRoute, $appShellRoute];
+
+RouteBase get $alarmRingingRoute => GoRouteData.$route(
+  path: '/alarm-ringing/:alarmId',
+  factory: $AlarmRingingRoute._fromState,
+);
+
+mixin $AlarmRingingRoute on GoRouteData {
+  static AlarmRingingRoute _fromState(GoRouterState state) =>
+      AlarmRingingRoute(alarmId: state.pathParameters['alarmId']!);
+
+  AlarmRingingRoute get _self => this as AlarmRingingRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/alarm-ringing/${Uri.encodeComponent(_self.alarmId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $appShellRoute => ShellRouteData.$route(
   factory: $AppShellRouteExtension._fromState,

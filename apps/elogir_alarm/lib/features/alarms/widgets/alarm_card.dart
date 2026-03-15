@@ -34,6 +34,10 @@ class AlarmCard extends ConsumerWidget {
     return '${h.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
   }
 
+  bool _isSnoozed(Alarm alarm) =>
+      alarm.snoozedUntil != null &&
+      alarm.snoozedUntil!.isAfter(DateTime.now());
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ElogirTheme.of(context);
@@ -79,6 +83,11 @@ class AlarmCard extends ConsumerWidget {
                   variant: ElogirTextVariant.bodyMedium,
                   style: TextStyle(color: theme.colors.onSurfaceVariant),
                 ),
+              ],
+              // Snooze indicator
+              if (_isSnoozed(alarm)) ...[
+                SizedBox(height: theme.spacing.xs),
+                _SnoozeBadge(snoozedUntil: alarm.snoozedUntil!),
               ],
               SizedBox(height: theme.spacing.sm),
               // Bottom row: repeat days + next occurrence
@@ -157,6 +166,35 @@ class _RepeatDayDots extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+}
+
+class _SnoozeBadge extends StatelessWidget {
+  const _SnoozeBadge({required this.snoozedUntil});
+
+  final DateTime snoozedUntil;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ElogirTheme.of(context);
+    final h = snoozedUntil.hour.toString().padLeft(2, '0');
+    final m = snoozedUntil.minute.toString().padLeft(2, '0');
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: theme.spacing.sm,
+        vertical: theme.spacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colors.primaryContainer,
+        borderRadius: theme.radii.sm,
+      ),
+      child: ElogirText(
+        'Snoozed until $h:$m',
+        variant: ElogirTextVariant.labelSmall,
+        style: TextStyle(color: theme.colors.onPrimaryContainer),
+      ),
     );
   }
 }

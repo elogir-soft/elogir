@@ -66,5 +66,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Used to ring alarms at scheduled times.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_alarmkit._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Required for AlarmKit local communication.</string>
 </dict>
 </plist>
