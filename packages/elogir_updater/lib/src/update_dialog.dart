@@ -136,17 +136,14 @@ class _UpdateDialogContentState extends State<_UpdateDialogContent> {
   }
 
   Widget _buildDownloading(BuildContext context) {
+    final percent = double.tryParse(_progress);
+
     return ElogirDialog(
       title: const Text('Downloading Update'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const ElogirSpinner(),
-          if (_progress.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text('$_progress%'),
-          ],
-        ],
+      content: ElogirProgressBar(
+        value: percent != null ? percent / 100 : null,
+        label: const Text('Downloading…'),
+        showPercentage: true,
       ),
     );
   }

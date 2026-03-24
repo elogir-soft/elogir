@@ -39,6 +39,16 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Required by ota_update for APK install via FileProvider -->
+        <provider
+            android:name="sk.nicecode.ota_update.OtaUpdateFileProvider"
+            android:authorities="${applicationId}.ota_update_provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/ota_update_provider_paths" />
+        </provider>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
