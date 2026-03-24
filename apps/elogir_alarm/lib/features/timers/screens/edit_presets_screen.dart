@@ -156,18 +156,18 @@ class _EditPresetsScreenState extends ConsumerState<EditPresetsScreen> {
                     padding: EdgeInsets.only(bottom: theme.spacing.xs),
                     child: ElogirCard(
                       padding: EdgeInsets.symmetric(
-                        horizontal: theme.spacing.sm,
-                        vertical: theme.spacing.xs,
+                        horizontal: theme.spacing.md,
+                        vertical: theme.spacing.sm,
                       ),
                       child: Row(
                         children: [
                           ReorderableDragStartListener(
                             index: index,
                             child: Padding(
-                              padding: EdgeInsets.all(theme.spacing.xs),
+                              padding: EdgeInsets.all(theme.spacing.sm),
                               child: FaIcon(
                                 FontAwesomeIcons.gripVertical,
-                                size: 14,
+                                size: 16,
                                 color: theme.colors.onSurfaceVariant,
                               ),
                             ),

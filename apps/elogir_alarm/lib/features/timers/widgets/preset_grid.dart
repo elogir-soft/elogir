@@ -27,7 +27,7 @@ class PresetGrid extends ConsumerWidget {
           return ElogirButton(
             onPressed: () => onPresetSelected(seconds * 1000),
             variant: ElogirButtonVariant.tonal,
-            size: ElogirButtonSize.sm,
+            size: ElogirButtonSize.md,
             child: Text(duration.presetLabel),
           );
         }),
