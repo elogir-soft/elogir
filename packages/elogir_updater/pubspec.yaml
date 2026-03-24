@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   dio:
+  elogir_ui:
   package_info_plus:
   ota_update: ^7.1.0
   pub_semver: ^2.1.5

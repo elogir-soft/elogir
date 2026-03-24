@@ -8,6 +8,7 @@ import 'package:elogir_alarm/features/settings/providers/settings_provider.dart'
 import 'package:elogir_alarm/features/timers/providers/active_timers_provider.dart';
 import 'package:elogir_alarm/routing/router.dart';
 import 'package:elogir_ui/elogir_ui.dart';
+import 'package:elogir_updater/elogir_updater.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,6 +31,8 @@ class _AppState extends ConsumerState<App> {
     _ringingSubscription = native.Alarm.ringing.listen(_onAlarmRinging);
     // Listen for snooze actions from the notification to update the DB.
     _snoozedSubscription = native.Alarm.snoozed.listen(_onAlarmSnoozed);
+    // Check for updates once the navigator is ready.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
   }
 
   @override
@@ -86,6 +89,25 @@ class _AppState extends ConsumerState<App> {
             .read(alarmRepositoryProvider)
             .updateSnoozedUntil(alarm.id, snoozeTime);
         return;
+      }
+    }
+  }
+
+  Future<void> _checkForUpdates() async {
+    final updater = ElogirUpdater(
+      owner: 'elogir-soft',
+      repo: 'elogir',
+      appPrefix: 'elogir_alarm',
+    );
+    final release = await updater.checkForUpdate();
+    if (release != null && mounted) {
+      final navContext = rootNavigatorKey.currentContext;
+      if (navContext != null) {
+        await showUpdateDialog(
+          context: navContext,
+          release: release,
+          updater: updater,
+        );
       }
     }
   }
