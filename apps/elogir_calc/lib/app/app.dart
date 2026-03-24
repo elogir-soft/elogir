@@ -1,15 +1,46 @@
 import 'package:elogir_calc/features/settings/providers/settings_provider.dart';
 import 'package:elogir_calc/routing/router.dart';
 import 'package:elogir_ui/elogir_ui.dart';
+import 'package:elogir_updater/elogir_updater.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Root application widget.
-class App extends ConsumerWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<App> createState() => _AppState();
+}
+
+class _AppState extends ConsumerState<App> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
+  }
+
+  Future<void> _checkForUpdates() async {
+    final updater = ElogirUpdater(
+      owner: 'elogir-soft',
+      repo: 'elogir',
+      appPrefix: 'elogir_calc',
+    );
+    final release = await updater.checkForUpdate();
+    if (release != null && mounted) {
+      final navContext = rootNavigatorKey.currentContext;
+      if (navContext != null) {
+        await showUpdateDialog(
+          context: navContext,
+          release: release,
+          updater: updater,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     final themeModeString = ref.watch(
       settingsProvider.select((s) => s.value?.themeMode ?? 'system'),
