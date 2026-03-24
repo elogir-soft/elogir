@@ -77,6 +77,8 @@ class _UpdateDialogContentState extends State<_UpdateDialogContent> {
               _state = _DialogState.error;
               _errorMessage = 'Another update is already in progress.';
             });
+          case OtaStatus.INSTALLATION_DONE:
+            Navigator.of(context).pop();
         }
       },
       onError: (_) {
