@@ -165,6 +165,7 @@ class _TimerRingingScreenState extends ConsumerState<TimerRingingScreen> {
   Future<void> _dismiss(WidgetRef ref, AppTimer timer) async {
     _navigating = true;
     await native.Alarm.stop(_nativeId);
+    ref.read(activeTimersProvider.notifier).markCompleted(timer.id);
     if (mounted) context.go('/timers');
   }
 

@@ -100,8 +100,17 @@ class ActiveTimers extends _$ActiveTimers {
 
   Future<void> _persistAll() async {
     final repo = ref.read(timerRepositoryProvider);
+    final now = DateTime.now();
     for (final timer in state) {
-      await repo.save(timer);
+      // For running timers, stamp startedAt with the current time so that
+      // _hydrateFromDrift can compute correct remaining time on the next cold
+      // start: remaining = remainingMs - (T_reopen - startedAt).
+      // Without this, startedAt stays at the original start/resume time while
+      // remainingMs is already decremented, causing double-subtraction.
+      final toSave = timer.status == TimerStatus.running
+          ? timer.copyWith(startedAt: now)
+          : timer;
+      await repo.save(toSave);
     }
   }
 
@@ -173,6 +182,16 @@ class ActiveTimers extends _$ActiveTimers {
     state = state.where((t) => t.id != id).toList();
     _cancelNativeAlarm(id);
     await ref.read(timerRepositoryProvider).delete(id);
+  }
+
+  /// Mark a timer as completed immediately (e.g. after the user dismisses the
+  /// ringing screen). Prevents the tick loop from running the timer down to
+  /// zero a second time with no alarm to ring.
+  void markCompleted(String id) {
+    state = state.map((t) {
+      if (t.id != id) return t;
+      return t.copyWith(status: TimerStatus.completed, remainingMs: 0);
+    }).toList();
   }
 
   /// Remove all completed/cancelled timers.
