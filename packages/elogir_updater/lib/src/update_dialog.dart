@@ -79,6 +79,11 @@ class _UpdateDialogContentState extends State<_UpdateDialogContent> {
             });
           case OtaStatus.INSTALLATION_DONE:
             Navigator.of(context).pop();
+          default:
+            setState(() {
+              _state = _DialogState.error;
+              _errorMessage = 'Update failed. Please try again.';
+            });
         }
       },
       onError: (_) {

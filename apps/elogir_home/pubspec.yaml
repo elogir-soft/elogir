@@ -1,7 +1,7 @@
 name: elogir_home
 description: Smart home app in the elogir ecosystem.
 publish_to: 'none'
-version: 0.1.4+6
+version: 0.1.5+7
 resolution: workspace
 
 environment:
